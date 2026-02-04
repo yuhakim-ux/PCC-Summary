@@ -16,20 +16,47 @@ public with sharing class AHISController {
     public static AHISData getAHISData(Id recordId) {
         try {
             String userRole = getCurrentUserRole();
-            
-            if (USE_OPENAI) {
-                // Try to use OpenAI with real or mock context
-                return getAHISDataWithOpenAI(recordId, userRole);
-            } else {
-                // Fallback to pure mock data
-                return AHISMockDataService.getMockAHISData(recordId, userRole);
-            }
+            return getAHISDataForRole(recordId, userRole);
         } catch (Exception e) {
             System.debug('AHIS Error: ' + e.getMessage() + '\n' + e.getStackTraceString());
             AHISData errorData = new AHISData();
             errorData.success = false;
             errorData.errorMessage = e.getMessage();
             return errorData;
+        }
+    }
+    
+    /**
+     * @description Gets AHIS data for a record with a specified user role (V3 persona switcher)
+     * @param recordId The ID of the record to analyze
+     * @param userRole The user role to use for role-specific content
+     * @return AHISData containing summary, insights, and actions
+     */
+    @AuraEnabled(cacheable=false)
+    public static AHISData getAHISDataForPersona(Id recordId, String userRole) {
+        try {
+            // Use provided role or fallback to auto-detected
+            String role = String.isNotBlank(userRole) ? userRole : getCurrentUserRole();
+            return getAHISDataForRole(recordId, role);
+        } catch (Exception e) {
+            System.debug('AHIS Error: ' + e.getMessage() + '\n' + e.getStackTraceString());
+            AHISData errorData = new AHISData();
+            errorData.success = false;
+            errorData.errorMessage = e.getMessage();
+            return errorData;
+        }
+    }
+    
+    /**
+     * @description Internal method to get AHIS data for a given role
+     */
+    private static AHISData getAHISDataForRole(Id recordId, String userRole) {
+        if (USE_OPENAI) {
+            // Try to use OpenAI with real or mock context
+            return getAHISDataWithOpenAI(recordId, userRole);
+        } else {
+            // Fallback to pure mock data
+            return AHISMockDataService.getMockAHISData(recordId, userRole);
         }
     }
     

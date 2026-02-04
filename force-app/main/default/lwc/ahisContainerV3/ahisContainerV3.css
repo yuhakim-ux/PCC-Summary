@@ -1,0 +1,175 @@
+/* AHIS Container V3 Styles - With Persona Switcher */
+
+:host {
+    display: block;
+}
+
+/* Card styling - 20px border radius */
+.ahis-container-v3 {
+    --slds-c-card-color-background: #ffffff;
+    --slds-c-card-radius-border: 20px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+/* Card title */
+.card-title {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    color: #2e2e2e;
+}
+
+/* V3 version badge */
+.version-badge {
+    background: linear-gradient(135deg, #0176d3 0%, #032d60 100%);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Header actions container */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Persona switcher container */
+.persona-switcher-container {
+    min-width: 180px;
+}
+
+.persona-switcher {
+    --slds-c-input-radius-border: 8px;
+}
+
+/* Persona context bar - shows current persona info */
+.persona-context-bar {
+    background: linear-gradient(90deg, #f0f7ff 0%, #e8f4fd 100%);
+    padding: 8px 16px;
+    border-bottom: 1px solid #d8edff;
+}
+
+.persona-label {
+    font-weight: 600;
+    color: #0176d3;
+    font-size: 13px;
+}
+
+.persona-description {
+    color: #5c5c5c;
+    font-size: 12px;
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left: 1px solid #c9c9c9;
+}
+
+/* Timestamp row */
+.timestamp-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.timestamp-text {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #5c5c5c;
+}
+
+/* Loading container */
+.loading-container {
+    min-height: 200px;
+    flex-direction: column;
+}
+
+.loading-container p {
+    color: var(--slds-g-color-neutral-base-50, #706e6b);
+}
+
+/* Content area */
+.ahis-content {
+    padding: 16px 16px 20px 16px;
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.ahis-content-expanded {
+    max-height: none;
+}
+
+/* Modal styling overrides */
+.slds-modal__header {
+    background: linear-gradient(135deg, var(--slds-g-color-brand-base-50, #0176d3) 0%, var(--slds-g-color-brand-base-40, #014486) 100%);
+    color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+.slds-modal__title {
+    display: flex;
+    align-items: center;
+}
+
+.slds-modal__content {
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+}
+
+/* Scrollbar styling */
+.ahis-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ahis-content::-webkit-scrollbar-track {
+    background: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    border-radius: 3px;
+}
+
+.ahis-content::-webkit-scrollbar-thumb {
+    background: var(--slds-g-color-neutral-base-70, #c9c9c9);
+    border-radius: 3px;
+}
+
+.ahis-content::-webkit-scrollbar-thumb:hover {
+    background: var(--slds-g-color-neutral-base-50, #706e6b);
+}
+
+/* Error alert styling */
+.slds-alert_error {
+    display: flex;
+    align-items: center;
+}
+
+/* Animation for loading */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading-container lightning-spinner {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Responsive adjustments for persona switcher */
+@media (max-width: 600px) {
+    .persona-switcher-container {
+        min-width: 140px;
+    }
+    
+    .persona-description {
+        display: none;
+    }
+}

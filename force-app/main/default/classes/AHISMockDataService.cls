@@ -23,17 +23,28 @@ public with sharing class AHISMockDataService {
             data.summary = getMockContactCenterSummary();
             data.insights = getMockContactCenterInsights();
             data.suggestedActions = getMockContactCenterActions();
+            data.changesSinceLastVisit = getMockContactCenterChanges();
         } else if (userRole == 'CARE_MANAGER') {
             data.summary = getMockCareManagerSummary();
             data.insights = getMockCareManagerInsights();
             data.suggestedActions = getMockCareManagerActions();
+            data.changesSinceLastVisit = getMockCareManagerChanges();
+        } else if (userRole == 'FIELD_CAREGIVER') {
+            data.summary = getMockFieldCaregiverSummary();
+            data.insights = getMockFieldCaregiverInsights();
+            data.suggestedActions = getMockFieldCaregiverActions();
+            data.changesSinceLastVisit = getMockFieldCaregiverChanges();
+        } else if (userRole == 'SUPERVISOR') {
+            data.summary = getMockSupervisorSummary();
+            data.insights = getMockSupervisorInsights();
+            data.suggestedActions = getMockSupervisorActions();
+            data.changesSinceLastVisit = getMockSupervisorChanges();
         } else {
             data.summary = getMockDefaultSummary();
             data.insights = getMockDefaultInsights();
             data.suggestedActions = getMockDefaultActions();
+            data.changesSinceLastVisit = getMockChanges();
         }
-        
-        data.changesSinceLastVisit = getMockChanges();
         
         return data;
     }
@@ -196,6 +207,225 @@ public with sharing class AHISMockDataService {
         actions.add(action4);
         
         return actions;
+    }
+    
+    // ============ Field Caregiver Mock Data ============
+    
+    private static String getMockFieldCaregiverSummary() {
+        return 'PRE-VISIT BRIEF: Maria Santos, 67F, lives alone in a single-story home. ' +
+               'Mobility concern: Member reported increased difficulty walking since last visit. Verify grab bars in bathroom. ' +
+               'Medications to verify: Metformin 500mg (twice daily), Lisinopril 10mg (daily), Aspirin 81mg (daily). ' +
+               'Key discussion: Food access challenges identified - may need community resource referral. ' +
+               'Safety note: No known fall history, but osteoarthritis may increase risk.';
+    }
+    
+    private static List<OpenAIService.AHISInsight> getMockFieldCaregiverInsights() {
+        List<OpenAIService.AHISInsight> insights = new List<OpenAIService.AHISInsight>();
+        
+        OpenAIService.AHISInsight insight1 = new OpenAIService.AHISInsight();
+        insight1.title = 'Mobility Assessment Needed';
+        insight1.description = 'Member reported increased difficulty walking. Assess gait, balance, and home environment for fall risks. Check if walker or cane would be beneficial.';
+        insight1.riskCategory = 'Clinical';
+        insight1.confidence = 'High';
+        insight1.sourceRecords = new List<String>{'CaseNote-445', 'Assessment-2024-001'};
+        insights.add(insight1);
+        
+        OpenAIService.AHISInsight insight2 = new OpenAIService.AHISInsight();
+        insight2.title = 'Home Safety Check';
+        insight2.description = 'Verify grab bars installed in bathroom. Check for trip hazards (rugs, cords). Ensure adequate lighting in hallways and stairs.';
+        insight2.riskCategory = 'Social';
+        insight2.confidence = 'Medium';
+        insight2.sourceRecords = new List<String>{'HomeAssessment-2023', 'CarePlan-2024-001'};
+        insights.add(insight2);
+        
+        OpenAIService.AHISInsight insight3 = new OpenAIService.AHISInsight();
+        insight3.title = 'Medication Verification';
+        insight3.description = 'Confirm member is taking all medications as prescribed. Check pill organizer and verify Lisinopril refill status (may be overdue).';
+        insight3.riskCategory = 'Clinical';
+        insight3.confidence = 'High';
+        insight3.sourceRecords = new List<String>{'MedList-2024', 'RxClaim-88721'};
+        insights.add(insight3);
+        
+        OpenAIService.AHISInsight insight4 = new OpenAIService.AHISInsight();
+        insight4.title = 'Food Security Discussion';
+        insight4.description = 'Member mentioned difficulty affording fresh vegetables. Bring information about local food bank and Meals on Wheels program.';
+        insight4.riskCategory = 'Social';
+        insight4.confidence = 'Medium';
+        insight4.sourceRecords = new List<String>{'SDOH-Assessment-2024'};
+        insights.add(insight4);
+        
+        return insights;
+    }
+    
+    private static List<OpenAIService.AHISAction> getMockFieldCaregiverActions() {
+        List<OpenAIService.AHISAction> actions = new List<OpenAIService.AHISAction>();
+        
+        OpenAIService.AHISAction action1 = new OpenAIService.AHISAction();
+        action1.actionId = 'ACT-FC-001';
+        action1.title = 'Complete Fall Risk Assessment';
+        action1.description = 'Use standardized fall risk tool during visit. Document findings and recommend interventions if score indicates high risk.';
+        action1.actionType = 'review';
+        action1.priority = 'High';
+        action1.status = 'pending';
+        actions.add(action1);
+        
+        OpenAIService.AHISAction action2 = new OpenAIService.AHISAction();
+        action2.actionId = 'ACT-FC-002';
+        action2.title = 'Medication Reconciliation';
+        action2.description = 'Review all medications with member. Count pills, check expiration dates, and note any adherence concerns for care manager.';
+        action2.actionType = 'review';
+        action2.priority = 'High';
+        action2.status = 'pending';
+        actions.add(action2);
+        
+        OpenAIService.AHISAction action3 = new OpenAIService.AHISAction();
+        action3.actionId = 'ACT-FC-003';
+        action3.title = 'Provide Food Resource Information';
+        action3.description = 'Leave printed materials about community food bank (located at 123 Main St) and SNAP application assistance.';
+        action3.actionType = 'outreach';
+        action3.priority = 'Medium';
+        action3.status = 'pending';
+        actions.add(action3);
+        
+        OpenAIService.AHISAction action4 = new OpenAIService.AHISAction();
+        action4.actionId = 'ACT-FC-004';
+        action4.title = 'Document Visit Findings';
+        action4.description = 'Complete visit note with mobility observations, home safety findings, and any concerns to escalate to care manager.';
+        action4.actionType = 'update';
+        action4.priority = 'Medium';
+        action4.status = 'pending';
+        actions.add(action4);
+        
+        return actions;
+    }
+    
+    private static List<String> getMockFieldCaregiverChanges() {
+        return new List<String>{
+            'NEW: Mobility concern reported by member (Jan 30, 2024)',
+            'UPDATED: Lisinopril refill overdue by 5 days',
+            'NEW: SDOH assessment flagged food insecurity',
+            'REMINDER: Cardiology follow-up scheduled Feb 15'
+        };
+    }
+    
+    // ============ Supervisor Mock Data ============
+    
+    private static String getMockSupervisorSummary() {
+        return 'MEMBER RISK PROFILE: Maria Santos | Risk Score: MEDIUM-HIGH (72/100) | ' +
+               'Escalation Triggers: 2 active (BP control gap, SDOH food insecurity) | ' +
+               'Assigned Care Manager: Sarah Johnson, RN | Last CM Contact: 3 days ago | ' +
+               'Care Plan Status: 78% on track, 1 goal at risk (BP), 1 overdue (eye exam) | ' +
+               'Compliance Gaps: Diabetic retinopathy exam 3 months overdue (HEDIS impact) | ' +
+               'Team Workload: Sarah Johnson has 23 active members (above target of 20).';
+    }
+    
+    private static List<OpenAIService.AHISInsight> getMockSupervisorInsights() {
+        List<OpenAIService.AHISInsight> insights = new List<OpenAIService.AHISInsight>();
+        
+        OpenAIService.AHISInsight insight1 = new OpenAIService.AHISInsight();
+        insight1.title = 'Escalation Required: BP Control';
+        insight1.description = 'Blood pressure goal at risk for 6+ weeks despite medication compliance. May need physician review and medication adjustment. Consider escalating to medical director.';
+        insight1.riskCategory = 'Clinical';
+        insight1.confidence = 'High';
+        insight1.sourceRecords = new List<String>{'CarePlanGoal-002', 'Vital-2024-001', 'Vital-2024-002'};
+        insights.add(insight1);
+        
+        OpenAIService.AHISInsight insight2 = new OpenAIService.AHISInsight();
+        insight2.title = 'SDOH Intervention Needed';
+        insight2.description = 'Food insecurity identified but no intervention initiated yet. Community Health Worker assignment recommended. Task overdue by 5 days.';
+        insight2.riskCategory = 'Social';
+        insight2.confidence = 'High';
+        insight2.sourceRecords = new List<String>{'SDOH-Assessment-2024', 'Task-003'};
+        insights.add(insight2);
+        
+        OpenAIService.AHISInsight insight3 = new OpenAIService.AHISInsight();
+        insight3.title = 'HEDIS Gap: Eye Exam';
+        insight3.description = 'Diabetic retinopathy screening 3 months overdue. Impacts HEDIS measure DRE. 15 similar gaps across your team this quarter.';
+        insight3.riskCategory = 'Compliance';
+        insight3.confidence = 'High';
+        insight3.sourceRecords = new List<String>{'CareGap-DRE-2024', 'QualityMetric-Q1'};
+        insights.add(insight3);
+        
+        OpenAIService.AHISInsight insight4 = new OpenAIService.AHISInsight();
+        insight4.title = 'Care Manager Workload Alert';
+        insight4.description = 'Sarah Johnson, RN currently managing 23 active high-risk members (target: 20). Consider redistributing 3 members or adding support.';
+        insight4.riskCategory = 'Operational';
+        insight4.confidence = 'Medium';
+        insight4.sourceRecords = new List<String>{'TeamCapacity-2024', 'CaseloadReport-Feb'};
+        insights.add(insight4);
+        
+        return insights;
+    }
+    
+    private static List<OpenAIService.AHISAction> getMockSupervisorActions() {
+        List<OpenAIService.AHISAction> actions = new List<OpenAIService.AHISAction>();
+        
+        OpenAIService.AHISAction action1 = new OpenAIService.AHISAction();
+        action1.actionId = 'ACT-SUP-001';
+        action1.title = 'Review BP Escalation';
+        action1.description = 'Schedule case review with Sarah Johnson to discuss Maria Santos BP management. Consider involving medical director for medication review.';
+        action1.actionType = 'escalate';
+        action1.priority = 'High';
+        action1.status = 'pending';
+        actions.add(action1);
+        
+        OpenAIService.AHISAction action2 = new OpenAIService.AHISAction();
+        action2.actionId = 'ACT-SUP-002';
+        action2.title = 'Assign CHW for SDOH';
+        action2.description = 'Assign Maria Garcia, CHW to support food insecurity intervention. Current CHW caseload: 18/25 capacity.';
+        action2.actionType = 'update';
+        action2.priority = 'High';
+        action2.status = 'pending';
+        actions.add(action2);
+        
+        OpenAIService.AHISAction action3 = new OpenAIService.AHISAction();
+        action3.actionId = 'ACT-SUP-003';
+        action3.title = 'Run HEDIS Gap Report';
+        action3.description = 'Generate team-wide diabetic eye exam gap report. 15 members overdue - consider bulk outreach campaign.';
+        action3.actionType = 'review';
+        action3.priority = 'Medium';
+        action3.status = 'pending';
+        actions.add(action3);
+        
+        OpenAIService.AHISAction action4 = new OpenAIService.AHISAction();
+        action4.actionId = 'ACT-SUP-004';
+        action4.title = 'Rebalance Caseloads';
+        action4.description = 'Review team caseload distribution. Sarah Johnson over capacity. Consider reassigning 3 stable members to Tom Wilson (17/20 capacity).';
+        action4.actionType = 'update';
+        action4.priority = 'Medium';
+        action4.status = 'pending';
+        actions.add(action4);
+        
+        return actions;
+    }
+    
+    private static List<String> getMockSupervisorChanges() {
+        return new List<String>{
+            'ESCALATION: BP goal at risk for 6+ weeks',
+            'OVERDUE: SDOH intervention task (5 days)',
+            'HEDIS ALERT: Eye exam gap impacts Q1 metrics',
+            'CAPACITY: Sarah Johnson at 115% caseload'
+        };
+    }
+    
+    // ============ Role-Specific Changes ============
+    
+    private static List<String> getMockContactCenterChanges() {
+        return new List<String>{
+            'Prescription filled: Metformin 500mg (Jan 28)',
+            'EOB received for lab work (Jan 30)',
+            'Cardiology appointment confirmed (Feb 15)',
+            'No outstanding balance on account'
+        };
+    }
+    
+    private static List<String> getMockCareManagerChanges() {
+        return new List<String>{
+            'Lab results: A1C improved to 7.4 (from 7.8)',
+            'BP readings still elevated (avg 145/92)',
+            'SDOH assessment completed - food insecurity flagged',
+            'Eye exam now 3 months overdue'
+        };
     }
     
     // ============ Default Mock Data ============
