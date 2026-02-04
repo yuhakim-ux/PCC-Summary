@@ -67,6 +67,7 @@ export default class AhisInsights extends LightningElement {
                 id: `insight-${index}`,
                 riskIcon: riskCfg.icon,
                 riskBadgeClass: riskCfg.badgeClass,
+                cardClass: `insight-card insight-card-${(insight.riskCategory || 'clinical').toLowerCase()}`,
                 confidenceClass: confCfg.class,
                 confidenceTitle: confCfg.title,
                 hasSourceRecords: insight.sourceRecords && insight.sourceRecords.length > 0,

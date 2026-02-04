@@ -40,6 +40,10 @@ export default class AhisSummary extends LightningElement {
         return this.changesSinceLastVisit && this.changesSinceLastVisit.length > 0;
     }
     
+    get changeCount() {
+        return this.changesSinceLastVisit ? this.changesSinceLastVisit.length.toString() : '0';
+    }
+    
     get roleLabel() {
         return this.roleConfig[this.userRole]?.label || null;
     }

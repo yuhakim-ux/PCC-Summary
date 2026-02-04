@@ -4,9 +4,8 @@
         <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_small">
             <div class="slds-col">
                 <h3 class="slds-text-heading_small slds-text-color_default">
-                    <lightning-icon icon-name="utility:light_bulb" size="x-small" class="slds-m-right_x-small"></lightning-icon>
                     Key Insights
-                    <span class="slds-badge slds-badge_inverse slds-m-left_x-small">{insightCount}</span>
+                    <lightning-badge label={insightCount} class="slds-m-left_x-small"></lightning-badge>
                 </h3>
             </div>
         </div>
@@ -20,79 +19,23 @@
             </div>
         </template>
         
-        <!-- Insights Accordion -->
+        <!-- Insights List - Stacked Cards -->
         <template if:true={hasInsights}>
-            <lightning-accordion allow-multiple-sections-open active-section-name={activeSections}>
+            <div class="insights-list">
                 <template for:each={formattedInsights} for:item="insight">
-                    <lightning-accordion-section 
-                        key={insight.id}
-                        name={insight.id}
-                        label={insight.title}
-                        class="insight-section">
-                        
-                        <!-- Insight Header (custom) -->
-                        <div slot="label" class="insight-header">
-                            <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-spread">
-                                <div class="slds-col slds-grid slds-grid_vertical-align-center">
-                                    <!-- Risk Category Badge -->
-                                    <span class={insight.riskBadgeClass}>
-                                        <lightning-icon 
-                                            icon-name={insight.riskIcon} 
-                                            size="xx-small" 
-                                            class="slds-m-right_xx-small">
-                                        </lightning-icon>
-                                        {insight.riskCategory}
-                                    </span>
-                                    <span class="slds-m-left_small insight-title">{insight.title}</span>
-                                </div>
-                                <div class="slds-col_bump-left">
-                                    <!-- Confidence Indicator -->
-                                    <span class={insight.confidenceClass} title={insight.confidenceTitle}>
-                                        {insight.confidence}
-                                    </span>
-                                </div>
-                            </div>
+                    <div key={insight.id} class={insight.cardClass}>
+                        <!-- Card Header with Icon Only -->
+                        <div class="insight-card-header">
+                            <lightning-icon 
+                                icon-name={insight.riskIcon} 
+                                size="x-small"
+                                class="insight-card-icon">
+                            </lightning-icon>
+                            <span class="insight-card-title">{insight.title}</span>
                         </div>
-                        
-                        <!-- Insight Body -->
-                        <div class="insight-body">
-                            <p class="slds-text-body_regular slds-m-bottom_small">{insight.description}</p>
-                            
-                            <!-- Source Records -->
-                            <template if:true={insight.hasSourceRecords}>
-                                <div class="source-records slds-m-top_small">
-                                    <span class="slds-text-title_caps slds-text-color_weak">Source Records:</span>
-                                    <div class="slds-m-top_xx-small">
-                                        <template for:each={insight.sourceRecords} for:item="source">
-                                            <lightning-badge 
-                                                key={source} 
-                                                label={source}
-                                                class="slds-m-right_xx-small slds-m-bottom_xx-small source-badge">
-                                            </lightning-badge>
-                                        </template>
-                                    </div>
-                                </div>
-                            </template>
-                            
-                            <!-- Drill Down Button -->
-                            <div class="slds-m-top_small">
-                                <lightning-button
-                                    variant="base"
-                                    label="View Details"
-                                    title="Drill down for more information"
-                                    icon-name="utility:chevronright"
-                                    icon-position="right"
-                                    onclick={handleDrillDown}
-                                    data-insight-type={insight.drillDownType}
-                                    data-insight-title={insight.title}
-                                    data-risk-category={insight.riskCategory}
-                                    class="drill-down-btn">
-                                </lightning-button>
-                            </div>
-                        </div>
-                    </lightning-accordion-section>
+                    </div>
                 </template>
-            </lightning-accordion>
+            </div>
         </template>
         
         <!-- Risk Summary (shown in expanded view) -->

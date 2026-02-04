@@ -1,17 +1,65 @@
-/* AHIS Insights Component Styles */
+/* AHIS Insights Component Styles - V2 Stacked Layout */
 
 :host {
     display: block;
 }
 
 .ahis-insights-container {
-    padding: var(--slds-g-spacing-4, 16px);
-    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
-    border-radius: var(--slds-g-radius-border-2, 8px);
-    border: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+    padding: 0;
 }
 
-/* Insight section styling */
+/* Insights List */
+.insights-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--slds-g-spacing-2, 8px);
+}
+
+/* Insight Card Styles */
+.insight-card {
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    padding: var(--slds-g-spacing-2, 8px) var(--slds-g-spacing-3, 12px);
+    border-left: 3px solid var(--slds-g-color-neutral-base-70, #c9c9c9);
+}
+
+.insight-card-clinical {
+    border-left-color: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.insight-card-social {
+    border-left-color: var(--slds-g-color-warning-base-40, #a96404);
+}
+
+.insight-card-operational {
+    border-left-color: var(--slds-g-color-info-base-40, #0b5cab);
+}
+
+.insight-card-compliance {
+    border-left-color: var(--slds-g-color-success-base-40, #2e844a);
+}
+
+.insight-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 8px);
+}
+
+.insight-card-icon {
+    flex-shrink: 0;
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-brand-base-50, #0176d3);
+}
+
+.insight-card-title {
+    font-weight: 500;
+    font-size: var(--slds-g-font-scale-neg-1, 13px);
+    color: var(--slds-g-color-neutral-base-10, #181818);
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Legacy styles kept for backward compatibility */
 .insight-section {
     border-radius: var(--slds-g-radius-border-1, 4px);
     margin-bottom: var(--slds-g-spacing-2, 8px);

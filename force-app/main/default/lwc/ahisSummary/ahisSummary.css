@@ -1,26 +1,94 @@
-/* AHIS Summary Component Styles */
+/* AHIS Summary Component Styles - V2 Figma Precise */
 
 :host {
     display: block;
 }
 
 .ahis-summary-container {
-    padding: var(--slds-g-spacing-4, 16px);
-    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
-    border-radius: var(--slds-g-radius-border-2, 8px);
-    border: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+    padding: 0;
 }
 
-/* Summary text box */
+/* Section Header - Bold 14px */
+.section-header {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 19px;
+    color: #2e2e2e;
+    margin: 0 0 8px 0;
+}
+
+/* Summary text - Regular 13px */
 .summary-text {
-    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
-    border-radius: var(--slds-g-radius-border-1, 4px);
-    border-left: 4px solid var(--slds-g-color-brand-base-50, #0176d3);
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #5c5c5c;
+    margin: 0;
+    padding-bottom: 12px;
 }
 
-.summary-text p {
-    line-height: 1.6;
-    color: var(--slds-g-color-neutral-base-10, #181818);
+/* Section Divider */
+.section-divider {
+    height: 1px;
+    background-color: #c9c9c9;
+    margin: 8px 0 16px 0;
+}
+
+/* Info Banner - Scoped Notification Informational */
+.info-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #d8e6fe;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+
+.info-icon {
+    flex-shrink: 0;
+    --slds-c-icon-color-foreground-default: #0b5cab;
+}
+
+.info-text {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 13px;
+    font-weight: 590;
+    line-height: 18px;
+    color: #0b5cab;
+}
+
+/* Changes List */
+.changes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 4px;
+}
+
+.change-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Blue circle indicator */
+.change-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: #0250D9;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.change-text {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 13px;
+    font-weight: 590;
+    line-height: 18px;
+    color: #444444;
 }
 
 /* Role indicator badge */

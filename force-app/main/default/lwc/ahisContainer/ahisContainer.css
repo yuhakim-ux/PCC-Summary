@@ -1,17 +1,67 @@
-/* AHIS Container Styles - SLDS 2 Compliant */
+/* AHIS Container Styles - V2 Figma Precise */
 
 :host {
     display: block;
 }
 
-/* Card styling */
+/* Card styling - 20px border radius */
 .ahis-container {
-    --slds-c-card-color-background: var(--slds-g-color-neutral-base-100, #ffffff);
-    border-radius: var(--slds-g-radius-border-2, 8px);
-    box-shadow: var(--slds-g-shadow-1, 0 2px 4px rgba(0, 0, 0, 0.1));
+    --slds-c-card-color-background: #ffffff;
+    --slds-c-card-radius-border: 20px;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
-/* Role badge styling */
+/* Card title - Regular weight, matches Figma */
+.card-title {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    color: #2e2e2e;
+}
+
+/* Timestamp row */
+.timestamp-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.timestamp-text {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #5c5c5c;
+}
+
+/* Custom refresh button */
+.refresh-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.refresh-btn:hover {
+    opacity: 0.8;
+}
+
+.refresh-btn:focus {
+    outline: none;
+}
+
+/* View More link - hidden for now */
+.view-more-container {
+    display: none;
+}
+
+/* Role badge styling (kept for backward compatibility) */
 .role-badge {
     --slds-c-badge-color-background: var(--slds-g-color-brand-base-50, #0176d3);
     --slds-c-badge-text-color: var(--slds-g-color-neutral-base-100, #ffffff);
@@ -28,10 +78,12 @@
     color: var(--slds-g-color-neutral-base-50, #706e6b);
 }
 
-/* Content area */
+/* Content area - 16px horizontal, 20px bottom padding */
 .ahis-content {
+    padding: 0 16px 20px 16px;
     max-height: 600px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .ahis-content-expanded {
