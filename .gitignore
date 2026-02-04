@@ -1,0 +1,50 @@
+# Salesforce DX / SFDX
+.sf/
+.sfdx/
+.localdevserver/
+
+# Salesforce metadata
+deploy/
+
+# Logs
+*.log
+logs/
+
+# Node modules (if using Node for tooling)
+node_modules/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Scratch org auth files
+*.scratch
+
+# Test results
+test-results/
+coverage/
+
+# Temp files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Environment files (may contain secrets)
+.env
+.env.local
+.env.*.local
+
+# Package directories
+packages/
+
+# Cursor IDE
+.cursor/

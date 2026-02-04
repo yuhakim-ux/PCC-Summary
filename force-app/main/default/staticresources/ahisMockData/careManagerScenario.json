@@ -1,0 +1,215 @@
+{
+  "scenarioName": "Care Manager - John Doe Care Plan",
+  "description": "Reviewing diabetes management care plan progress",
+  "userRole": "CARE_MANAGER",
+  "recordType": "CarePlan",
+  
+  "patient": {
+    "name": "John Doe",
+    "birthdate": "1958-03-15",
+    "age": 66,
+    "gender": "Male",
+    "phone": "(510) 555-0123",
+    "email": "john.doe@email.com",
+    "address": "789 Oak Avenue, Oakland, CA 94612"
+  },
+  
+  "carePlan": {
+    "name": "Diabetes Management Plan - John Doe",
+    "status": "Active",
+    "startDate": "2024-09-01",
+    "endDate": "2025-09-01",
+    "careManager": "Jennifer Williams, RN",
+    "primaryDiagnosis": "Type 2 Diabetes Mellitus"
+  },
+  
+  "goals": [
+    {
+      "name": "Reduce HbA1c to below 7%",
+      "status": "In Progress",
+      "targetDate": "2025-03-01",
+      "progress": 60,
+      "priority": "High",
+      "description": "Primary glycemic control goal",
+      "lastHbA1c": "7.8%",
+      "targetHbA1c": "< 7.0%"
+    },
+    {
+      "name": "Walk 30 minutes daily",
+      "status": "In Progress",
+      "targetDate": "2025-01-01",
+      "progress": 75,
+      "priority": "Medium",
+      "description": "Physical activity goal for cardiovascular health",
+      "currentAverage": "22 min/day"
+    },
+    {
+      "name": "Complete diabetes education program",
+      "status": "Overdue",
+      "targetDate": "2024-11-15",
+      "progress": 40,
+      "priority": "High",
+      "description": "Self-management education program",
+      "modulesCompleted": "2 of 5"
+    }
+  ],
+  
+  "problems": [
+    {
+      "name": "Uncontrolled Type 2 Diabetes",
+      "status": "Active",
+      "severity": "Moderate",
+      "onsetDate": "2020-01-15"
+    },
+    {
+      "name": "Obesity",
+      "status": "Active",
+      "severity": "Moderate",
+      "bmi": 32.5
+    },
+    {
+      "name": "Hypertension",
+      "status": "Controlled",
+      "severity": "Mild",
+      "lastBP": "128/82"
+    }
+  ],
+  
+  "interventions": [
+    {
+      "name": "Medication Management",
+      "status": "Active",
+      "type": "Clinical",
+      "frequency": "Monthly review",
+      "lastReview": "2024-11-01"
+    },
+    {
+      "name": "Nutritional Counseling",
+      "status": "Scheduled",
+      "type": "Education",
+      "nextSession": "2024-12-10"
+    },
+    {
+      "name": "Exercise Program",
+      "status": "Active",
+      "type": "Lifestyle",
+      "frequency": "Weekly check-in"
+    }
+  ],
+  
+  "careTasks": [
+    {
+      "subject": "Schedule follow-up appointment",
+      "status": "Not Started",
+      "priority": "High",
+      "dueDate": "2024-12-05",
+      "assignedTo": "Jennifer Williams"
+    },
+    {
+      "subject": "Review medication adherence",
+      "status": "In Progress",
+      "priority": "Medium",
+      "dueDate": "2024-11-28",
+      "assignedTo": "Jennifer Williams"
+    },
+    {
+      "subject": "Coordinate with nutritionist",
+      "status": "Not Started",
+      "priority": "Medium",
+      "dueDate": "2024-12-07",
+      "assignedTo": "Care Coordination Team"
+    }
+  ],
+  
+  "careTeam": [
+    {
+      "name": "Jennifer Williams, RN",
+      "role": "Care Manager",
+      "primary": true
+    },
+    {
+      "name": "Dr. Michael Chen",
+      "role": "Endocrinologist",
+      "primary": false
+    },
+    {
+      "name": "Lisa Park, RD",
+      "role": "Nutritionist",
+      "primary": false
+    }
+  ],
+  
+  "mockAHISResponse": {
+    "summary": "John Doe's Diabetes Management Plan shows mixed progress. While physical activity goals are on track (75% complete), the diabetes education program is overdue with only 2 of 5 modules completed. The primary HbA1c goal is progressing but the latest reading of 7.8% still exceeds the target of <7.0%. There is one high-priority overdue goal requiring immediate attention.",
+    
+    "insights": [
+      {
+        "title": "Overdue Education Goal",
+        "description": "Diabetes self-management education program is 2 weeks overdue with only 40% completion. Patient has completed 2 of 5 modules. Recommend immediate outreach to understand barriers and reschedule remaining sessions.",
+        "riskCategory": "Clinical",
+        "confidence": "High",
+        "sourceRecords": ["Goal: Complete diabetes education program", "Education Module Records"]
+      },
+      {
+        "title": "HbA1c Above Target",
+        "description": "Latest HbA1c reading of 7.8% exceeds the target of <7.0%. Current trajectory suggests goal may not be met by March 2025 target date without intervention adjustment.",
+        "riskCategory": "Clinical",
+        "confidence": "Medium",
+        "sourceRecords": ["Goal: Reduce HbA1c", "Lab Results"]
+      },
+      {
+        "title": "Physical Activity Progress",
+        "description": "Patient is averaging 22 minutes of daily walking, approaching the 30-minute goal. Positive trend observed over the past month.",
+        "riskCategory": "Clinical",
+        "confidence": "High",
+        "sourceRecords": ["Goal: Walk 30 minutes daily", "Activity Tracker Data"]
+      },
+      {
+        "title": "Medication Review Due",
+        "description": "Monthly medication review is due. Consider medication adjustment given HbA1c above target.",
+        "riskCategory": "Compliance",
+        "confidence": "Medium",
+        "sourceRecords": ["Intervention: Medication Management"]
+      }
+    ],
+    
+    "suggestedActions": [
+      {
+        "actionId": "ACT-CM-001",
+        "title": "Reschedule Education Sessions",
+        "description": "Contact patient to reschedule remaining 3 diabetes education modules. Explore barriers to completion such as transportation or scheduling conflicts.",
+        "actionType": "outreach",
+        "priority": "High"
+      },
+      {
+        "actionId": "ACT-CM-002",
+        "title": "Review Medication Regimen",
+        "description": "Schedule medication review with endocrinologist to discuss potential adjustments given current HbA1c levels.",
+        "actionType": "schedule",
+        "priority": "High"
+      },
+      {
+        "actionId": "ACT-CM-003",
+        "title": "Update Goal Target Dates",
+        "description": "Adjust target dates for overdue goals based on patient discussion and realistic timeline.",
+        "actionType": "update",
+        "priority": "Medium"
+      },
+      {
+        "actionId": "ACT-CM-004",
+        "title": "Coordinate Nutritionist Follow-up",
+        "description": "Ensure nutritionist appointment on December 10th is confirmed and patient is prepared.",
+        "actionType": "review",
+        "priority": "Medium"
+      }
+    ],
+    
+    "changesSinceLastVisit": [
+      "Diabetes education goal became overdue (was due Nov 15)",
+      "HbA1c goal progress increased from 55% to 60%",
+      "Physical activity goal progress increased from 70% to 75%",
+      "New medication review task created",
+      "Nutritionist consultation scheduled for Dec 10"
+    ]
+  }
+}

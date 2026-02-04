@@ -1,0 +1,102 @@
+/* AHIS Container Styles - SLDS 2 Compliant */
+
+:host {
+    display: block;
+}
+
+/* Card styling */
+.ahis-container {
+    --slds-c-card-color-background: var(--slds-g-color-neutral-base-100, #ffffff);
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    box-shadow: var(--slds-g-shadow-1, 0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Role badge styling */
+.role-badge {
+    --slds-c-badge-color-background: var(--slds-g-color-brand-base-50, #0176d3);
+    --slds-c-badge-text-color: var(--slds-g-color-neutral-base-100, #ffffff);
+    font-size: var(--slds-g-font-scale-neg-1, 12px);
+}
+
+/* Loading container */
+.loading-container {
+    min-height: 200px;
+    flex-direction: column;
+}
+
+.loading-container p {
+    color: var(--slds-g-color-neutral-base-50, #706e6b);
+}
+
+/* Content area */
+.ahis-content {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.ahis-content-expanded {
+    max-height: none;
+}
+
+/* Footer styling */
+.ahis-footer {
+    border-top: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+    padding-top: var(--slds-g-spacing-3, 12px);
+    display: flex;
+    align-items: center;
+    color: var(--slds-g-color-neutral-base-50, #706e6b);
+}
+
+/* Modal styling overrides */
+.slds-modal__header {
+    background: linear-gradient(135deg, var(--slds-g-color-brand-base-50, #0176d3) 0%, var(--slds-g-color-brand-base-40, #014486) 100%);
+    color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+.slds-modal__title {
+    display: flex;
+    align-items: center;
+}
+
+.slds-modal__content {
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+}
+
+/* Scrollbar styling */
+.ahis-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ahis-content::-webkit-scrollbar-track {
+    background: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    border-radius: 3px;
+}
+
+.ahis-content::-webkit-scrollbar-thumb {
+    background: var(--slds-g-color-neutral-base-70, #c9c9c9);
+    border-radius: 3px;
+}
+
+.ahis-content::-webkit-scrollbar-thumb:hover {
+    background: var(--slds-g-color-neutral-base-50, #706e6b);
+}
+
+/* Error alert styling */
+.slds-alert_error {
+    display: flex;
+    align-items: center;
+}
+
+/* Animation for loading */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading-container lightning-spinner {
+    animation: pulse 2s ease-in-out infinite;
+}

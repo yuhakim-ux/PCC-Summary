@@ -1,0 +1,83 @@
+/* AHIS Summary Component Styles */
+
+:host {
+    display: block;
+}
+
+.ahis-summary-container {
+    padding: var(--slds-g-spacing-4, 16px);
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    border: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+}
+
+/* Summary text box */
+.summary-text {
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    border-radius: var(--slds-g-radius-border-1, 4px);
+    border-left: 4px solid var(--slds-g-color-brand-base-50, #0176d3);
+}
+
+.summary-text p {
+    line-height: 1.6;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+/* Role indicator badge */
+.role-indicator {
+    --slds-c-badge-color-background: var(--slds-g-color-neutral-base-90, #e5e5e5);
+    --slds-c-badge-text-color: var(--slds-g-color-neutral-base-30, #444444);
+    font-size: var(--slds-g-font-scale-neg-2, 11px);
+}
+
+/* Changes section */
+.changes-section {
+    padding-top: var(--slds-g-spacing-3, 12px);
+    border-top: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+}
+
+.changes-header {
+    color: var(--slds-g-color-neutral-base-40, #5c5c5c);
+    font-weight: 600;
+}
+
+.change-icon {
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-warning-base-50, #fe9339);
+}
+
+.changes-list {
+    margin-left: var(--slds-g-spacing-5, 20px);
+    margin-top: var(--slds-g-spacing-2, 8px);
+}
+
+.change-item {
+    color: var(--slds-g-color-neutral-base-20, #2e2e2e);
+    padding: var(--slds-g-spacing-1, 4px) 0;
+    position: relative;
+}
+
+.change-item::marker {
+    color: var(--slds-g-color-warning-base-50, #fe9339);
+}
+
+/* Role context banner */
+.role-context {
+    background: linear-gradient(90deg, var(--slds-g-color-brand-base-95, #eef4ff) 0%, var(--slds-g-color-neutral-base-100, #ffffff) 100%);
+    border-radius: var(--slds-g-radius-border-1, 4px);
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--slds-g-color-brand-base-80, #aacbff);
+}
+
+.role-context span {
+    color: var(--slds-g-color-brand-base-30, #014486);
+}
+
+/* Expanded state */
+.expanded .summary-text {
+    font-size: var(--slds-g-font-scale-1, 16px);
+}
+
+.expanded .summary-text p {
+    line-height: 1.8;
+}

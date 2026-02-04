@@ -1,0 +1,166 @@
+{
+  "scenarioName": "Contact Center Agent - Maria Santiago",
+  "description": "Member calling about plan coverage and prescription refill",
+  "userRole": "CONTACT_CENTER_AGENT",
+  "recordType": "Account",
+  
+  "member": {
+    "name": "Maria Santiago",
+    "birthdate": "1972-10-12",
+    "age": 52,
+    "gender": "Female",
+    "phone": "(415) 368-6767",
+    "email": "maria.santiago@gmail.com",
+    "address": "34 Pine Street, Apt 5B, San Francisco, CA 94109",
+    "primaryLanguage": "English",
+    "primaryPhysician": "Dr. Will Thomas",
+    "physicianPhone": "(415) 632-8732"
+  },
+  
+  "memberPlans": [
+    {
+      "name": "Premium HDHP",
+      "status": "Active",
+      "effectiveFrom": "2024-06-30",
+      "effectiveTo": "2025-07-01",
+      "memberNumber": "11112873",
+      "payer": "Makana Health",
+      "issuerNumber": "723623672876"
+    },
+    {
+      "name": "Gold Dental Plan",
+      "status": "Active",
+      "effectiveFrom": "2024-06-30",
+      "effectiveTo": "2025-07-01",
+      "memberNumber": "11112873",
+      "payer": "Makana Health",
+      "issuerNumber": "93765"
+    }
+  ],
+  
+  "healthConditions": [
+    {
+      "condition": "Type 2 Diabetes",
+      "severity": "Moderate",
+      "onsetDate": "2018-05-15"
+    },
+    {
+      "condition": "Depression",
+      "severity": "Moderate",
+      "onsetDate": "2020-03-01"
+    }
+  ],
+  
+  "medications": [
+    {
+      "name": "Metformin 500mg",
+      "dosage": "Twice daily",
+      "prescriber": "Dr. Will Thomas",
+      "lastRefill": "2024-11-15",
+      "refillDue": "2024-12-15"
+    },
+    {
+      "name": "Sertraline 50mg",
+      "dosage": "Once daily",
+      "prescriber": "Dr. Sarah Chen",
+      "lastRefill": "2024-10-20",
+      "refillDue": "2024-11-20"
+    }
+  ],
+  
+  "upcomingAppointments": [
+    {
+      "type": "Annual Checkup",
+      "date": "2024-12-20",
+      "time": "10:00 AM",
+      "provider": "Dr. Will Thomas",
+      "location": "SF Medical Center"
+    }
+  ],
+  
+  "alerts": [
+    {
+      "type": "warning",
+      "message": "Prescription is available for refill",
+      "priority": "High"
+    },
+    {
+      "type": "info",
+      "message": "Annual checkup appointment reminder",
+      "priority": "Medium"
+    }
+  ],
+  
+  "recentInteractions": [
+    {
+      "date": "2024-11-25",
+      "channel": "Phone",
+      "subject": "Plan coverage inquiry",
+      "outcome": "Resolved"
+    },
+    {
+      "date": "2024-11-10",
+      "channel": "Portal",
+      "subject": "Appointment scheduling",
+      "outcome": "Scheduled"
+    }
+  ],
+  
+  "mockAHISResponse": {
+    "summary": "Maria Santiago is a 52-year-old female member with active Premium HDHP and Gold Dental coverage through Makana Health. She has been managing Type 2 Diabetes and Depression with regular physician visits. Her prescription for Metformin is due for refill, and she has an upcoming annual checkup scheduled for December 20th.",
+    
+    "insights": [
+      {
+        "title": "Prescription Refill Due",
+        "description": "Metformin 500mg prescription is due for refill on December 15th. Patient should contact pharmacy or physician to ensure continuity of care.",
+        "riskCategory": "Clinical",
+        "confidence": "High",
+        "sourceRecords": ["Metformin 500mg Prescription", "Pharmacy Records"]
+      },
+      {
+        "title": "Plan Coverage Active",
+        "description": "Member has active health and dental coverage through July 2025. No coverage gaps identified.",
+        "riskCategory": "Operational",
+        "confidence": "High",
+        "sourceRecords": ["Premium HDHP Plan", "Gold Dental Plan"]
+      },
+      {
+        "title": "Upcoming Preventive Care",
+        "description": "Annual checkup scheduled with primary physician Dr. Will Thomas. Recommend confirming appointment and any pre-visit requirements.",
+        "riskCategory": "Clinical",
+        "confidence": "Medium",
+        "sourceRecords": ["Service Appointment"]
+      }
+    ],
+    
+    "suggestedActions": [
+      {
+        "actionId": "ACT-001",
+        "title": "Process Prescription Refill",
+        "description": "Assist member with initiating prescription refill for Metformin through pharmacy system",
+        "actionType": "outreach",
+        "priority": "High"
+      },
+      {
+        "actionId": "ACT-002",
+        "title": "Confirm Upcoming Appointment",
+        "description": "Verify annual checkup appointment details and send confirmation to member",
+        "actionType": "schedule",
+        "priority": "Medium"
+      },
+      {
+        "actionId": "ACT-003",
+        "title": "Create Follow-up Case",
+        "description": "If issue not resolved, create case for follow-up by care coordination team",
+        "actionType": "escalate",
+        "priority": "Low"
+      }
+    ],
+    
+    "changesSinceLastVisit": [
+      "New prescription refill alert generated",
+      "Annual checkup appointment added to calendar",
+      "Previous plan inquiry case was closed"
+    ]
+  }
+}

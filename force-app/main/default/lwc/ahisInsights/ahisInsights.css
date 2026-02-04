@@ -1,0 +1,168 @@
+/* AHIS Insights Component Styles */
+
+:host {
+    display: block;
+}
+
+.ahis-insights-container {
+    padding: var(--slds-g-spacing-4, 16px);
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    border: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+}
+
+/* Insight section styling */
+.insight-section {
+    border-radius: var(--slds-g-radius-border-1, 4px);
+    margin-bottom: var(--slds-g-spacing-2, 8px);
+    overflow: hidden;
+}
+
+/* Risk badges */
+.risk-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--slds-g-radius-border-1, 4px);
+    font-size: var(--slds-g-font-scale-neg-2, 11px);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.risk-clinical {
+    background-color: var(--slds-g-color-error-container-1, #fef1ee);
+    color: var(--slds-g-color-error-base-40, #ba0517);
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.risk-social {
+    background-color: var(--slds-g-color-warning-container-1, #fef4e8);
+    color: var(--slds-g-color-warning-base-40, #a96404);
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-warning-base-40, #a96404);
+}
+
+.risk-operational {
+    background-color: var(--slds-g-color-info-container-1, #eef4ff);
+    color: var(--slds-g-color-info-base-40, #0b5cab);
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-info-base-40, #0b5cab);
+}
+
+.risk-compliance {
+    background-color: var(--slds-g-color-success-container-1, #e6f7e9);
+    color: var(--slds-g-color-success-base-40, #2e844a);
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-success-base-40, #2e844a);
+}
+
+/* Confidence badges */
+.confidence-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: var(--slds-g-radius-border-1, 4px);
+    font-size: var(--slds-g-font-scale-neg-2, 11px);
+    font-weight: 500;
+}
+
+.confidence-high {
+    background-color: var(--slds-g-color-success-container-1, #e6f7e9);
+    color: var(--slds-g-color-success-base-40, #2e844a);
+}
+
+.confidence-medium {
+    background-color: var(--slds-g-color-warning-container-1, #fef4e8);
+    color: var(--slds-g-color-warning-base-40, #a96404);
+}
+
+.confidence-low {
+    background-color: var(--slds-g-color-error-container-1, #fef1ee);
+    color: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+/* Insight header */
+.insight-header {
+    width: 100%;
+}
+
+.insight-title {
+    font-weight: 500;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+/* Insight body */
+.insight-body {
+    padding: var(--slds-g-spacing-3, 12px);
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    border-radius: 0 0 var(--slds-g-radius-border-1, 4px) var(--slds-g-radius-border-1, 4px);
+}
+
+/* Source records */
+.source-records {
+    padding-top: var(--slds-g-spacing-2, 8px);
+    border-top: 1px dashed var(--slds-g-color-border-base-1, #e5e5e5);
+}
+
+.source-badge {
+    --slds-c-badge-color-background: var(--slds-g-color-neutral-base-90, #e5e5e5);
+    --slds-c-badge-text-color: var(--slds-g-color-neutral-base-30, #444444);
+    cursor: pointer;
+}
+
+.source-badge:hover {
+    --slds-c-badge-color-background: var(--slds-g-color-brand-base-80, #aacbff);
+    --slds-c-badge-text-color: var(--slds-g-color-brand-base-30, #014486);
+}
+
+/* Drill down button */
+.drill-down-btn {
+    --slds-c-button-text-color: var(--slds-g-color-brand-base-50, #0176d3);
+}
+
+/* Risk summary cards */
+.risk-summary {
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    border-radius: var(--slds-g-radius-border-1, 4px);
+}
+
+.risk-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--slds-g-spacing-3, 12px);
+    border-radius: var(--slds-g-radius-border-1, 4px);
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+    text-align: center;
+}
+
+.risk-card-clinical {
+    border-left: 3px solid var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.risk-card-social {
+    border-left: 3px solid var(--slds-g-color-warning-base-40, #a96404);
+}
+
+.risk-card-operational {
+    border-left: 3px solid var(--slds-g-color-info-base-40, #0b5cab);
+}
+
+.risk-card-compliance {
+    border-left: 3px solid var(--slds-g-color-success-base-40, #2e844a);
+}
+
+.risk-count {
+    font-size: var(--slds-g-font-scale-3, 24px);
+    font-weight: 700;
+    margin: var(--slds-g-spacing-1, 4px) 0;
+}
+
+.risk-label {
+    font-size: var(--slds-g-font-scale-neg-1, 12px);
+    color: var(--slds-g-color-neutral-base-50, #706e6b);
+}
+
+/* Accordion overrides */
+lightning-accordion-section {
+    --slds-c-accordion-section-content-spacing-block-start: 0;
+    --slds-c-accordion-section-content-spacing-block-end: 0;
+    --slds-c-accordion-section-content-spacing-inline-start: 0;
+    --slds-c-accordion-section-content-spacing-inline-end: 0;
+}
