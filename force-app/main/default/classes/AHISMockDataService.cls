@@ -46,6 +46,9 @@ public with sharing class AHISMockDataService {
             data.changesSinceLastVisit = getMockChanges();
         }
         
+        // Add source records for all roles (Charles Green data)
+        data.sourceRecords = getMockSourceRecords();
+        
         return data;
     }
     
@@ -123,10 +126,10 @@ public with sharing class AHISMockDataService {
     // ============ Care Manager Mock Data ============
     
     private static String getMockCareManagerSummary() {
-        return 'Maria Santos (67F) is enrolled in the Chronic Care Management program for diabetes and hypertension. ' +
-               'Care plan is 78% on track with 3 of 4 quarterly goals met. A1C reduced from 8.2 to 7.4 over 6 months. ' +
-               'Blood pressure control remains a challenge with recent readings averaging 145/92. ' +
-               'High engagement score (8/10) with consistent portal usage and appointment attendance.';
+        return 'Maria Santos (67F) is a Medicare Advantage member with chronic care management needs requiring close monitoring. ' +
+               'Multiple care gaps identified including overdue diabetic eye exam. ' +
+               'Member has scheduled follow-up appointments and active care plan interventions. ' +
+               'High priority case requiring coordination between care team and specialists.';
     }
     
     private static List<OpenAIService.AHISInsight> getMockCareManagerInsights() {
@@ -421,19 +424,19 @@ public with sharing class AHISMockDataService {
     
     private static List<String> getMockCareManagerChanges() {
         return new List<String>{
-            'Lab results: A1C improved to 7.4 (from 7.8)',
-            'BP readings still elevated (avg 145/92)',
-            'SDOH assessment completed - food insecurity flagged',
-            'Eye exam now 3 months overdue'
+            'Prior Auth Request escalated - Physical Health (Feb 2, 2026)',
+            'Multiple follow-up calls scheduled (pending)',
+            'New Prior Auth cases created requiring review',
+            'Member contact information verified'
         };
     }
     
     // ============ Default Mock Data ============
     
     private static String getMockDefaultSummary() {
-        return 'Maria Santos is an active member with comprehensive healthcare coverage. ' +
-               'She has upcoming appointments scheduled and is generally engaged with her care plan. ' +
-               'Review the insights below for key information about her health status and recommended actions.';
+        return 'Maria Santos (67F) is an active Medicare Advantage member enrolled in chronic care management. ' +
+               'She has ongoing care plan interventions and scheduled appointments. ' +
+               'Review the insights below for key information about her care status and recommended actions.';
     }
     
     private static List<OpenAIService.AHISInsight> getMockDefaultInsights() {
@@ -477,11 +480,124 @@ public with sharing class AHISMockDataService {
     
     private static List<String> getMockChanges() {
         return new List<String>{
-            'New lab results received (Feb 1, 2024)',
-            'Prescription filled: Metformin 500mg (Jan 28, 2024)',
-            'Care plan goal updated by Dr. Chen (Jan 25, 2024)',
-            'Member completed health assessment survey (Jan 20, 2024)'
+            'Prior Auth Request escalated (Feb 2, 2026)',
+            'Follow-up call scheduled (Feb 4, 2026)',
+            'Case status updated to Escalated (Feb 2, 2026)',
+            'Member record reviewed by care team (Jan 30, 2026)'
         };
+    }
+    
+    // ============ Mock Source Records (for expanded modal) ============
+    
+    /**
+     * @description Generates mock source records for the expanded modal view
+     * Shows the records that contributed to generating the AI summary
+     * @return List of SourceRecord with Charles Green-specific data
+     */
+    private static List<AHISController.SourceRecord> getMockSourceRecords() {
+        List<AHISController.SourceRecord> sourceRecords = new List<AHISController.SourceRecord>();
+        
+        // 1. Prior Auth Request
+        AHISController.SourceRecord priorAuth = new AHISController.SourceRecord();
+        priorAuth.recordId = 'a0B5g00000PA2026234';
+        priorAuth.recordName = 'Prior Auth Request / PA-2026-0234';
+        priorAuth.objectType = 'PriorAuthRequest';
+        priorAuth.lastUpdate = Datetime.now().addHours(-2); // Today at 9:45 AM equivalent
+        priorAuth.sourcedFields = new List<AHISController.SourcedField>();
+        
+        AHISController.SourcedField paField1 = new AHISController.SourcedField();
+        paField1.fieldName = 'Status';
+        paField1.fieldValue = 'Escalated';
+        priorAuth.sourcedFields.add(paField1);
+        
+        AHISController.SourcedField paField2 = new AHISController.SourcedField();
+        paField2.fieldName = 'Request Type';
+        paField2.fieldValue = 'Physical Health Services';
+        priorAuth.sourcedFields.add(paField2);
+        
+        AHISController.SourcedField paField3 = new AHISController.SourcedField();
+        paField3.fieldName = 'Priority';
+        paField3.fieldValue = 'High';
+        priorAuth.sourcedFields.add(paField3);
+        
+        sourceRecords.add(priorAuth);
+        
+        // 2. Follow-up Task
+        AHISController.SourceRecord followUpTask = new AHISController.SourceRecord();
+        followUpTask.recordId = '00T5g00000TSK0892';
+        followUpTask.recordName = 'Follow-up Task / TSK-0892';
+        followUpTask.objectType = 'Task';
+        followUpTask.lastUpdate = Datetime.now().addHours(-3); // Today at 8:30 AM equivalent
+        followUpTask.sourcedFields = new List<AHISController.SourcedField>();
+        
+        AHISController.SourcedField taskField1 = new AHISController.SourcedField();
+        taskField1.fieldName = 'Status';
+        taskField1.fieldValue = 'Pending';
+        followUpTask.sourcedFields.add(taskField1);
+        
+        AHISController.SourcedField taskField2 = new AHISController.SourcedField();
+        taskField2.fieldName = 'Due Date';
+        taskField2.fieldValue = 'Feb 4, 2026';
+        followUpTask.sourcedFields.add(taskField2);
+        
+        AHISController.SourcedField taskField3 = new AHISController.SourcedField();
+        taskField3.fieldName = 'Assigned To';
+        taskField3.fieldValue = 'Sarah Johnson, RN';
+        followUpTask.sourcedFields.add(taskField3);
+        
+        sourceRecords.add(followUpTask);
+        
+        // 3. Care Plan
+        AHISController.SourceRecord carePlan = new AHISController.SourceRecord();
+        carePlan.recordId = '0Pk5g00000CP2026001';
+        carePlan.recordName = 'Care Plan / CP-2026-001';
+        carePlan.objectType = 'CarePlan';
+        carePlan.lastUpdate = Datetime.now().addDays(-1).addHours(-8); // Feb 1 at 3:15 PM equivalent
+        carePlan.sourcedFields = new List<AHISController.SourcedField>();
+        
+        AHISController.SourcedField cpField1 = new AHISController.SourcedField();
+        cpField1.fieldName = 'Status';
+        cpField1.fieldValue = 'Active';
+        carePlan.sourcedFields.add(cpField1);
+        
+        AHISController.SourcedField cpField2 = new AHISController.SourcedField();
+        cpField2.fieldName = 'Care Coordination Required';
+        cpField2.fieldValue = 'Yes';
+        carePlan.sourcedFields.add(cpField2);
+        
+        AHISController.SourcedField cpField3 = new AHISController.SourcedField();
+        cpField3.fieldName = 'Next Review Date';
+        cpField3.fieldValue = 'Feb 15, 2026';
+        carePlan.sourcedFields.add(cpField3);
+        
+        sourceRecords.add(carePlan);
+        
+        // 4. Member Account
+        AHISController.SourceRecord memberAccount = new AHISController.SourceRecord();
+        memberAccount.recordId = '0015g00000ACC78432';
+        memberAccount.recordName = 'Member Account / ACC-78432';
+        memberAccount.objectType = 'Account';
+        memberAccount.lastUpdate = Datetime.now().addDays(-3).addHours(-12); // Jan 30 at 11:20 AM equivalent
+        memberAccount.sourcedFields = new List<AHISController.SourcedField>();
+        
+        AHISController.SourcedField accField1 = new AHISController.SourcedField();
+        accField1.fieldName = 'Contact Verified';
+        accField1.fieldValue = 'Yes';
+        memberAccount.sourcedFields.add(accField1);
+        
+        AHISController.SourcedField accField2 = new AHISController.SourcedField();
+        accField2.fieldName = 'Age';
+        accField2.fieldValue = '89';
+        memberAccount.sourcedFields.add(accField2);
+        
+        AHISController.SourcedField accField3 = new AHISController.SourcedField();
+        accField3.fieldName = 'Primary Language';
+        accField3.fieldValue = 'English';
+        memberAccount.sourcedFields.add(accField3);
+        
+        sourceRecords.add(memberAccount);
+        
+        return sourceRecords;
     }
     
     /**

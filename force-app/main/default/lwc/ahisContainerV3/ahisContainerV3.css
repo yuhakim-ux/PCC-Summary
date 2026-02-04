@@ -87,6 +87,25 @@
     color: #5c5c5c;
 }
 
+/* Custom refresh button */
+.refresh-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.refresh-btn:hover {
+    opacity: 0.8;
+}
+
+.refresh-btn:focus {
+    outline: none;
+}
+
 /* Loading container */
 .loading-container {
     min-height: 200px;
@@ -107,21 +126,6 @@
 
 .ahis-content-expanded {
     max-height: none;
-}
-
-/* Modal styling overrides */
-.slds-modal__header {
-    background: linear-gradient(135deg, var(--slds-g-color-brand-base-50, #0176d3) 0%, var(--slds-g-color-brand-base-40, #014486) 100%);
-    color: var(--slds-g-color-neutral-base-100, #ffffff);
-}
-
-.slds-modal__title {
-    display: flex;
-    align-items: center;
-}
-
-.slds-modal__content {
-    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
 }
 
 /* Scrollbar styling */
@@ -161,6 +165,123 @@
 
 .loading-container lightning-spinner {
     animation: pulse 2s ease-in-out infinite;
+}
+
+/* ============ Section Divider ============ */
+
+.section-divider {
+    height: 1px;
+    background-color: #c9c9c9;
+    margin: 8px 0 16px 0;
+}
+
+/* ============ Inline Sourced Records Section ============ */
+
+.sourced-records-section {
+    padding: 8px 4px 12px 4px;
+}
+
+/* Clickable header with chevron */
+.sourced-records-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.sourced-records-header:hover {
+    opacity: 0.8;
+}
+
+.chevron-icon {
+    --slds-c-icon-color-foreground-default: #444444;
+}
+
+.sourced-records-title {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 13px;
+    font-weight: 590;
+    line-height: 18px;
+    color: #444444;
+}
+
+/* Container for expanded records */
+.sourced-records-list {
+    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Source record items */
+.source-record-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e3e3e3;
+}
+
+.source-record-item:last-child,
+.source-record-item-last {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* Record label with link */
+.record-label {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-wrap: wrap;
+}
+
+.record-link {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 14px;
+    font-weight: 590;
+    line-height: 19px;
+    color: #0250d9;
+    text-decoration: none;
+    max-width: 210px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.record-link:hover {
+    text-decoration: underline;
+}
+
+.link-icon {
+    flex-shrink: 0;
+    --slds-c-icon-color-foreground-default: #0250d9;
+}
+
+/* Last update text */
+.record-update {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 12px;
+    font-weight: 590;
+    line-height: 17px;
+    color: #5c5c5c;
+    margin: 0;
+}
+
+/* Sourced fields numbered list */
+.sourced-fields-list {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    color: #5c5c5c;
+    margin: 0;
+    padding-left: 18px;
+}
+
+.sourced-fields-list li {
+    margin-bottom: 0;
 }
 
 /* Responsive adjustments for persona switcher */

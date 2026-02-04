@@ -104,6 +104,47 @@ export default class AhisContainer extends NavigationMixin(LightningElement) {
         return date.toLocaleString();
     }
     
+    /**
+     * Formats source records for display in the expanded modal
+     */
+    get formattedSourceRecords() {
+        if (!this.ahisData.sourceRecords || this.ahisData.sourceRecords.length === 0) {
+            return [];
+        }
+        
+        const records = this.ahisData.sourceRecords;
+        return records.map((record, index) => ({
+            ...record,
+            recordLink: `/lightning/r/${record.objectType}/${record.recordId}/view`,
+            lastUpdateFormatted: `Last Update: ${this.formatDateTime(record.lastUpdate)}`,
+            itemClass: index === records.length - 1 
+                ? 'source-record-item source-record-item-last' 
+                : 'source-record-item'
+        }));
+    }
+    
+    /**
+     * Formats a datetime to a friendly string like "Today at 10:37 AM" or "Feb 2 at 3:15 PM"
+     */
+    formatDateTime(dateTimeValue) {
+        if (!dateTimeValue) return '';
+        
+        const date = new Date(dateTimeValue);
+        const now = new Date();
+        const isToday = date.toDateString() === now.toDateString();
+        
+        const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+        const timeStr = date.toLocaleTimeString('en-US', timeOptions);
+        
+        if (isToday) {
+            return `Today at ${timeStr}`;
+        }
+        
+        const dateOptions = { month: 'short', day: 'numeric' };
+        const dateStr = date.toLocaleDateString('en-US', dateOptions);
+        return `${dateStr} at ${timeStr}`;
+    }
+    
     // Event handlers
     handleRefresh() {
         this.loadAHISData();
@@ -111,6 +152,20 @@ export default class AhisContainer extends NavigationMixin(LightningElement) {
     
     handleExpandToggle() {
         this.isExpanded = !this.isExpanded;
+    }
+    
+    /**
+     * Handles click on the modal overlay to close the modal
+     */
+    handleOverlayClick() {
+        this.isExpanded = false;
+    }
+    
+    /**
+     * Prevents click events from bubbling up to the overlay
+     */
+    stopPropagation(event) {
+        event.stopPropagation();
     }
     
     handleDrillDown(event) {

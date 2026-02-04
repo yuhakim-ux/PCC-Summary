@@ -17,7 +17,7 @@ export default class AhisContainerV3 extends NavigationMixin(LightningElement) {
     @track isLoading = true;
     @track hasError = false;
     @track errorMessage = '';
-    @track isExpanded = false;
+    @track isSourceRecordsExpanded = false;
     @track showDrillDown = false;
     @track drillDownType = '';
     @track drillDownTitle = '';
@@ -118,18 +118,17 @@ export default class AhisContainerV3 extends NavigationMixin(LightningElement) {
         return this.roleDescriptions[this.selectedPersona] || '';
     }
     
-    get expandIcon() {
-        return this.isExpanded ? 'utility:contract_alt' : 'utility:expand_alt';
-    }
-    
-    get expandAltText() {
-        return this.isExpanded ? 'Collapse' : 'Expand';
-    }
-    
     get contentClass() {
-        return this.isExpanded 
-            ? 'ahis-content ahis-content-expanded' 
-            : 'ahis-content';
+        return 'ahis-content';
+    }
+    
+    // Sourced Records section getters
+    get sourceRecordsChevron() {
+        return this.isSourceRecordsExpanded ? 'utility:chevrondown' : 'utility:chevronright';
+    }
+    
+    get sourceRecordsCount() {
+        return this.ahisData.sourceRecords?.length || 0;
     }
     
     get formattedTimestamp() {
@@ -138,13 +137,57 @@ export default class AhisContainerV3 extends NavigationMixin(LightningElement) {
         return date.toLocaleString();
     }
     
+    /**
+     * Formats source records for display in the expanded modal
+     */
+    get formattedSourceRecords() {
+        if (!this.ahisData.sourceRecords || this.ahisData.sourceRecords.length === 0) {
+            return [];
+        }
+        
+        const records = this.ahisData.sourceRecords;
+        return records.map((record, index) => ({
+            ...record,
+            recordLink: `/lightning/r/${record.objectType}/${record.recordId}/view`,
+            lastUpdateFormatted: `Last Update: ${this.formatDateTime(record.lastUpdate)}`,
+            itemClass: index === records.length - 1 
+                ? 'source-record-item source-record-item-last' 
+                : 'source-record-item'
+        }));
+    }
+    
+    /**
+     * Formats a datetime to a friendly string like "Today at 10:37 AM" or "Feb 2 at 3:15 PM"
+     */
+    formatDateTime(dateTimeValue) {
+        if (!dateTimeValue) return '';
+        
+        const date = new Date(dateTimeValue);
+        const now = new Date();
+        const isToday = date.toDateString() === now.toDateString();
+        
+        const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+        const timeStr = date.toLocaleTimeString('en-US', timeOptions);
+        
+        if (isToday) {
+            return `Today at ${timeStr}`;
+        }
+        
+        const dateOptions = { month: 'short', day: 'numeric' };
+        const dateStr = date.toLocaleDateString('en-US', dateOptions);
+        return `${dateStr} at ${timeStr}`;
+    }
+    
     // Event handlers
     handleRefresh() {
         this.loadAHISData();
     }
     
-    handleExpandToggle() {
-        this.isExpanded = !this.isExpanded;
+    /**
+     * Toggle the sourced records collapsible section
+     */
+    toggleSourceRecords() {
+        this.isSourceRecordsExpanded = !this.isSourceRecordsExpanded;
     }
     
     handleDrillDown(event) {

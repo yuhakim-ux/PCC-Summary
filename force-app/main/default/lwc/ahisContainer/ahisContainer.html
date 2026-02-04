@@ -66,36 +66,61 @@
         </template>
     </lightning-card>
     
-    <!-- Expanded Modal View -->
+    <!-- Expanded Modal View - Source Records -->
     <template if:true={isExpanded}>
-        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading" class="slds-modal slds-fade-in-open slds-modal_large">
-            <div class="slds-modal__container">
-                <header class="slds-modal__header">
-                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleExpandToggle}>
-                        <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
-                    </button>
-                    <h2 id="modal-heading" class="slds-modal__title slds-hyphenate">
-                        <lightning-icon icon-name="custom:custom63" size="small" class="slds-m-right_small"></lightning-icon>
-                        Agentic Health Intelligence Surface
-                    </h2>
-                </header>
-                <div class="slds-modal__content slds-p-around_medium">
-                    <!-- Expanded Summary (includes What's Changed) -->
-                    <c-ahis-summary
-                        summary={ahisData.summary}
-                        generated-at={ahisData.generatedAt}
-                        changes-since-last-visit={ahisData.changesSinceLastVisit}
-                        user-role={userRole}
-                        is-expanded="true">
-                    </c-ahis-summary>
+        <div class="source-records-modal-overlay" onclick={handleOverlayClick}>
+            <div class="source-records-modal" onclick={stopPropagation}>
+                <!-- Close Button (outside card) -->
+                <div class="modal-close-btn-container">
+                    <lightning-button-icon
+                        icon-name="utility:close"
+                        alternative-text="Close"
+                        title="Close"
+                        onclick={handleExpandToggle}
+                        variant="border">
+                    </lightning-button-icon>
                 </div>
-                <footer class="slds-modal__footer">
-                    <lightning-button label="Close" onclick={handleExpandToggle}></lightning-button>
-                    <lightning-button variant="brand" label="Refresh" onclick={handleRefresh}></lightning-button>
-                </footer>
+                
+                <!-- Modal Card -->
+                <div class="modal-card">
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <h2 class="modal-title">Source Records</h2>
+                    </div>
+                    
+                    <!-- Body (scrollable) -->
+                    <div class="modal-body">
+                        <template for:each={formattedSourceRecords} for:item="record">
+                            <div key={record.recordId} class={record.itemClass}>
+                                <!-- Record Name/ID Link -->
+                                <div class="record-label">
+                                    <a href={record.recordLink} class="record-link" target="_blank">
+                                        {record.recordName}
+                                    </a>
+                                    <lightning-icon icon-name="utility:new_window" size="xx-small" class="link-icon"></lightning-icon>
+                                </div>
+                                
+                                <!-- Last Update -->
+                                <p class="record-update">{record.lastUpdateFormatted}</p>
+                                
+                                <!-- Sourced Fields List -->
+                                <ol class="sourced-fields-list">
+                                    <template for:each={record.sourcedFields} for:item="field">
+                                        <li key={field.fieldName}>{field.fieldName}: {field.fieldValue}</li>
+                                    </template>
+                                </ol>
+                            </div>
+                        </template>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <lightning-button label="Close" onclick={handleExpandToggle}></lightning-button>
+                        <lightning-button variant="brand" label="Refresh" onclick={handleRefresh}></lightning-button>
+                    </div>
+                </div>
             </div>
-        </section>
-        <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
     </template>
     
     <!-- Drill Down Panel -->

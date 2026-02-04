@@ -1,3 +1,13 @@
+/* Section Header - Matching Summary style */
+.section-header {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 19px;
+    color: #2e2e2e;
+    margin: 0 0 8px 0;
+}
+
 /* AHIS Actions Container */
 .ahis-actions-container {
     padding: 0.75rem;

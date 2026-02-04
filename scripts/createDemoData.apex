@@ -26,9 +26,9 @@ if (!existingAccounts.isEmpty()) {
         Phone = '(415) 555-0142',
         BillingStreet = '742 Evergreen Terrace',
         BillingCity = 'San Francisco',
-        BillingState = 'CA',
+        BillingStateCode = 'CA',
         BillingPostalCode = '94102',
-        BillingCountry = 'United States',
+        BillingCountryCode = 'US',
         Type = 'Customer',
         Industry = 'Healthcare'
     );

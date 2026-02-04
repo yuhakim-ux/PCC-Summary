@@ -1,9 +1,8 @@
 <template>
-    <lightning-card class="ahis-container-v3">
+    <lightning-card class="ahis-container-v3" icon-name="standard:unified_health_score">
         <!-- Header with Persona Switcher -->
         <div slot="title" class="slds-grid slds-grid_vertical-align-center">
-            <span class="slds-truncate card-title">Agentic Health Intelligence</span>
-            <span class="version-badge">V3</span>
+            <span class="card-title">Agentic Health Intelligence</span>
         </div>
         
         <div slot="actions" class="header-actions">
@@ -19,24 +18,6 @@
                     dropdown-alignment="right">
                 </lightning-combobox>
             </div>
-            
-            <lightning-button-icon
-                icon-name={expandIcon}
-                alternative-text={expandAltText}
-                title={expandAltText}
-                onclick={handleExpandToggle}
-                variant="border"
-                class="slds-m-left_x-small">
-            </lightning-button-icon>
-            <lightning-button-icon
-                icon-name="utility:refresh"
-                alternative-text="Refresh"
-                title="Regenerate Summary"
-                onclick={handleRefresh}
-                variant="border"
-                disabled={isLoading}
-                class="slds-m-left_x-small">
-            </lightning-button-icon>
         </div>
         
         <!-- Persona Context Bar -->
@@ -77,15 +58,14 @@
         <template if:true={showContent}>
             <div class={contentClass}>
                 <!-- Timestamp Row -->
-                <div class="timestamp-row slds-m-bottom_small">
-                    <span class="slds-text-body_small slds-text-color_weak">{formattedTimestamp}</span>
-                    <lightning-button-icon
-                        icon-name="utility:refresh"
-                        alternative-text="Refresh"
-                        size="x-small"
-                        onclick={handleRefresh}
-                        class="timestamp-refresh">
-                    </lightning-button-icon>
+                <div class="timestamp-row">
+                    <span class="timestamp-text">{formattedTimestamp}</span>
+                    <button class="refresh-btn" onclick={handleRefresh} title="Refresh">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.4787 5.60389H8.91309C8.75149 5.60389 8.61682 5.7385 8.61682 5.90004V7.30004C8.61682 7.4885 8.50908 7.56927 8.37441 7.43466C8.32055 7.35389 8.26668 7.30004 8.18588 7.24619C7.21626 6.25004 5.86957 5.81927 4.49595 6.11543C4.01114 6.22312 3.55327 6.41158 3.14926 6.70773C1.99111 7.51543 1.31777 8.80773 1.29083 10.2077C1.29083 11.2847 1.66791 12.3616 2.39512 13.1693C3.14926 14.0039 4.19968 14.4616 5.30396 14.4616C6.40825 14.4616 7.21626 14.1116 7.94347 13.4654C8.07814 13.3308 8.07814 13.1423 7.94347 13.0347L7.53947 12.6039C7.43173 12.4962 7.27013 12.4693 7.16239 12.6039C6.46212 13.1962 5.51943 13.4385 4.57675 13.1962C4.33435 13.1423 4.06501 13.0077 3.84954 12.8731C2.74526 12.1731 2.23351 10.8539 2.55672 9.53466C2.61059 9.26543 2.71832 9.02312 2.85299 8.78081C3.39167 7.81158 4.33435 7.24619 5.3309 7.24619C6.32745 7.24619 6.83919 7.56927 7.37786 8.13466C7.4856 8.21543 7.53947 8.32312 7.62027 8.40389C7.67414 8.56543 7.53947 8.64619 7.37786 8.64619H6.03118C5.86957 8.64619 5.7349 8.78081 5.7349 8.94235V9.56158C5.7349 9.72312 5.84264 9.83081 6.00424 9.83081H9.53257C9.66724 9.83081 9.77497 9.69619 9.77497 9.56158V5.90004C9.77497 5.7385 9.61337 5.60389 9.4787 5.60389Z" fill="#0250D9"/>
+                            <path d="M14.5961 3.74619L13.6534 3.26158C13.3841 3.12696 13.1417 2.88466 13.007 2.5885L12.5491 1.61927C12.4953 1.48466 12.2798 1.48466 12.2259 1.61927L11.7681 2.5885C11.6334 2.88466 11.391 3.10004 11.1217 3.26158L10.179 3.74619C10.0443 3.82696 10.0443 4.01543 10.179 4.06927L11.1217 4.55389C11.391 4.6885 11.6334 4.93081 11.7681 5.22696L12.2259 6.19619C12.2798 6.33081 12.4953 6.33081 12.5491 6.19619L13.007 5.22696C13.1417 4.93081 13.3841 4.71543 13.6534 4.55389L14.5961 4.06927C14.7308 3.9885 14.7308 3.80004 14.5961 3.74619Z" fill="#0250D9"/>
+                        </svg>
+                    </button>
                 </div>
                 
                 <!-- Summary Section -->
@@ -93,80 +73,52 @@
                     summary={ahisData.summary}
                     generated-at={ahisData.generatedAt}
                     changes-since-last-visit={ahisData.changesSinceLastVisit}
-                    user-role={userRole}
-                    class="slds-m-bottom_medium">
+                    user-role={userRole}>
                 </c-ahis-summary>
                 
-                <!-- Key Insights Section -->
-                <c-ahis-insights
-                    insights={ahisData.insights}
-                    user-role={userRole}
-                    ondrildown={handleDrillDown}
-                    class="slds-m-bottom_medium">
-                </c-ahis-insights>
+                <!-- Divider -->
+                <div class="section-divider"></div>
                 
-                <!-- Suggested Actions Section -->
-                <c-ahis-actions
-                    actions={ahisData.suggestedActions}
-                    user-role={userRole}
-                    onactionresponse={handleActionResponse}
-                    onscheduleaction={handleScheduleAction}
-                    class="slds-m-bottom_small">
-                </c-ahis-actions>
+                <!-- Sourced Records Section (collapsible) -->
+                <div class="sourced-records-section">
+                    <div class="sourced-records-header" onclick={toggleSourceRecords}>
+                        <lightning-icon 
+                            icon-name={sourceRecordsChevron} 
+                            size="xx-small" 
+                            class="chevron-icon">
+                        </lightning-icon>
+                        <span class="sourced-records-title">Sourced Records ({sourceRecordsCount})</span>
+                    </div>
+                    
+                    <template if:true={isSourceRecordsExpanded}>
+                        <div class="sourced-records-list">
+                            <template for:each={formattedSourceRecords} for:item="record">
+                                <div key={record.recordId} class={record.itemClass}>
+                                    <!-- Record Name/ID Link -->
+                                    <div class="record-label">
+                                        <a href={record.recordLink} class="record-link" target="_blank">
+                                            {record.recordName}
+                                        </a>
+                                        <lightning-icon icon-name="utility:new_window" size="xx-small" class="link-icon"></lightning-icon>
+                                    </div>
+                                    
+                                    <!-- Last Update -->
+                                    <p class="record-update">{record.lastUpdateFormatted}</p>
+                                    
+                                    <!-- Sourced Fields List -->
+                                    <ol class="sourced-fields-list">
+                                        <template for:each={record.sourcedFields} for:item="field">
+                                            <li key={field.fieldName}>{field.fieldName}: {field.fieldValue}</li>
+                                        </template>
+                                    </ol>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
             </div>
         </template>
     </lightning-card>
-    
-    <!-- Expanded Modal View -->
-    <template if:true={isExpanded}>
-        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-v3" class="slds-modal slds-fade-in-open slds-modal_large">
-            <div class="slds-modal__container">
-                <header class="slds-modal__header">
-                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleExpandToggle}>
-                        <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
-                    </button>
-                    <h2 id="modal-heading-v3" class="slds-modal__title slds-hyphenate">
-                        <lightning-icon icon-name="custom:custom63" size="small" class="slds-m-right_small"></lightning-icon>
-                        Agentic Health Intelligence - {userRoleBadge} View
-                    </h2>
-                </header>
-                <div class="slds-modal__content slds-p-around_medium">
-                    <!-- Expanded Summary -->
-                    <c-ahis-summary
-                        summary={ahisData.summary}
-                        generated-at={ahisData.generatedAt}
-                        changes-since-last-visit={ahisData.changesSinceLastVisit}
-                        user-role={userRole}
-                        is-expanded="true"
-                        class="slds-m-bottom_medium">
-                    </c-ahis-summary>
-                    
-                    <!-- Expanded Insights -->
-                    <c-ahis-insights
-                        insights={ahisData.insights}
-                        user-role={userRole}
-                        is-expanded="true"
-                        ondrildown={handleDrillDown}
-                        class="slds-m-bottom_medium">
-                    </c-ahis-insights>
-                    
-                    <!-- Expanded Actions -->
-                    <c-ahis-actions
-                        actions={ahisData.suggestedActions}
-                        user-role={userRole}
-                        is-expanded="true"
-                        onactionresponse={handleActionResponse}
-                        onscheduleaction={handleScheduleAction}>
-                    </c-ahis-actions>
-                </div>
-                <footer class="slds-modal__footer">
-                    <lightning-button label="Close" onclick={handleExpandToggle}></lightning-button>
-                    <lightning-button variant="brand" label="Refresh" onclick={handleRefresh}></lightning-button>
-                </footer>
-            </div>
-        </section>
-        <div class="slds-backdrop slds-backdrop_open"></div>
-    </template>
     
     <!-- Drill Down Panel -->
     <template if:true={showDrillDown}>

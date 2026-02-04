@@ -99,19 +99,176 @@
     color: var(--slds-g-color-neutral-base-50, #706e6b);
 }
 
-/* Modal styling overrides */
-.slds-modal__header {
-    background: linear-gradient(135deg, var(--slds-g-color-brand-base-50, #0176d3) 0%, var(--slds-g-color-brand-base-40, #014486) 100%);
-    color: var(--slds-g-color-neutral-base-100, #ffffff);
+/* ============ Source Records Modal Styles ============ */
+
+/* Modal overlay - semi-transparent background */
+.source-records-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 8px;
+    z-index: 9001;
 }
 
-.slds-modal__title {
+/* Modal container - 400px narrow width */
+.source-records-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    width: 400px;
+    max-width: calc(100vw - 16px);
+}
+
+/* Close button container (outside card) */
+.modal-close-btn-container {
+    flex-shrink: 0;
+}
+
+/* Modal card - 20px rounded, multi-layer shadow */
+.modal-card {
+    width: 100%;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.12),
+                0px 7px 7px 0px rgba(0, 0, 0, 0.12),
+                0px -1px 3px 0px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 80px);
+}
+
+/* Modal header - centered title */
+.modal-header {
+    background: white;
+    border-bottom: 1px solid #c9c9c9;
+    padding: 16px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.modal-title {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    color: #001e5b;
+    margin: 0;
+}
+
+/* Modal body - scrollable content area */
+.modal-body {
+    background: white;
+    padding: 16px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Source record items */
+.source-record-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e3e3e3;
+    margin-bottom: 12px;
+}
+
+.source-record-item:last-child,
+.source-record-item-last {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+/* Record label with link */
+.record-label {
     display: flex;
     align-items: center;
+    gap: 3px;
+    flex-wrap: wrap;
 }
 
-.slds-modal__content {
-    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+.record-link {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 14px;
+    font-weight: 590;
+    line-height: 19px;
+    color: #0250d9;
+    text-decoration: none;
+    max-width: 210px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.record-link:hover {
+    text-decoration: underline;
+}
+
+.link-icon {
+    flex-shrink: 0;
+    --slds-c-icon-color-foreground-default: #0250d9;
+}
+
+/* Last update text */
+.record-update {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 12px;
+    font-weight: 590;
+    line-height: 17px;
+    color: #5c5c5c;
+    margin: 0;
+}
+
+/* Sourced fields numbered list */
+.sourced-fields-list {
+    font-family: var(--slds-g-font-family-base, 'Salesforce Sans', sans-serif);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    color: #5c5c5c;
+    margin: 0;
+    padding-left: 18px;
+}
+
+.sourced-fields-list li {
+    margin-bottom: 0;
+}
+
+/* Modal footer */
+.modal-footer {
+    background: white;
+    border-top: 1px solid #c9c9c9;
+    padding: 16px 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    height: 64px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+/* Modal body scrollbar styling */
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f3f3f3;
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #c9c9c9;
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #706e6b;
 }
 
 /* Scrollbar styling */

@@ -284,9 +284,9 @@ public with sharing class AHISController {
         Map<String, Object> context = new Map<String, Object>();
         
         context.put('member', new Map<String, Object>{
-            'name' => 'Maria Santos',
-            'age' => 67,
-            'gender' => 'Female',
+            'name' => 'Charles Green',
+            'age' => 89,
+            'gender' => 'Male',
             'primaryLanguage' => 'English',
             'city' => 'San Francisco',
             'state' => 'CA'
@@ -569,6 +569,7 @@ public with sharing class AHISController {
         @AuraEnabled public List<OpenAIService.AHISInsight> insights;
         @AuraEnabled public List<OpenAIService.AHISAction> suggestedActions;
         @AuraEnabled public List<String> changesSinceLastVisit;
+        @AuraEnabled public List<SourceRecord> sourceRecords;
         @AuraEnabled public Datetime generatedAt;
         @AuraEnabled public Boolean success;
         @AuraEnabled public String errorMessage;
@@ -577,5 +578,24 @@ public with sharing class AHISController {
     public class DrillDownData {
         @AuraEnabled public String insightType;
         @AuraEnabled public List<Map<String, Object>> records;
+    }
+    
+    /**
+     * @description Represents a source record used to generate the AHIS summary
+     */
+    public class SourceRecord {
+        @AuraEnabled public String recordId;
+        @AuraEnabled public String recordName;
+        @AuraEnabled public String objectType;
+        @AuraEnabled public Datetime lastUpdate;
+        @AuraEnabled public List<SourcedField> sourcedFields;
+    }
+    
+    /**
+     * @description Represents a field from a source record
+     */
+    public class SourcedField {
+        @AuraEnabled public String fieldName;
+        @AuraEnabled public String fieldValue;
     }
 }

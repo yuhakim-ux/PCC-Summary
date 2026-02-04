@@ -1,18 +1,7 @@
 <template>
     <div class={containerClass}>
         <!-- Section Header -->
-        <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_small">
-            <div class="slds-col">
-                <h3 class="slds-text-heading_small slds-text-color_default">
-                    <lightning-icon icon-name="utility:checklist" size="x-small" class="slds-m-right_x-small"></lightning-icon>
-                    Suggested Actions
-                    <span class="slds-badge slds-badge_inverse slds-m-left_x-small">{actionCount}</span>
-                    <template if:true={pendingCount}>
-                        <span class="slds-badge slds-theme_warning slds-m-left_xx-small" title="Pending actions">{pendingCount} pending</span>
-                    </template>
-                </h3>
-            </div>
-        </div>
+        <p class="section-header">Suggested Actions</p>
         
         <!-- No Actions State -->
         <template if:false={hasActions}>
