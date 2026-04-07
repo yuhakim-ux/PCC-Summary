@@ -26,21 +26,54 @@ See root **`.gitignore`**: `node_modules/`, build output, `.env*`, OS junk, `.cu
 
 ## New remote (new GitHub repo)
 
-If you want this codebase under a **new** repository name without losing local history:
+Use this when you want a **different** repo name or org than the current `origin`, **without** losing local commit history.
 
-1. Create an empty repo on GitHub (no README/license if you will push existing history).
-2. Add a second remote and push:
+### Before you start
+
+- Work from the project root, branch **`main`**, with a clean working tree (`git status`).
+- Decide **`<org>`** (your user or org on GitHub) and **`<new-repo>`** (the new repository name).
+
+### Option A — Create an empty repo on github.com, then push
+
+1. On GitHub: **New repository**.
+2. Set owner to **`<org>`** and name to **`<new-repo>`**.
+3. Choose **Public** or **Private**.
+4. **Do not** initialize with README, `.gitignore`, or license (avoids merge conflicts on first push).
+5. Create the repository and copy its HTTPS URL, e.g. `https://github.com/<org>/<new-repo>.git`.
+
+In your terminal:
 
 ```bash
+cd /path/to/this/project
 git remote add new-origin https://github.com/<org>/<new-repo>.git
 git push -u new-origin main
 ```
 
-3. Optionally switch default remote:
+6. **Optional — point `origin` at the new repo only** (so `git push` goes there by default):
 
 ```bash
 git remote remove origin
 git remote rename new-origin origin
 ```
 
-Or use GitHub CLI: `gh repo create <name> --private --source=. --remote=origin --push` (after `gh auth login`).
+The old **AHIIS** remote URL is removed locally; the old repo on GitHub is unchanged unless you push to it again.
+
+### Option B — GitHub CLI (`gh`)
+
+1. `gh auth login`
+2. From the project root:
+
+```bash
+gh repo create <new-repo> --private --source=. --remote=new-origin --push
+```
+
+Use `--public` instead of `--private` for a public repo. This creates the repo, adds remote `new-origin`, and pushes the current branch.
+
+3. Optionally rename remotes as in Option A (`remove origin`, `rename new-origin origin`).
+
+**Note:** `gh repo create ... --remote=origin` can fail if `origin` already exists; using `--remote=new-origin` avoids that.
+
+### After pushing
+
+- Confirm **Settings → General → default branch** is `main` if needed.
+- Add description, topics, and collaborators on GitHub.
