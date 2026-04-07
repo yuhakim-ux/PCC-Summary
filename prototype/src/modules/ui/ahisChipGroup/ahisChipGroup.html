@@ -1,0 +1,17 @@
+<template>
+    <template lwc:if={hasItems}>
+        <div class="chip-container">
+            <template for:each={items} for:item="chip">
+                <span key={chip.key} class="chip">
+                    <template lwc:if={chip.dotColor}>
+                        <span class={chip.dotClass}></span>
+                    </template>
+                    {chip.label}
+                </span>
+            </template>
+        </div>
+        <template lwc:if={summary}>
+            <p class="slds-m-top_x-small slds-text-body_small slds-text-color_weak">{summary}</p>
+        </template>
+    </template>
+</template>

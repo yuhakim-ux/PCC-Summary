@@ -1,0 +1,17 @@
+<template>
+    <template lwc:if={hasRows}>
+        <div class="identity-grid">
+            <template for:each={rows} for:item="row">
+                <div key={row.key} class="id-row">
+                    <span class="id-label">{row.label}</span>
+                    <template lwc:if={row.statusValue}>
+                        <lightning-badge label={row.statusValue} class={row.statusClass}></lightning-badge>
+                    </template>
+                    <template lwc:else>
+                        <span class="id-value">{row.value}</span>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </template>
+</template>

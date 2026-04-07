@@ -1,0 +1,64 @@
+:host {
+    display: block;
+}
+
+.summary-section {
+    border-top: 1px solid var(--slds-g-color-border-1, #e5e5e5);
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    user-select: none;
+    border-radius: 0.25rem;
+    transition: background 0.1s ease;
+}
+
+.section-header:hover {
+    background: var(--slds-g-color-surface-2, #f3f3f3);
+}
+
+.section-icon {
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-on-surface-2, #706e6b);
+    flex-shrink: 0;
+}
+
+.alert-icon {
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-warning-1, #fe9339);
+}
+
+.section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--slds-g-color-on-surface-1, #181818);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex: 1;
+}
+
+.section-count {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--slds-g-color-on-surface-2, #706e6b);
+    background: var(--slds-g-color-surface-2, #f3f3f3);
+    border-radius: 10px;
+    padding: 0 8px;
+    min-width: 20px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.chevron {
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-on-surface-2, #706e6b);
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+}
+
+.section-body {
+    margin-top: 0.25rem;
+}

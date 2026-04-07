@@ -1,0 +1,17 @@
+<template>
+    <div class="summary-section">
+        <div class="section-header" onclick={handleToggle} role="button" tabindex="0" onkeydown={handleKeydown}>
+            <lightning-icon icon-name={iconName} size="x-small" class={iconComputedClass}></lightning-icon>
+            <h3 class="section-title">{title}</h3>
+            <template lwc:if={hasCount}>
+                <span class="section-count">{count}</span>
+            </template>
+            <lightning-icon icon-name={chevronIcon} size="xx-small" class="chevron"></lightning-icon>
+        </div>
+        <template lwc:if={isExpanded}>
+            <div class="section-body">
+                <slot></slot>
+            </div>
+        </template>
+    </div>
+</template>

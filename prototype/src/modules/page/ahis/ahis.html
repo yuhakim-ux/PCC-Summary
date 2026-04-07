@@ -1,0 +1,291 @@
+<template>
+    <!-- Record Page Header -->
+    <div class="slds-page-header slds-page-header_record-home record-header">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-person-account record-icon">
+                            <lightning-icon icon-name="standard:person_account" size="medium"></lightning-icon>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    <span class="record-type-label">Person Account</span>
+                                    <span class="slds-page-header__title slds-truncate record-name card-header-title-match" title="Carole White">Carole White</span>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-page-header__col-actions">
+                <div class="slds-page-header__controls">
+                    <div class="slds-page-header__control">
+                        <lightning-button
+                            label={followLabel}
+                            variant={followVariant}
+                            icon-name={followIconName}
+                            onclick={handleFollow}>
+                        </lightning-button>
+                    </div>
+                    <div class="slds-page-header__control">
+                        <lightning-button-group>
+                            <lightning-button label="Edit" variant="neutral"></lightning-button>
+                            <lightning-button label="Clone" variant="neutral"></lightning-button>
+                            <lightning-button-menu
+                                alternative-text="More Actions"
+                                variant="border-filled"
+                                icon-size="medium"
+                                menu-alignment="right">
+                                <lightning-menu-item label="Send Email" value="send_email" icon-name="utility:email"></lightning-menu-item>
+                                <lightning-menu-item label="Log a Call" value="log_call" icon-name="utility:log_a_call"></lightning-menu-item>
+                                <lightning-menu-item label="Create Task" value="create_task" icon-name="utility:task"></lightning-menu-item>
+                                <lightning-menu-item label="Printable View" value="printable" icon-name="utility:print"></lightning-menu-item>
+                            </lightning-button-menu>
+                        </lightning-button-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-page-header__row slds-page-header__row_gutters">
+            <div class="slds-page-header__col-details">
+                <ul class="slds-page-header__detail-row">
+                    <li class="slds-page-header__detail-block">
+                        <div class="slds-truncate detail-label" title="Date of Birth">Date of Birth</div>
+                        <div class="slds-truncate detail-value" title="03/15/1958">03/15/1958</div>
+                    </li>
+                    <li class="slds-page-header__detail-block">
+                        <div class="slds-truncate detail-label" title="Member ID">Member ID</div>
+                        <div class="slds-truncate detail-value" title="982734">982734</div>
+                    </li>
+                    <li class="slds-page-header__detail-block">
+                        <div class="slds-truncate detail-label" title="Plan">Plan</div>
+                        <div class="slds-truncate detail-value" title="Medicare Advantage (HMO)">Medicare Advantage (HMO)</div>
+                    </li>
+                    <li class="slds-page-header__detail-block">
+                        <div class="slds-truncate detail-label" title="PCP">PCP</div>
+                        <div class="slds-truncate detail-value" title="Dr. Aris">Dr. Aris</div>
+                    </li>
+                    <li class="slds-page-header__detail-block">
+                        <div class="slds-truncate detail-label" title="Phone">Phone</div>
+                        <div class="slds-truncate detail-value">
+                            <lightning-formatted-phone value="4155550198"></lightning-formatted-phone>
+                        </div>
+                    </li>
+                    <li class="slds-page-header__detail-block">
+                        <div class="slds-truncate detail-label" title="MRN">MRN</div>
+                        <div class="slds-truncate detail-value" title="MRN-441029">MRN-441029</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record Body: Two-Column Layout -->
+    <div class="slds-grid slds-gutters_small slds-wrap record-body">
+
+        <!-- Main Column: AHIS Component (8/12) -->
+        <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+
+            <!-- AHIS Card -->
+            <lightning-card class="ahis-shell">
+                <div slot="title" class="title-row">
+                    <div class="title-block">
+                        <p class="slds-truncate title-text card-header-title-match">{cardTitle}</p>
+                        <p class="slds-text-body_small title-subtext">{cardSubtitle}</p>
+                    </div>
+                </div>
+
+                <div slot="actions">
+                    <template lwc:if={showGenerateState}>
+                        <lightning-button
+                            label="Generate Summary"
+                            variant="brand"
+                            onclick={handleGenerate}
+                            class="slds-m-right_x-small">
+                        </lightning-button>
+                    </template>
+                    <lightning-button-icon
+                        icon-name="utility:refresh"
+                        alternative-text="Refresh"
+                        title="Regenerate Summary"
+                        onclick={handleRefresh}
+                        disabled={isLoading}>
+                    </lightning-button-icon>
+                </div>
+
+                <!-- Loading State -->
+                <template lwc:if={isLoading}>
+                    <div class="slds-p-around_large slds-align_absolute-center loading-area">
+                        <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+                        <p class="slds-m-top_medium slds-text-body_regular loading-title">Analyzing health intelligence…</p>
+                        <p class="slds-m-top_xx-small slds-text-body_small slds-text-color_weak">Collecting claim, clinical, and activity signals.</p>
+                    </div>
+                </template>
+
+                <!-- Error State -->
+                <template lwc:if={hasError}>
+                    <div class="slds-p-around_medium">
+                        <div class="slds-notify slds-notify_alert slds-alert_error slds-grid slds-grid_vertical-align-center" role="alert">
+                            <lightning-icon icon-name="utility:error" alternative-text="Error" size="small" class="slds-m-right_x-small"></lightning-icon>
+                            <span class="slds-text-body_regular">{errorMessage}</span>
+                        </div>
+                        <div class="slds-m-top_medium slds-align_absolute-center">
+                            <lightning-button label="Try Again" onclick={handleRefresh} variant="brand"></lightning-button>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Generate State -->
+                <template lwc:if={showGenerateState}>
+                    <div class="slds-p-bottom_medium">
+                        <section class="nested-card">
+                            <div class="nested-card-header">
+                                <lightning-icon icon-name="utility:sparkles" size="x-small" class="sparkles-icon"></lightning-icon>
+                                <span class="nested-card-title">Generate 360 Summary</span>
+                                <lightning-button-icon
+                                    icon-name="utility:info"
+                                    alternative-text="Info"
+                                    size="small"
+                                    variant="bare"
+                                    class="info-icon-btn">
+                                </lightning-button-icon>
+                            </div>
+                            <p class="nested-card-body slds-text-color_weak">
+                                This summary is generated on demand to reduce latency and token usage.
+                            </p>
+                        </section>
+                    </div>
+                </template>
+
+                <!-- Main Content -->
+                <template lwc:if={showContent}>
+                    <div class="slds-p-bottom_small">
+                        <!-- Micro-Summary -->
+                        <div class="slds-m-bottom_small">
+                            <section class="nested-card">
+                                <div class="nested-card-header">
+                                    <lightning-icon icon-name="utility:sparkles" size="x-small" class="sparkles-icon"></lightning-icon>
+                                    <span class="nested-card-title">AI Summary</span>
+                                    <lightning-button-icon
+                                        icon-name="utility:info"
+                                        alternative-text="Info"
+                                        size="small"
+                                        variant="bare"
+                                        class="info-icon-btn">
+                                    </lightning-button-icon>
+                                </div>
+                                <p class="nested-card-body">{microSummaryText}</p>
+                            </section>
+                        </div>
+
+                        <!-- Persona-aware Summary -->
+                        <div class="slds-m-bottom_small">
+                            <ui-ahis-summary
+                                ahis-data={ahisData}
+                                persona={resolvedPersona}>
+                            </ui-ahis-summary>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer slds-grid slds-grid_vertical-align-center">
+                        <lightning-icon icon-name="utility:clock" size="xx-small" class="footer-icon"></lightning-icon>
+                        <span class="slds-text-body_small">Generated: {formattedTimestamp}</span>
+                        <span class="footer-divider">|</span>
+                        <span class="slds-text-body_small footer-role">{footerRoleLabel}</span>
+                    </div>
+                </template>
+            </lightning-card>
+        </div>
+
+        <!-- Right Column: Sidebar (4/12) -->
+        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+
+            <!-- Activity Timeline -->
+            <lightning-card title="Activity" class="sidebar-card">
+                <lightning-button-group slot="actions">
+                    <lightning-button label="Log a Call" variant="neutral"></lightning-button>
+                    <lightning-button label="New Task" variant="neutral"></lightning-button>
+                </lightning-button-group>
+                <div class="slds-p-around_small">
+                    <ul class="activity-list">
+                        <template for:each={activityItems} for:item="item">
+                            <li key={item.id} class="activity-item">
+                                <div class="activity-icon-col">
+                                    <lightning-icon
+                                        icon-name={item.iconName}
+                                        size="small"
+                                        alternative-text={item.type}>
+                                    </lightning-icon>
+                                    <div class="activity-connector"></div>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-start">
+                                        <p class="activity-subject">{item.subject}</p>
+                                        <p class="activity-date">{item.date}</p>
+                                    </div>
+                                    <p class="activity-desc">{item.description}</p>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </lightning-card>
+
+            <!-- Related Lists -->
+            <div class="sidebar-spacer"></div>
+            <lightning-card title="Related" class="sidebar-card">
+                <div class="slds-p-around_small">
+                    <ul class="related-list">
+                        <template for:each={relatedLists} for:item="rel">
+                            <li key={rel.id} class="related-list-item">
+                                <lightning-icon icon-name={rel.iconName} size="small" class="related-item-icon"></lightning-icon>
+                                <span class="related-item-label">{rel.label}</span>
+                                <lightning-badge label={rel.count} class="related-count"></lightning-badge>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </lightning-card>
+        </div>
+    </div>
+
+    <!-- Floating Summary Type Picker (demo control) -->
+    <div class="fab-persona slds-is-fixed">
+        <lightning-button-icon
+            icon-name="utility:people"
+            variant="border-filled"
+            size="large"
+            alternative-text="Switch summary type"
+            title="Switch summary type"
+            aria-haspopup="true"
+            aria-expanded={isPersonaPickerOpen}
+            onclick={handlePersonaFabClick}>
+        </lightning-button-icon>
+        <template lwc:if={isPersonaPickerOpen}>
+            <div class="fab-persona-backdrop" onclick={handlePersonaBackdropClick} role="presentation"></div>
+            <div class="fab-persona-card-wrapper">
+                <lightning-card title="Summary Type" class="fab-persona-card">
+                    <div class="slds-p-around_small">
+                        <lightning-combobox
+                            label="Persona"
+                            value={currentRole}
+                            options={roleOptions}
+                            onchange={handleRoleChange}
+                            variant="label-hidden"
+                            class="fab-role-picker">
+                        </lightning-combobox>
+                        <p class="fab-demo-hint">
+                            <lightning-icon icon-name="utility:info_alt" size="xx-small" class="demo-label-icon"></lightning-icon>
+                            Demo control — not shipped
+                        </p>
+                    </div>
+                </lightning-card>
+            </div>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,19 @@
+:host {
+    display: block;
+}
+
+.sub-section {
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.sub-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--slds-g-color-on-surface-2, #706e6b);
+    padding-left: 0.25rem;
+    margin-bottom: 0.25rem;
+    display: block;
+}

@@ -1,0 +1,45 @@
+<template>
+    <template lwc:if={hasItems}>
+        <ul class="bullet-list">
+            <template for:each={items} for:item="item">
+                <li key={item.key} class={item.computedClass}>
+                    <template lwc:if={item.isDetail}>
+                        <!-- Multi-line detail layout (claims, meds, credentials) -->
+                        <div class="detail-primary">
+                            <span class="item-primary">{item.primary}</span>
+                            <template lwc:if={item.secondary}>
+                                <span class="item-secondary">{item.secondary}</span>
+                            </template>
+                        </div>
+                        <template lwc:if={item.hasMetaLine}>
+                            <div class="detail-meta">
+                                <template lwc:if={item.badge}>
+                                    <lightning-badge label={item.badge} class={item.badgeClass}></lightning-badge>
+                                </template>
+                                <template for:each={item.metaItems} for:item="meta">
+                                    <span key={meta.key} class="item-secondary">{meta.text}</span>
+                                </template>
+                            </div>
+                        </template>
+                        <template lwc:if={item.note}>
+                            <span class="item-note">{item.note}</span>
+                        </template>
+                    </template>
+                    <template lwc:else>
+                        <!-- Standard inline layout -->
+                        <span class="item-primary">{item.primary}</span>
+                        <template lwc:if={item.secondary}>
+                            <span class="item-secondary">{item.secondary}</span>
+                        </template>
+                        <template lwc:if={item.badge}>
+                            <lightning-badge label={item.badge} class={item.badgeClass}></lightning-badge>
+                        </template>
+                        <template lwc:if={item.note}>
+                            <span class="item-note">{item.note}</span>
+                        </template>
+                    </template>
+                </li>
+            </template>
+        </ul>
+    </template>
+</template>

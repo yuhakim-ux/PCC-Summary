@@ -1,0 +1,55 @@
+:host {
+    display: block;
+}
+
+.identity-grid {
+    padding-bottom: 0.625rem;
+    margin-bottom: 0.5rem;
+}
+
+.id-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0;
+    font-size: 0.8125rem;
+}
+
+.id-label {
+    color: var(--slds-g-color-on-surface-2, #706e6b);
+    font-weight: 500;
+    min-width: 110px;
+    font-size: 0.75rem;
+}
+
+.id-value {
+    color: var(--slds-g-color-on-surface-1, #181818);
+    text-align: right;
+    font-weight: 500;
+}
+
+/* Badge variants */
+.badge-error {
+    --slds-c-badge-color-background: var(--slds-g-color-error-container-1, #feded8);
+    --slds-c-badge-text-color: var(--slds-g-color-error-1, #ba0517);
+}
+
+.badge-warning {
+    --slds-c-badge-color-background: var(--slds-g-color-warning-container-1, #fef3e0);
+    --slds-c-badge-text-color: var(--slds-g-color-warning-2, #8c4b02);
+}
+
+.badge-success {
+    --slds-c-badge-color-background: var(--slds-g-color-success-container-1, #cdefc4);
+    --slds-c-badge-text-color: var(--slds-g-color-success-1, #2e844a);
+}
+
+.badge-neutral {
+    --slds-c-badge-color-background: var(--slds-g-color-surface-container-3, #e5e5e5);
+    --slds-c-badge-text-color: var(--slds-g-color-on-surface-2, #706e6b);
+}
+
+.badge-info {
+    --slds-c-badge-color-background: var(--slds-g-color-info-container-1, #eef4ff);
+    --slds-c-badge-text-color: var(--slds-g-color-info-1, #0070d2);
+}

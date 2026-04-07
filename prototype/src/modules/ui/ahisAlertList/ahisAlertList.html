@@ -1,0 +1,15 @@
+<template>
+    <template lwc:if={hasItems}>
+        <ul class="alert-list">
+            <template for:each={visibleItems} for:item="alert">
+                <li key={alert.key} class={alert.className}>
+                    <span class={alert.dotClass}></span>
+                    <span class="alert-text">{alert.text}</span>
+                </li>
+            </template>
+        </ul>
+        <template lwc:if={hasMore}>
+            <button class="show-more-btn" onclick={handleShowAll}>+ {hiddenCount} more</button>
+        </template>
+    </template>
+</template>
