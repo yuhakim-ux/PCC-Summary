@@ -1,0 +1,48 @@
+:host {
+    display: block;
+}
+
+.drill-tile {
+    padding: 12px;
+    transition: box-shadow 0.15s ease;
+}
+
+.drill-tile:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.record-link {
+    color: var(--slds-g-color-accent-1, #066AFE);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.record-link:hover {
+    text-decoration: underline;
+}
+
+/* Status badge variants */
+.status-badge-open {
+    --slds-c-badge-color-background: var(--slds-g-color-info-container-1, #eef4ff);
+    --slds-c-badge-text-color: var(--slds-g-color-info-1, #0b5cab);
+}
+
+.status-badge-overdue {
+    --slds-c-badge-color-background: var(--slds-g-color-error-container-1, #fef1ee);
+    --slds-c-badge-text-color: var(--slds-g-color-error-1, #ba0517);
+}
+
+.status-badge-progress {
+    --slds-c-badge-color-background: var(--slds-g-color-warning-container-1, #fef4e8);
+    --slds-c-badge-text-color: var(--slds-g-color-warning-1, #a96404);
+}
+
+.status-badge-scheduled {
+    --slds-c-badge-color-background: var(--slds-g-color-success-container-1, #e6f7e9);
+    --slds-c-badge-text-color: var(--slds-g-color-success-1, #2e844a);
+}
+
+.status-badge-neutral {
+    --slds-c-badge-color-background: var(--slds-g-color-surface-container-3, #e5e5e5);
+    --slds-c-badge-text-color: var(--slds-g-color-on-surface-1, #5c5c5c);
+}

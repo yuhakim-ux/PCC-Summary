@@ -5,18 +5,18 @@
 .chip-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.25rem;
-    margin-top: 0.25rem;
+    gap: var(--slds-g-spacing-1, 4px);
+    margin-top: var(--slds-g-spacing-1, 4px);
 }
 
 .chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
-    padding: 0.25rem 0.625rem;
+    gap: var(--slds-g-spacing-1, 4px);
+    padding: var(--slds-g-spacing-1, 4px) var(--slds-g-spacing-2, 8px);
     background: var(--slds-g-color-surface-2, #f3f3f3);
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    font-size: var(--slds-g-font-scale-base, 13px);
     border: 1px solid var(--slds-g-color-border-1, #e5e5e5);
 }
 

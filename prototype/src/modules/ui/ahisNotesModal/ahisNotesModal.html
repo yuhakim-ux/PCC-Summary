@@ -1,0 +1,17 @@
+<template>
+    <lightning-modal-header label={label}></lightning-modal-header>
+    <lightning-modal-body>
+        <p class="slds-m-bottom_small slds-text-body_regular">{message}</p>
+        <lightning-textarea
+            label="Notes"
+            value={notes}
+            onchange={handleNotesChange}
+            placeholder="Enter your notes here..."
+            max-length="500">
+        </lightning-textarea>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+        <lightning-button variant="brand" label="Confirm" onclick={handleConfirm} class="slds-m-left_x-small"></lightning-button>
+    </lightning-modal-footer>
+</template>

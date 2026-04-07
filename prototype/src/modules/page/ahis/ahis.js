@@ -1,6 +1,9 @@
 import { LightningElement, track } from 'lwc';
 import { getAHISData, getAvailableRoles } from 'data/ahis';
+import { buildSections } from 'data/ahisSectionRegistry';
 import AhisDrillDown from 'ui/ahisDrillDown';
+
+const COLLAPSED_ALLOW_IDS = new Set(['alerts', 'patientCareGaps', 'adverseActions']);
 
 const ACTIVITY_ITEMS = [
     { id: 'a1', type: 'call', iconName: 'standard:log_a_call', subject: 'Medication review call', date: 'Apr 4, 2026', description: 'Discussed Metformin side effects and refill timing.' },
@@ -13,10 +16,11 @@ const ACTIVITY_ITEMS = [
 const RELATED_LISTS = [
     { id: 'r1', label: 'Cases', count: '2', iconName: 'standard:case' },
     { id: 'r2', label: 'Claims', count: '4', iconName: 'standard:custom_notification' },
-    { id: 'r3', label: 'Care Plans', count: '1', iconName: 'standard:care_plan' },
-    { id: 'r4', label: 'Referrals', count: '2', iconName: 'standard:referral' },
+    { id: 'r3', label: 'Care Plans', count: '1', iconName: 'standard:capacity_plan' },
+    { id: 'r4', label: 'Referrals', count: '2', iconName: 'standard:document_reference' },
     { id: 'r5', label: 'Appointments', count: '1', iconName: 'standard:event' },
 ];
+
 
 export default class Ahis extends LightningElement {
     @track ahisData = {};
@@ -26,8 +30,10 @@ export default class Ahis extends LightningElement {
     @track currentRole = 'MEMBER';
     @track isFollowing = false;
     @track isPersonaPickerOpen = false;
+    @track isCollapsed = true;
 
     showGenerateButton = true;
+    showActionBar = false;
     hasGenerated = false;
     activityItems = ACTIVITY_ITEMS;
     relatedLists = RELATED_LISTS;
@@ -50,12 +56,14 @@ export default class Ahis extends LightningElement {
         return this.ahisData?.message || 'Persona-aware overview for fast case decisions';
     }
 
-    get footerRoleLabel() {
-        return this.ahisData?.label || this.currentRole;
-    }
-
     get resolvedPersona() {
         return this.ahisData?.persona || 'member';
+    }
+
+    get identityData() {
+        const all = buildSections(this.resolvedPersona, this.ahisData);
+        const id = all.find((s) => s.isIdentityGrid);
+        return id ? id.data : {};
     }
 
     get showContent() {
@@ -66,9 +74,15 @@ export default class Ahis extends LightningElement {
         return this.showGenerateButton && !this.hasGenerated && !this.isLoading;
     }
 
+    get showAiLabel() {
+        return this.hasGenerated || this.isLoading;
+    }
+
     get formattedTimestamp() {
         if (!this.ahisData?.generatedAt) return '';
-        return new Date(this.ahisData.generatedAt).toLocaleString();
+        const d = new Date(this.ahisData.generatedAt);
+        const time = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        return `Today at ${time}`;
     }
 
     get microSummaryText() {
@@ -85,6 +99,44 @@ export default class Ahis extends LightningElement {
 
     get followIconName() {
         return this.isFollowing ? 'utility:check' : 'utility:add';
+    }
+
+    get isExpanded() {
+        return !this.isCollapsed;
+    }
+
+    get toggleLabel() {
+        if (!this.isCollapsed) return 'Show less';
+        const all = buildSections(this.resolvedPersona, this.ahisData);
+        const hidden = all.filter((s) => !s.isIdentityGrid && !COLLAPSED_ALLOW_IDS.has(s.id));
+        return `Show more (${hidden.length})`;
+    }
+
+    get primaryActionLabel() {
+        const labels = {
+            member: 'Check Appeal SLA',
+            patient: 'Schedule Referral',
+            provider: 'Renew Credential',
+        };
+        return labels[this.resolvedPersona] || 'Take Action';
+    }
+
+    get primaryActionIcon() {
+        const icons = {
+            member: 'utility:clock',
+            patient: 'utility:event',
+            provider: 'utility:refresh',
+        };
+        return icons[this.resolvedPersona] || 'utility:check';
+    }
+
+    get secondaryActionLabel() {
+        const labels = {
+            member: 'Create Case',
+            patient: 'Order Labs',
+            provider: 'Resolve Case',
+        };
+        return labels[this.resolvedPersona] || 'View Details';
     }
 
     handleFollow() {
@@ -133,6 +185,10 @@ export default class Ahis extends LightningElement {
         this.loadData();
     }
 
+    handleToggleExpand() {
+        this.isCollapsed = !this.isCollapsed;
+    }
+
     handleDrillDown(event) {
         const { riskCategory, insightTitle } = event.detail;
         AhisDrillDown.open({
@@ -141,6 +197,11 @@ export default class Ahis extends LightningElement {
             drillDownType: riskCategory,
             drillDownTitle: insightTitle,
         });
+    }
+
+    handleFeedback(event) {
+        const { contentId, value } = event.detail;
+        console.log(`Feedback for ${contentId}: ${value}`);
     }
 
     handleActionResponse(event) {

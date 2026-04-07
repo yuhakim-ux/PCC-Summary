@@ -1,0 +1,32 @@
+<template>
+    <div class="feedback-row">
+        <div class="feedback-actions">
+            <button
+                class={thumbUpClass}
+                title="This is helpful"
+                onclick={handleThumbUp}
+                aria-pressed={isThumbUp}>
+                <lightning-icon icon-name="utility:like" size="xx-small" class="feedback-icon"></lightning-icon>
+            </button>
+            <button
+                class={thumbDownClass}
+                title="This is not helpful"
+                onclick={handleThumbDown}
+                aria-pressed={isThumbDown}>
+                <lightning-icon icon-name="utility:dislike" size="xx-small" class="feedback-icon"></lightning-icon>
+            </button>
+            <template lwc:if={showOverflow}>
+                <lightning-button-menu
+                    alternative-text="More actions"
+                    variant="bare"
+                    icon-size="x-small"
+                    menu-alignment="right"
+                    class="feedback-overflow"
+                    onselect={handleOverflowSelect}>
+                    <lightning-menu-item value="copy" label="Copy text" icon-name="utility:copy"></lightning-menu-item>
+                    <lightning-menu-item value="report" label="Report an issue" icon-name="utility:bug"></lightning-menu-item>
+                </lightning-button-menu>
+            </template>
+        </div>
+    </div>
+</template>

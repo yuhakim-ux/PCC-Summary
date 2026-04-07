@@ -1,0 +1,65 @@
+<template>
+    <div class="ahis-insights">
+        <div class="insights-header">
+            <h3 class="insights-title">
+                <lightning-icon icon-name="utility:light_bulb" size="x-small" class="insights-title-icon"></lightning-icon>
+                Key Insights
+            </h3>
+            <lightning-badge label={insightCountLabel} class="count-badge"></lightning-badge>
+        </div>
+
+        <template lwc:if={noInsights}>
+            <p class="no-insights">No key insights identified at this time.</p>
+        </template>
+
+        <template lwc:if={hasInsights}>
+            <!-- Risk Distribution (nested agentic card) -->
+            <section class="nested-agentic-card">
+                <div class="nested-agentic-header">
+                    <lightning-icon icon-name="utility:sparkles" size="x-small" class="nested-agentic-icon"></lightning-icon>
+                    <span class="nested-agentic-title">Risk Distribution</span>
+                </div>
+                <div class="risk-cards">
+                    <template for:each={riskCategories} for:item="category">
+                        <div key={category.name} class={category.cardClass}>
+                            <lightning-icon icon-name={category.icon} size="x-small"></lightning-icon>
+                            <span class="risk-count">{category.count}</span>
+                            <span class="risk-label-text">{category.name}</span>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- Insight items -->
+            <ul class="insight-list">
+                <template for:each={formattedInsights} for:item="insight">
+                    <li key={insight.id} class="insight-item">
+                        <div class="insight-row">
+                            <span class={insight.riskBadgeClass}>{insight.riskCategory}</span>
+                            <span class="insight-title-text">{insight.title}</span>
+                            <span class={insight.confidenceClass}>{insight.confidence}</span>
+                        </div>
+                        <p class="insight-desc">{insight.description}</p>
+                        <template lwc:if={insight.hasSourceRecords}>
+                            <div class="insight-sources">
+                                <template for:each={insight.sourceRecords} for:item="source">
+                                    <lightning-badge key={source} label={source} class="source-badge"></lightning-badge>
+                                </template>
+                            </div>
+                        </template>
+                        <lightning-button
+                            variant="base"
+                            label="View Details"
+                            icon-name="utility:chevronright"
+                            icon-position="right"
+                            onclick={handleDrillDown}
+                            data-risk-category={insight.riskCategory}
+                            data-insight-title={insight.title}
+                            class="drill-down-btn">
+                        </lightning-button>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</template>

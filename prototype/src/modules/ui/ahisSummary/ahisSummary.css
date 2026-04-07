@@ -1,0 +1,18 @@
+:host {
+    display: block;
+}
+
+.ahis-summary {
+    padding: var(--slds-g-spacing-3, 12px) var(--slds-g-spacing-3, 12px) var(--slds-g-spacing-1, 4px);
+    background: var(--slds-g-color-surface-container-1, #ffffff);
+    border-radius: var(--slds-g-radius-border-3, 12px);
+}
+
+.section-slot,
+.sub-slot {
+    display: contents;
+}
+
+.no-adverse {
+    color: var(--slds-g-color-on-surface-2, #706e6b);
+}

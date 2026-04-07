@@ -1,0 +1,87 @@
+<template>
+    <div class="ahis-actions">
+        <div class="actions-header">
+            <h3 class="actions-title">
+                <lightning-icon icon-name="utility:checklist" size="x-small" class="actions-title-icon"></lightning-icon>
+                Suggested Actions
+            </h3>
+            <template lwc:if={hasPending}>
+                <span class="pending-count">{pendingLabel}</span>
+            </template>
+        </div>
+
+        <template lwc:if={noActions}>
+            <p class="no-actions">No suggested actions at this time.</p>
+        </template>
+
+        <template lwc:if={hasActions}>
+            <ul class="action-list">
+                <template for:each={formattedActions} for:item="action">
+                    <li key={action.id} class="action-item">
+                        <div class="action-row">
+                            <div class="action-info">
+                                <lightning-icon icon-name={action.actionIcon} size="x-small" class="action-icon"></lightning-icon>
+                                <div class="action-text">
+                                    <span class="action-title">{action.title}</span>
+                                    <span class="action-desc">{action.description}</span>
+                                </div>
+                            </div>
+                            <span class={action.priorityClass}>{action.priority}</span>
+                        </div>
+
+                        <template lwc:if={action.isPending}>
+                            <div class="action-footer">
+                                <div class="action-footer-left">
+                                    <lightning-button
+                                        variant="brand"
+                                        label="Accept"
+                                        data-action-id={action.id}
+                                        onclick={handleAccept}
+                                        class="action-accept-btn">
+                                    </lightning-button>
+                                    <lightning-button
+                                        variant="neutral"
+                                        label="Dismiss"
+                                        data-action-id={action.id}
+                                        onclick={handleDismissClick}>
+                                    </lightning-button>
+                                </div>
+                                <div class="action-footer-right">
+                                    <lightning-button-menu
+                                        alternative-text="More"
+                                        variant="bare"
+                                        icon-size="x-small"
+                                        menu-alignment="right"
+                                        data-action-id={action.id}
+                                        onselect={handleMenuSelect}>
+                                        <lightning-menu-item value="edit" label="Edit" icon-name="utility:edit"></lightning-menu-item>
+                                        <lightning-menu-item value="schedule" label="Schedule" icon-name="utility:event"></lightning-menu-item>
+                                    </lightning-button-menu>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template lwc:if={action.isAccepted}>
+                            <div class="action-status status-accepted">
+                                <lightning-icon icon-name="utility:success" size="xx-small" class="status-icon"></lightning-icon>
+                                Accepted
+                            </div>
+                        </template>
+                        <template lwc:if={action.isModified}>
+                            <div class="action-status status-modified">
+                                <lightning-icon icon-name="utility:edit" size="xx-small" class="status-icon"></lightning-icon>
+                                Modified
+                            </div>
+                        </template>
+                        <template lwc:if={action.isDismissed}>
+                            <div class="action-status status-dismissed">
+                                <lightning-icon icon-name="utility:close" size="xx-small" class="status-icon"></lightning-icon>
+                                Dismissed
+                            </div>
+                        </template>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</template>

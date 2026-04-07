@@ -1,0 +1,90 @@
+:host {
+    display: inline;
+}
+
+.citation-wrapper {
+    position: relative;
+    display: inline;
+}
+
+.citation-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 16px;
+    padding: 0 4px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--slds-g-color-accent-1, #0176d3);
+    background: var(--slds-g-color-accent-container-1, #e1ecff);
+    border: none;
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    cursor: pointer;
+    vertical-align: super;
+    transition: background 0.12s ease;
+}
+
+.citation-btn:hover {
+    background: var(--slds-g-color-accent-container-1, #d4e3ff);
+}
+
+.citation-popover {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    min-width: 220px;
+    background: var(--slds-g-color-surface-container-1, #ffffff);
+    border: 1px solid var(--slds-g-color-border-1, #e5e5e5);
+    border-radius: var(--slds-g-radius-border-3, 12px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    padding: var(--slds-g-spacing-3, 12px);
+}
+
+.popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--slds-g-spacing-2, 8px);
+}
+
+.popover-title {
+    font-size: var(--slds-g-font-scale-neg-1, 0.6875rem);
+    font-weight: 590;
+    color: var(--slds-g-color-on-surface-2, #706e6b);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.popover-body {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-1, 4px);
+}
+
+.popover-source-icon {
+    flex-shrink: 0;
+}
+
+.popover-source-name {
+    font-size: var(--slds-g-font-scale-base, 13px);
+    font-weight: 600;
+    color: var(--slds-g-color-accent-1, #0176d3);
+    text-decoration: none;
+}
+
+.popover-source-name:hover {
+    text-decoration: underline;
+}
+
+.popover-source-dot {
+    color: var(--slds-g-color-on-surface-2, #706e6b);
+}
+
+.popover-source-type {
+    font-size: var(--slds-g-font-scale-base, 13px);
+    color: var(--slds-g-color-on-surface-2, #706e6b);
+}

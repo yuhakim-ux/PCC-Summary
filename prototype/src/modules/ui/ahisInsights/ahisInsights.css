@@ -1,0 +1,224 @@
+:host {
+    display: block;
+}
+
+.ahis-insights {
+    padding: var(--slds-g-spacing-3, 12px);
+    background: var(--slds-g-color-surface-container-1, #ffffff);
+    border-radius: var(--slds-g-radius-border-3, 12px);
+    border: 1px solid var(--slds-g-color-border-1, #e5e5e5);
+}
+
+.insights-header {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 8px);
+    margin-bottom: var(--slds-g-spacing-3, 12px);
+}
+
+.insights-title {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-1, 4px);
+    font-size: var(--slds-g-font-scale-1, 0.8125rem);
+    font-weight: 590;
+    color: var(--slds-g-color-on-surface-1, #181818);
+    margin: 0;
+}
+
+.insights-title-icon {
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-on-surface-2, #706e6b);
+}
+
+.count-badge {
+    --slds-c-badge-color-background: var(--slds-g-color-surface-inverse-1, #032D60);
+    --slds-c-badge-text-color: var(--slds-g-color-on-surface-inverse-1, #fff);
+}
+
+.no-insights {
+    text-align: center;
+    color: var(--slds-g-color-on-surface-2, #706e6b);
+    font-size: var(--slds-g-font-scale-base, 13px);
+    padding: var(--slds-g-spacing-4, 16px) 0;
+}
+
+/* Nested agentic card (SLDS 2 pattern) */
+.nested-agentic-card {
+    background: var(--slds-g-color-palette-purple-90, #ece1f9);
+    border-radius: var(--slds-g-radius-border-3, 12px);
+    padding: var(--slds-g-spacing-3, 12px);
+    margin-bottom: var(--slds-g-spacing-3, 12px);
+    overflow: hidden;
+}
+
+.nested-agentic-header {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-1, 4px);
+    margin-bottom: var(--slds-g-spacing-2, 8px);
+}
+
+.nested-agentic-icon {
+    --slds-c-icon-color-foreground-default: #032d60;
+    flex-shrink: 0;
+}
+
+.nested-agentic-title {
+    font-size: var(--slds-g-font-scale-1, 0.8125rem);
+    font-weight: 590;
+    color: var(--slds-g-color-on-surface-1, #181818);
+}
+
+.risk-cards {
+    display: flex;
+    gap: var(--slds-g-spacing-2, 8px);
+    flex-wrap: wrap;
+}
+
+.risk-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--slds-g-spacing-3, 12px);
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    background: var(--slds-g-color-surface-container-1, #fff);
+    text-align: center;
+    border-left: 3px solid transparent;
+    flex: 1 1 0;
+    min-width: 70px;
+}
+
+.risk-card-clinical    { border-left-color: var(--slds-g-color-error-1, #ba0517); }
+.risk-card-social      { border-left-color: var(--slds-g-color-warning-1, #a96404); }
+.risk-card-operational { border-left-color: var(--slds-g-color-info-1, #0b5cab); }
+.risk-card-compliance  { border-left-color: var(--slds-g-color-success-1, #2e844a); }
+.risk-card-financial   { border-left-color: var(--slds-g-color-error-1, #ba0517); }
+
+.risk-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: var(--slds-g-spacing-1, 4px) 0;
+}
+
+.risk-label-text {
+    font-size: var(--slds-g-font-scale-neg-1, 0.6875rem);
+    color: var(--slds-g-color-on-surface-2, #5c5c5c);
+}
+
+/* Insight items */
+.insight-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.insight-item {
+    padding: var(--slds-g-spacing-3, 12px);
+    border: 1px solid var(--slds-g-color-border-1, #e5e5e5);
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    margin-bottom: var(--slds-g-spacing-2, 8px);
+}
+
+.insight-item:last-child {
+    margin-bottom: 0;
+}
+
+.insight-row {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 8px);
+    margin-bottom: var(--slds-g-spacing-2, 8px);
+}
+
+/* Risk badges */
+.risk-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    font-size: var(--slds-g-font-scale-neg-2, 10px);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.risk-clinical {
+    background-color: var(--slds-g-color-error-container-1, #fef1ee);
+    color: var(--slds-g-color-error-1, #ba0517);
+}
+
+.risk-social {
+    background-color: var(--slds-g-color-warning-container-1, #fef4e8);
+    color: var(--slds-g-color-warning-1, #a96404);
+}
+
+.risk-operational {
+    background-color: var(--slds-g-color-info-container-1, #eef4ff);
+    color: var(--slds-g-color-info-1, #0b5cab);
+}
+
+.risk-compliance {
+    background-color: var(--slds-g-color-success-container-1, #e6f7e9);
+    color: var(--slds-g-color-success-1, #2e844a);
+}
+
+.risk-financial {
+    background-color: var(--slds-g-color-error-container-1, #fef1ee);
+    color: var(--slds-g-color-error-1, #ba0517);
+}
+
+.insight-title-text {
+    font-weight: 590;
+    font-size: var(--slds-g-font-scale-base, 13px);
+    color: var(--slds-g-color-on-surface-1, #181818);
+    flex: 1;
+}
+
+/* Confidence badges */
+.confidence-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    font-size: var(--slds-g-font-scale-neg-2, 10px);
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.confidence-high {
+    background-color: var(--slds-g-color-success-container-1, #e6f7e9);
+    color: var(--slds-g-color-success-1, #2e844a);
+}
+
+.confidence-medium {
+    background-color: var(--slds-g-color-warning-container-1, #fef4e8);
+    color: var(--slds-g-color-warning-1, #a96404);
+}
+
+.confidence-low {
+    background-color: var(--slds-g-color-error-container-1, #fef1ee);
+    color: var(--slds-g-color-error-1, #ba0517);
+}
+
+.insight-desc {
+    font-size: var(--slds-g-font-scale-base, 13px);
+    color: var(--slds-g-color-on-surface-2, #706e6b);
+    line-height: 1.4;
+    margin-bottom: var(--slds-g-spacing-2, 8px);
+}
+
+.insight-sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--slds-g-spacing-1, 4px);
+    margin-bottom: var(--slds-g-spacing-2, 8px);
+    padding-top: var(--slds-g-spacing-2, 8px);
+    border-top: 1px dashed var(--slds-g-color-border-1, #e5e5e5);
+}
+
+.source-badge {
+    --slds-c-badge-color-background: var(--slds-g-color-surface-container-3, #e5e5e5);
+    --slds-c-badge-text-color: var(--slds-g-color-on-surface-2, #2e2e2e);
+}
+
+.drill-down-btn {
+    --slds-c-button-text-color: var(--slds-g-color-accent-1, #066AFE);
+}

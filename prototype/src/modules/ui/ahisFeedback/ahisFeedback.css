@@ -1,0 +1,57 @@
+:host {
+    display: block;
+}
+
+.feedback-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.feedback-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-1, 4px);
+}
+
+.feedback-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.12s ease;
+    padding: 0;
+}
+
+.feedback-btn:hover {
+    background: var(--slds-g-color-surface-2, #f3f3f3);
+}
+
+.feedback-btn-active {
+    background: var(--slds-g-color-accent-container-1, #e1ecff);
+}
+
+.feedback-btn-active:hover {
+    background: var(--slds-g-color-accent-container-1, #d4e3ff);
+}
+
+.feedback-btn-negative.feedback-btn-active {
+    background: var(--slds-g-color-error-container-1, #feded8);
+}
+
+.feedback-btn-negative.feedback-btn-active:hover {
+    background: var(--slds-g-color-error-container-1, #fdd0c8);
+}
+
+.feedback-icon {
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-accent-1, #0176d3);
+}
+
+.feedback-overflow {
+    margin-left: var(--slds-g-spacing-1, 4px);
+}

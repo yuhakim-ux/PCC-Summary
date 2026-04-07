@@ -1,0 +1,64 @@
+<template>
+    <div class="ahis-summary">
+        <template for:each={renderedSections} for:item="section">
+            <div key={section.id} class="section-slot">
+
+                <!-- Alert List -->
+                <template lwc:if={section.isAlertList}>
+                    <ui-ahis-section
+                        section-key={section.id}
+                        title={section.title}
+                        icon-name={section.icon}
+                        icon-class={section.iconClass}
+                        count={section.count}
+                        sources={section.sources}>
+                        <ui-ahis-alert-list items={section.data}></ui-ahis-alert-list>
+                    </ui-ahis-section>
+                </template>
+
+                <!-- Bullet List -->
+                <template lwc:if={section.isBulletList}>
+                    <ui-ahis-section
+                        section-key={section.id}
+                        title={section.title}
+                        icon-name={section.icon}
+                        icon-class={section.iconClass}
+                        count={section.count}
+                        sources={section.sources}>
+                        <ui-ahis-bullet-list items={section.data}></ui-ahis-bullet-list>
+                    </ui-ahis-section>
+                </template>
+
+                <!-- Bullet List or Empty (for Adverse Actions) -->
+                <template lwc:if={section.isBulletListOrEmpty}>
+                    <ui-ahis-section
+                        section-key={section.id}
+                        title={section.title}
+                        icon-name={section.icon}
+                        icon-class={section.iconClass}
+                        sources={section.sources}>
+                        <template lwc:if={section.hasData}>
+                            <ui-ahis-bullet-list items={section.data}></ui-ahis-bullet-list>
+                        </template>
+                        <template lwc:else>
+                            <p class="slds-m-top_x-small slds-text-body_small no-adverse">{section.emptyMessage}</p>
+                        </template>
+                    </ui-ahis-section>
+                </template>
+
+                <!-- Chip Group -->
+                <template lwc:if={section.isChipGroup}>
+                    <ui-ahis-section
+                        section-key={section.id}
+                        title={section.title}
+                        icon-name={section.icon}
+                        count={section.count}
+                        sources={section.sources}>
+                        <ui-ahis-chip-group items={section.data} summary={section.summary}></ui-ahis-chip-group>
+                    </ui-ahis-section>
+                </template>
+
+            </div>
+        </template>
+    </div>
+</template>

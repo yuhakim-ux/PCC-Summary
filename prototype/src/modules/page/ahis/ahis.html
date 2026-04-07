@@ -95,34 +95,45 @@
                 <div slot="title" class="title-row">
                     <div class="title-block">
                         <p class="slds-truncate title-text card-header-title-match">{cardTitle}</p>
-                        <p class="slds-text-body_small title-subtext">{cardSubtitle}</p>
                     </div>
                 </div>
 
-                <div slot="actions">
-                    <template lwc:if={showGenerateState}>
-                        <lightning-button
-                            label="Generate Summary"
-                            variant="brand"
-                            onclick={handleGenerate}
-                            class="slds-m-right_x-small">
-                        </lightning-button>
-                    </template>
-                    <lightning-button-icon
-                        icon-name="utility:refresh"
-                        alternative-text="Refresh"
-                        title="Regenerate Summary"
-                        onclick={handleRefresh}
-                        disabled={isLoading}>
-                    </lightning-button-icon>
+                <div slot="actions" class="actions-row">
+                    <lightning-button-menu
+                        alternative-text="More options"
+                        variant="bare"
+                        icon-name="utility:threedots"
+                        icon-size="x-small"
+                        menu-alignment="right">
+                        <lightning-menu-item label="Regenerate" value="regenerate" icon-name="utility:refresh"></lightning-menu-item>
+                        <lightning-menu-item label="Copy Summary" value="copy" icon-name="utility:copy"></lightning-menu-item>
+                        <lightning-menu-item label="Export as PDF" value="export" icon-name="utility:download"></lightning-menu-item>
+                    </lightning-button-menu>
                 </div>
 
-                <!-- Loading State -->
+
+                <!-- Loading State (Streaming skeleton) -->
                 <template lwc:if={isLoading}>
-                    <div class="slds-p-around_large slds-align_absolute-center loading-area">
-                        <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
-                        <p class="slds-m-top_medium slds-text-body_regular loading-title">Analyzing health intelligence…</p>
-                        <p class="slds-m-top_xx-small slds-text-body_small slds-text-color_weak">Collecting claim, clinical, and activity signals.</p>
+                    <div class="loading-area">
+                        <div class="streaming-content">
+                            <div class="streaming-title-skeleton">
+                                <div class="skeleton-line skeleton-line-title"></div>
+                            </div>
+                            <div class="streaming-body-skeleton">
+                                <div class="skeleton-line skeleton-line-long stream-delay-1"></div>
+                                <div class="skeleton-line skeleton-line-long stream-delay-2"></div>
+                                <div class="skeleton-line skeleton-line-medium stream-delay-3"></div>
+                                <div class="skeleton-line skeleton-line-short stream-delay-4"></div>
+                            </div>
+                            <div class="streaming-body-skeleton stream-delay-5">
+                                <div class="skeleton-line skeleton-line-long stream-delay-5"></div>
+                                <div class="skeleton-line skeleton-line-medium stream-delay-6"></div>
+                            </div>
+                        </div>
+                        <p class="loading-message">
+                            <span class="loading-dot-pulse"></span>
+                            Generating summary
+                        </p>
                     </div>
                 </template>
 
@@ -139,33 +150,45 @@
                     </div>
                 </template>
 
-                <!-- Generate State -->
+                <!-- Generate State (Empty) -->
                 <template lwc:if={showGenerateState}>
-                    <div class="slds-p-bottom_medium">
-                        <section class="nested-card">
-                            <div class="nested-card-header">
-                                <lightning-icon icon-name="utility:sparkles" size="x-small" class="sparkles-icon"></lightning-icon>
-                                <span class="nested-card-title">Generate 360 Summary</span>
-                                <lightning-button-icon
-                                    icon-name="utility:info"
-                                    alternative-text="Info"
-                                    size="small"
-                                    variant="bare"
-                                    class="info-icon-btn">
-                                </lightning-button-icon>
-                            </div>
-                            <p class="nested-card-body slds-text-color_weak">
-                                This summary is generated on demand to reduce latency and token usage.
-                            </p>
-                        </section>
+                    <div class="generate-empty-state">
+                        <div class="empty-illustration">
+                            <lightning-icon icon-name="utility:sparkles" size="large" class="empty-sparkles-icon"></lightning-icon>
+                        </div>
+                        <p class="empty-title">Generate Summary</p>
+                        <p class="empty-body">Click Generate to create a persona-aware health intelligence summary.</p>
+                        <div class="empty-cta">
+                            <lightning-button
+                                label="Generate"
+                                variant="brand"
+                                icon-name="utility:sparkles"
+                                onclick={handleGenerate}>
+                            </lightning-button>
+                        </div>
                     </div>
                 </template>
 
                 <!-- Main Content -->
                 <template lwc:if={showContent}>
-                    <div class="slds-p-bottom_small">
-                        <!-- Micro-Summary -->
-                        <div class="slds-m-bottom_small">
+                    <!-- Inline Timestamp + Regenerate -->
+                    <div class="content-timestamp-row">
+                        <span class="content-timestamp">{formattedTimestamp}</span>
+                        <lightning-button-icon
+                            icon-name="utility:refresh"
+                            alternative-text="Regenerate"
+                            title="Regenerate Summary"
+                            size="x-small"
+                            variant="bare"
+                            onclick={handleRefresh}
+                            class="regenerate-btn">
+                        </lightning-button-icon>
+                    </div>
+
+                    <div class="ahis-content-wrapper">
+                        <!-- CONTEXT ZONE -->
+                        <div class="ahis-context-zone">
+                            <ui-ahis-identity-grid rows={identityData}></ui-ahis-identity-grid>
                             <section class="nested-card">
                                 <div class="nested-card-header">
                                     <lightning-icon icon-name="utility:sparkles" size="x-small" class="sparkles-icon"></lightning-icon>
@@ -182,21 +205,46 @@
                             </section>
                         </div>
 
-                        <!-- Persona-aware Summary -->
-                        <div class="slds-m-bottom_small">
+                        <!-- DIVIDER -->
+                        <div class="ahis-zone-divider"></div>
+
+                        <!-- DETAILS ZONE -->
+                        <div class="ahis-details-zone">
                             <ui-ahis-summary
                                 ahis-data={ahisData}
-                                persona={resolvedPersona}>
+                                persona={resolvedPersona}
+                                collapsed={isCollapsed}>
                             </ui-ahis-summary>
                         </div>
+
+                        <!-- Action Bar — hidden (set showActionBar=true to restore) -->
+                        <template lwc:if={showActionBar}>
+                            <div class="content-footer-row">
+                                <div class="content-footer-left">
+                                    <lightning-button
+                                        label={primaryActionLabel}
+                                        variant="brand"
+                                        icon-name={primaryActionIcon}
+                                        class="footer-primary-btn">
+                                    </lightning-button>
+                                    <lightning-button
+                                        label={secondaryActionLabel}
+                                        variant="neutral"
+                                        class="footer-secondary-btn">
+                                    </lightning-button>
+                                </div>
+                                <ui-ahis-feedback
+                                    content-id="summary"
+                                    onfeedback={handleFeedback}>
+                                </ui-ahis-feedback>
+                            </div>
+                        </template>
                     </div>
 
-                    <!-- Footer -->
-                    <div class="card-footer slds-grid slds-grid_vertical-align-center">
-                        <lightning-icon icon-name="utility:clock" size="xx-small" class="footer-icon"></lightning-icon>
-                        <span class="slds-text-body_small">Generated: {formattedTimestamp}</span>
-                        <span class="footer-divider">|</span>
-                        <span class="slds-text-body_small footer-role">{footerRoleLabel}</span>
+
+                    <!-- Toggle button at the very bottom -->
+                    <div class="card-toggle">
+                        <button class="toggle-btn" onclick={handleToggleExpand}>{toggleLabel}</button>
                     </div>
                 </template>
             </lightning-card>

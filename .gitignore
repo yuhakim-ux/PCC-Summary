@@ -1,10 +1,6 @@
-# Salesforce DX / SFDX
+# Optional: Salesforce CLI local state (only if you use sf/sfdx in this tree)
 .sf/
 .sfdx/
-.localdevserver/
-
-# Salesforce metadata
-deploy/
 
 # Logs
 *.log

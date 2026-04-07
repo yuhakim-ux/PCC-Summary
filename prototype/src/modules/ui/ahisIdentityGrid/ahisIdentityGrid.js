@@ -1,9 +1,16 @@
 import { LightningElement, api } from 'lwc';
 
 export default class AhisIdentityGrid extends LightningElement {
-    @api rows = [];
+    @api rows = {};
 
-    get hasRows() {
-        return this.rows?.length > 0;
+    get hasLines() {
+        return this.rows?.lines?.length > 0;
+    }
+
+    get lines() {
+        return (this.rows?.lines || []).map((l) => ({
+            ...l,
+            computedClass: l.isPrimary ? 'id-line-primary' : 'id-line',
+        }));
     }
 }

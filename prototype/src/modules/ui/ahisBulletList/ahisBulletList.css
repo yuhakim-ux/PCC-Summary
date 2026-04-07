@@ -4,29 +4,17 @@
 
 .bullet-list {
     list-style: none;
-    margin: 0.25rem 0 0;
+    margin: var(--slds-g-spacing-1, 4px) 0 0;
     padding: 0;
 }
 
 .bullet-item {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.3rem 0 0.3rem 0.75rem;
-    font-size: 0.8125rem;
-    position: relative;
-}
-
-.bullet-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.7em;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background-color: var(--slds-g-color-on-surface-2, #706e6b);
+    align-items: baseline;
+    gap: var(--slds-g-spacing-1, 4px);
+    padding: var(--slds-g-spacing-1, 4px) 0;
+    font-size: var(--slds-g-font-scale-base, 13px);
 }
 
 .detail-item {
@@ -34,21 +22,9 @@
     flex-wrap: wrap;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.125rem;
-    padding: 0.3rem 0 0.3rem 0.75rem;
-    font-size: 0.8125rem;
-    position: relative;
-}
-
-.detail-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.7em;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background-color: var(--slds-g-color-on-surface-2, #706e6b);
+    gap: 2px;
+    padding: var(--slds-g-spacing-1, 4px) 0;
+    font-size: var(--slds-g-font-scale-base, 13px);
 }
 
 .item-primary {
@@ -58,11 +34,9 @@
 
 .item-secondary {
     color: var(--slds-g-color-on-surface-2, #706e6b);
-    font-size: 0.75rem;
 }
 
 .item-note {
-    font-size: 0.75rem;
     font-style: italic;
     color: var(--slds-g-color-on-surface-2, #706e6b);
     flex-basis: 100%;
@@ -71,29 +45,28 @@
 
 .detail-primary {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    align-items: baseline;
+    gap: var(--slds-g-spacing-1, 4px);
     width: 100%;
 }
 
 .detail-meta {
     display: flex;
     align-items: center;
-    gap: 0.375rem;
+    gap: var(--slds-g-spacing-1, 4px);
     flex-wrap: wrap;
 }
 
-/* Credential item variant */
 .cred-item {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.125rem;
-    padding: 0.375rem 0.75rem;
-    background: var(--slds-g-color-surface-2, #f8f8f8);
-    border-radius: 0.25rem;
-    margin-bottom: 0.125rem;
-    font-size: 0.8125rem;
+    gap: 2px;
+    padding: var(--slds-g-spacing-1, 4px) var(--slds-g-spacing-3, 12px);
+    background: var(--slds-g-color-surface-2, #f3f3f3);
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    margin-bottom: 2px;
+    font-size: var(--slds-g-font-scale-base, 13px);
     position: relative;
 }
 
@@ -101,7 +74,25 @@
     display: none;
 }
 
-/* Badge variants */
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+    position: relative;
+    top: -1px;
+}
+.status-dot-error   { background-color: var(--slds-g-color-error-1, #ea001e); }
+.status-dot-warning { background-color: var(--slds-g-color-warning-1, #ff8c00); }
+.status-dot-success { background-color: var(--slds-g-color-success-1, #45c65a); }
+.status-dot-info    { background-color: var(--slds-g-color-info-1, #1b96ff); }
+.status-dot-neutral { background-color: var(--slds-g-color-on-surface-2, #939090); }
+
+.dot-label {
+    color: var(--slds-g-color-on-surface-2, #706e6b);
+}
+
 .badge-error {
     --slds-c-badge-color-background: var(--slds-g-color-error-container-1, #feded8);
     --slds-c-badge-text-color: var(--slds-g-color-error-1, #ba0517);

@@ -43,33 +43,86 @@ function severityBadgeClass(severity) {
     return 'badge-neutral';
 }
 
+const STATUS_DOT_MAP = {
+    Denied: 'status-dot status-dot-error',
+    Overdue: 'status-dot status-dot-error',
+    Expired: 'status-dot status-dot-error',
+    Closed: 'status-dot status-dot-error',
+    Expiring: 'status-dot status-dot-warning',
+    Pending: 'status-dot status-dot-warning',
+    'Pending approval': 'status-dot status-dot-warning',
+    'Pending lab signature': 'status-dot status-dot-warning',
+    'Under Review': 'status-dot status-dot-warning',
+    'Under Investigation': 'status-dot status-dot-warning',
+    Scheduled: 'status-dot status-dot-info',
+    Approved: 'status-dot status-dot-success',
+    Paid: 'status-dot status-dot-success',
+    Active: 'status-dot status-dot-success',
+    Accredited: 'status-dot status-dot-success',
+    Complete: 'status-dot status-dot-success',
+    Current: 'status-dot status-dot-success',
+    Open: 'status-dot status-dot-info',
+    New: 'status-dot status-dot-info',
+    'Due Soon': 'status-dot status-dot-warning',
+    'Not Started': 'status-dot status-dot-neutral',
+};
+
+function statusDotClass(status) {
+    return STATUS_DOT_MAP[status] || 'status-dot status-dot-neutral';
+}
+
+function severityDotClass(severity) {
+    const s = (severity || '').toLowerCase();
+    if (s === 'high' || s === 'severe') return 'status-dot status-dot-error';
+    if (s === 'moderate') return 'status-dot status-dot-warning';
+    return 'status-dot status-dot-neutral';
+}
+
+function asBadge(badge, badgeClass) {
+    return { badge, badgeClass, isBadge: true, isDot: false };
+}
+
+function asDot(label, dotClass) {
+    return { badge: label, dotClass, isBadge: false, isDot: true };
+}
+
+function noIndicator() {
+    return { badge: null, isBadge: false, isDot: false };
+}
+
 /* ══════════════════════════════════════
    MEMBER DATA SELECTORS
    ══════════════════════════════════════ */
 
+function ageFromDob(dobStr) {
+    if (!dobStr) return null;
+    const [m, d, y] = dobStr.split('/').map(Number);
+    const dob = new Date(y, m - 1, d);
+    const now = new Date();
+    let age = now.getFullYear() - dob.getFullYear();
+    const mDiff = now.getMonth() - dob.getMonth();
+    if (mDiff < 0 || (mDiff === 0 && now.getDate() < dob.getDate())) age--;
+    return age;
+}
+
+function lastInteractionLine(li) {
+    if (!li) return null;
+    return `Last interaction: ${li.daysAgo} days ago for ${li.reason}`;
+}
+
 function buildMemberIdentity(ip) {
-    if (!ip) return [];
-    return [
-        { key: 'mid', label: 'Member ID', value: ip.memberId },
-        { key: 'name', label: 'Name', value: ip.name },
-        { key: 'dob', label: 'DOB', value: ip.dob },
-        { key: 'gender', label: 'Gender / Language', value: `${ip.gender} · ${ip.language}` },
-        {
-            key: 'plan',
-            label: 'Plan',
-            value: ip.planName,
-            statusValue: ip.planStatus,
-            statusClass:
-                ip.planStatusIndicator === 'green'
-                    ? 'badge-success'
-                    : ip.planStatusIndicator === 'yellow'
-                      ? 'badge-warning'
-                      : 'badge-error',
-        },
-        { key: 'eff', label: 'Effective Dates', value: ip.effectiveDates },
-        { key: 'pcp', label: 'PCP', value: ip.pcp },
-        { key: 'grp', label: 'Group #', value: ip.groupNumber },
-    ].filter((r) => r.value);
+    if (!ip) return {};
+    const age = ageFromDob(ip.dob);
+    const line1Parts = [ip.name, age != null ? `${age} yrs` : null, ip.language].filter(Boolean);
+    const line2Parts = [ip.planName, ip.memberId ? `Member ID: ${ip.memberId}` : null, ip.pcp ? `PCP: ${ip.pcp}` : null].filter(Boolean);
+    const line3 = lastInteractionLine(ip.lastInteraction);
+    return {
+        lines: [
+            { key: 'l1', text: line1Parts.join(' | '), isPrimary: true },
+            { key: 'l2', text: line2Parts.join(' | '), isPrimary: false },
+            line3 ? { key: 'l3', text: line3, isPrimary: false } : null,
+        ].filter(Boolean),
+    };
 }
 
 function mapAlerts(alerts) {
@@ -84,65 +137,52 @@ function mapMemberConditions(conditions) {
     return (conditions || []).map((c, i) => ({
         key: `mc-${i}`,
         primary: c.name,
-        badge: c.severity,
-        badgeClass: severityBadgeClass(c.severity),
+        ...asDot(c.severity, severityDotClass(c.severity)),
         isDetail: false,
         computedClass: 'bullet-item',
     }));
 }
 
 function mapMemberClaims(claims) {
-    return (claims || []).map((c, i) => ({
-        key: `clm-${i}`,
-        primary: c.service,
-        secondary: c.claimId,
-        badge: c.status,
-        badgeClass: statusBadgeClass(c.status),
-        metaItems: [
-            { key: `clm-${i}-billed`, text: `Billed: ${c.billedAmount}` },
-            { key: `clm-${i}-resp`, text: `Resp: ${c.patientResponsibility}` },
-        ],
-        note: c.appealStatus ? `\u26A0 ${c.appealStatus}` : null,
-        isDetail: true,
-        hasMetaLine: true,
-        computedClass: 'detail-item',
+    return (claims || []).map((c, i) => {
+        const isCritical = c.status === 'Denied';
+        return {
+            key: `clm-${i}`,
+            primary: c.service,
+            secondary: c.claimId,
+            ...(isCritical ? asBadge(c.status, statusBadgeClass(c.status)) : asDot(c.status, statusDotClass(c.status))),
+            metaItems: [
+                { key: `clm-${i}-billed`, text: `Billed: ${c.billedAmount}` },
+                { key: `clm-${i}-resp`, text: `Resp: ${c.patientResponsibility}` },
+            ],
+            note: null,
+            isDetail: true,
+            hasMetaLine: true,
+            computedClass: 'detail-item',
+        };
+    });
+}
+
+function mapMemberPriorAuths(priorAuths) {
+    return (priorAuths || []).map((pa, i) => ({
+        key: `pa-${i}`,
+        primary: pa.service,
+        secondary: pa.authId,
+        ...asDot(pa.status, statusDotClass(pa.status)),
+        isDetail: false,
+        computedClass: 'bullet-item',
     }));
 }
 
-function mapMemberPriorAuths(paData) {
-    if (!paData) return null;
-    const subSections = [];
-    if (paData.priorAuths?.length > 0) {
-        subSections.push({
-            key: 'sub-pa',
-            label: 'Prior Authorizations',
-            items: paData.priorAuths.map((pa, i) => ({
-                key: `pa-${i}`,
-                primary: pa.service,
-                secondary: pa.authId,
-                badge: pa.status,
-                badgeClass: statusBadgeClass(pa.status),
-                isDetail: false,
-                computedClass: 'bullet-item',
-            })),
-        });
-    }
-    if (paData.appeals?.length > 0) {
-        subSections.push({
-            key: 'sub-appeals',
-            label: 'Appeals',
-            items: paData.appeals.map((a, i) => ({
-                key: `apl-${i}`,
-                primary: a.description,
-                secondary: a.appealId,
-                badge: `SLA: ${a.slaDaysRemaining} days`,
-                badgeClass: 'badge-error',
-                isDetail: false,
-                computedClass: 'bullet-item',
-            })),
-        });
-    }
-    return subSections.length > 0 ? subSections : null;
+function mapMemberAppeals(appeals) {
+    return (appeals || []).map((a, i) => ({
+        key: `apl-${i}`,
+        primary: a.description,
+        secondary: a.appealId,
+        ...asBadge(`SLA: ${a.slaDaysRemaining} days`, 'badge-error'),
+        isDetail: false,
+        computedClass: 'bullet-item',
+    }));
 }
 
 function mapMemberOpenCases(cases) {
@@ -150,8 +190,7 @@ function mapMemberOpenCases(cases) {
         key: `oc-${i}`,
         primary: c.subject,
         secondary: c.caseNumber,
-        badge: c.status,
-        badgeClass: statusBadgeClass(c.status),
+        ...asDot(c.status, statusDotClass(c.status)),
         isDetail: false,
         computedClass: 'bullet-item',
     }));
@@ -174,25 +213,18 @@ function mapMemberCareGaps(careGaps) {
    ══════════════════════════════════════ */
 
 function buildPatientIdentity(id) {
-    if (!id) return [];
+    if (!id) return {};
+    const line1Parts = [id.name, id.age != null ? `${id.age} yrs` : null, id.language].filter(Boolean);
+    const line2Parts = [id.mrn ? `MRN: ${id.mrn}` : null, id.pcp ? `PCP: ${id.pcp}` : null, id.riskLevel].filter(Boolean);
     const lc = id.lastContact;
-    const lastContactStr = lc ? `${lc.daysAgo}d ago via ${lc.channel} (${lc.topic})` : '';
-    return [
-        { key: 'name', label: 'Name', value: id.name },
-        { key: 'age', label: 'Age / Gender', value: `${id.age}yo · ${id.gender}` },
-        { key: 'lang', label: 'Language', value: id.language },
-        { key: 'mrn', label: 'MRN', value: id.mrn },
-        { key: 'pcp', label: 'PCP', value: id.pcp },
-        { key: 'coord', label: 'Care Coordinator', value: id.careCoordinator },
-        { key: 'lc', label: 'Last Contact', value: lastContactStr },
-        {
-            key: 'risk',
-            label: 'Risk Level',
-            value: id.riskLevel,
-            statusValue: id.riskLevel,
-            statusClass: (id.riskLevel || '').toLowerCase().includes('high') ? 'badge-error' : 'badge-warning',
-        },
-    ].filter((r) => r.value);
+    const line3 = lc ? `Last contact: ${lc.daysAgo} days ago via ${lc.channel} (${lc.topic})` : null;
+    return {
+        lines: [
+            { key: 'l1', text: line1Parts.join(' | '), isPrimary: true },
+            { key: 'l2', text: line2Parts.join(' | '), isPrimary: false },
+            line3 ? { key: 'l3', text: line3, isPrimary: false } : null,
+        ].filter(Boolean),
+    };
 }
 
 function mapPatientConditions(snapshot) {
@@ -200,8 +232,7 @@ function mapPatientConditions(snapshot) {
         key: `cond-${i}`,
         primary: c.name,
         secondary: [c.stage, c.onsetDate ? `onset ${c.onsetDate}` : ''].filter(Boolean).join(' · ') || undefined,
-        badge: c.severity,
-        badgeClass: severityBadgeClass(c.severity),
+        ...asDot(c.severity, severityDotClass(c.severity)),
         isDetail: false,
         computedClass: 'bullet-item',
     }));
@@ -212,82 +243,61 @@ function mapPatientMedications(meds) {
         key: `med-${i}`,
         primary: m.name,
         secondary: [m.dose, m.frequency].filter(Boolean).join(' — '),
-        badge: m.refillAlert || null,
-        badgeClass: 'badge-warning',
+        ...(m.refillAlert ? asBadge(m.refillAlert, 'badge-warning') : noIndicator()),
         metaItems: m.prescriber ? [{ key: `med-${i}-presc`, text: m.prescriber }] : [],
         note: m.sideEffects || null,
         isDetail: true,
-        hasMetaLine: !!(m.refillAlert || m.prescriber),
+        hasMetaLine: !!m.prescriber,
         computedClass: 'detail-item',
     }));
 }
 
-function mapPatientActivity(activity) {
-    if (!activity) return null;
-    const subSections = [];
+function mapPatientEncounters(encounters) {
+    return (encounters || []).map((enc) => ({
+        key: enc.date,
+        primary: enc.type,
+        secondary: `${enc.reason} — ${enc.date}` + (enc.provider ? ` · ${enc.provider}` : ''),
+        ...noIndicator(),
+        isDetail: false,
+        computedClass: 'bullet-item',
+    }));
+}
 
-    if (activity.encounters?.length > 0) {
-        subSections.push({
-            key: 'sub-encounters',
-            label: 'Encounters',
-            items: activity.encounters.map((enc) => ({
-                key: enc.date,
-                primary: enc.type,
-                secondary: `${enc.reason} — ${enc.date}` + (enc.provider ? ` · ${enc.provider}` : ''),
-                isDetail: false,
-                computedClass: 'bullet-item',
-            })),
-        });
-    }
-    if (activity.scheduledProcedures?.length > 0) {
-        subSections.push({
-            key: 'sub-procedures',
-            label: 'Scheduled Procedures',
-            items: activity.scheduledProcedures.map((p, i) => ({
-                key: `proc-${i}`,
-                primary: p.name,
-                secondary: p.date,
-                badge: p.status,
-                badgeClass: statusBadgeClass(p.status),
-                isDetail: false,
-                computedClass: 'bullet-item',
-            })),
-        });
-    }
-    if (activity.pendingLabs?.length > 0) {
-        subSections.push({
-            key: 'sub-labs',
-            label: 'Pending Labs',
-            items: activity.pendingLabs.map((l, i) => ({
-                key: `lab-${i}`,
-                primary: l.name,
-                secondary: `Ordered: ${l.orderedDate}`,
-                badge: l.status,
-                badgeClass: statusBadgeClass(l.status),
-                isDetail: false,
-                computedClass: 'bullet-item',
-            })),
-        });
-    }
-    if (activity.immunizations?.length > 0) {
-        subSections.push({
-            key: 'sub-immunizations',
-            label: 'Immunizations',
-            items: activity.immunizations.map((imm, i) => {
-                const cls = imm.status === 'Current' ? 'badge-success' : imm.status === 'Overdue' ? 'badge-error' : 'badge-warning';
-                return {
-                    key: `imm-${i}`,
-                    primary: imm.name,
-                    badge: imm.status,
-                    badgeClass: cls,
-                    isDetail: false,
-                    computedClass: 'bullet-item',
-                };
-            }),
-        });
-    }
+function mapPatientScheduledProcedures(procedures) {
+    return (procedures || []).map((p, i) => ({
+        key: `proc-${i}`,
+        primary: p.name,
+        secondary: `${p.date}${p.status ? ` · ${p.status}` : ''}`,
+        ...noIndicator(),
+        isDetail: false,
+        computedClass: 'bullet-item',
+    }));
+}
 
-    return subSections.length > 0 ? subSections : null;
+function mapPatientPendingLabs(labs) {
+    return (labs || []).map((l, i) => ({
+        key: `lab-${i}`,
+        primary: l.name,
+        secondary: `Ordered: ${l.orderedDate}${l.status ? ` · ${l.status}` : ''}`,
+        ...noIndicator(),
+        isDetail: false,
+        computedClass: 'bullet-item',
+    }));
+}
+
+function mapPatientImmunizations(immunizations) {
+    return (immunizations || []).map((imm, i) => {
+        const isCritical = imm.status === 'Overdue';
+        return {
+            key: `imm-${i}`,
+            primary: imm.name,
+            ...(isCritical
+                ? asBadge(imm.status, 'badge-error')
+                : asDot(imm.status, statusDotClass(imm.status))),
+            isDetail: false,
+            computedClass: 'bullet-item',
+        };
+    });
 }
 
 function mapPatientReferrals(referrals) {
@@ -295,8 +305,7 @@ function mapPatientReferrals(referrals) {
         key: `ref-${i}`,
         primary: r.specialty,
         secondary: `from ${r.referringProvider} · ${r.date}`,
-        badge: r.status,
-        badgeClass: statusBadgeClass(r.status),
+        ...asDot(r.status, statusDotClass(r.status)),
         isDetail: false,
         computedClass: 'bullet-item',
     }));
@@ -310,44 +319,26 @@ function mapPatientCareGaps(gaps) {
     }));
 }
 
-function mapPatientCareManagement(cm) {
-    if (!cm) return null;
-    const subSections = [];
+function mapCarePrograms(carePrograms) {
+    return (carePrograms || []).map((prog) => ({
+        key: prog.name,
+        label: `${prog.name} · ${prog.status} · Since ${prog.startDate}`,
+    }));
+}
 
-    if (cm.carePrograms?.length > 0) {
-        subSections.push({
-            key: 'sub-programs',
-            label: null,
-            componentOverride: 'chip-group',
-            items: cm.carePrograms.map((prog) => ({
-                key: prog.name,
-                label: `${prog.name} · ${prog.status} · Since ${prog.startDate}`,
-            })),
-        });
-    }
-    if (cm.barriers?.length > 0) {
-        subSections.push({
-            key: 'sub-barriers',
-            label: 'Barriers',
-            componentOverride: 'alert-list',
-            items: cm.barriers.map((b, i) => ({ key: `pb-${i}`, text: b, level: 'info' })),
-        });
-    }
-    if (cm.careTeam?.length > 0) {
-        subSections.push({
-            key: 'sub-team',
-            label: 'Care Team',
-            items: cm.careTeam.map((member) => ({
-                key: member.name,
-                primary: member.name,
-                secondary: member.role,
-                isDetail: false,
-                computedClass: 'bullet-item',
-            })),
-        });
-    }
+function mapCareBarriers(barriers) {
+    return (barriers || []).map((b, i) => ({ key: `pb-${i}`, text: b, level: 'info' }));
+}
 
-    return subSections.length > 0 ? subSections : null;
+function mapCareTeam(careTeam) {
+    return (careTeam || []).map((member) => ({
+        key: member.name,
+        primary: member.name,
+        secondary: member.role,
+        ...noIndicator(),
+        isDetail: false,
+        computedClass: 'bullet-item',
+    }));
 }
 
 /* ══════════════════════════════════════
@@ -355,31 +346,23 @@ function mapPatientCareManagement(cm) {
    ══════════════════════════════════════ */
 
 function buildProviderSnapshot(ps) {
-    if (!ps) return [];
-    const rows = [
-        { key: 'npi', label: 'NPI', value: `${ps.npi} (${ps.npiType})` },
-        { key: 'name', label: 'Name', value: ps.name },
-        { key: 'spec', label: 'Specialty', value: ps.specialty },
-        { key: 'tin', label: 'Tax ID (TIN)', value: ps.taxId },
-        { key: 'addr', label: 'Address', value: ps.address },
-        { key: 'phone', label: 'Phone', value: ps.phone },
-    ];
-    if (ps.rosterSize) {
-        rows.push({ key: 'roster', label: 'Roster Size', value: `${ps.rosterSize} physicians` });
-    }
-    if (ps.specialtiesOffered?.length > 0) {
-        rows.push({ key: 'specs', label: 'Specialties', value: ps.specialtiesOffered.join(', ') });
-    }
-    if (ps.acceptingNewPatients !== null && ps.acceptingNewPatients !== undefined) {
-        rows.push({
-            key: 'anp',
-            label: 'Accepting New Patients',
-            value: ps.acceptingNewPatients ? 'Yes' : 'No',
-            statusValue: ps.acceptingNewPatients ? 'Yes' : 'No',
-            statusClass: ps.acceptingNewPatients ? 'badge-success' : 'badge-error',
-        });
-    }
-    return rows;
+    if (!ps) return {};
+    const line1Parts = [ps.name, ps.specialty].filter(Boolean);
+    const line2Parts = [ps.npi ? `NPI: ${ps.npi}` : null, ps.phone, ps.acceptingNewPatients != null ? (ps.acceptingNewPatients ? 'Accepting Patients' : 'Not Accepting') : null].filter(Boolean);
+    const line3 = lastInteractionLine(ps.lastInteraction);
+    return {
+        lines: [
+            { key: 'l1', text: line1Parts.join(' | '), isPrimary: true },
+            { key: 'l2', text: line2Parts.join(' | '), isPrimary: false },
+            line3 ? { key: 'l3', text: line3, isPrimary: false } : null,
+        ].filter(Boolean),
+    };
+}
+
+function credIndicator(status) {
+    if (!status) return noIndicator();
+    const critical = ['Expiring', 'Expired'].includes(status);
+    return critical ? asBadge(status, statusBadgeClass(status)) : asDot(status, statusDotClass(status));
 }
 
 function mapProviderCredentials(cred) {
@@ -391,8 +374,7 @@ function mapProviderCredentials(cred) {
             key: 'lic',
             primary: 'State License',
             secondary: `${cred.stateLicense.number} · ${cred.stateLicense.state}`,
-            badge: cred.stateLicense.status,
-            badgeClass: statusBadgeClass(cred.stateLicense.status),
+            ...credIndicator(cred.stateLicense.status),
             metaItems: cred.stateLicense.expiryDate ? [{ key: 'lic-exp', text: `Expires ${cred.stateLicense.expiryDate}` }] : [],
             isDetail: true,
             hasMetaLine: true,
@@ -404,10 +386,9 @@ function mapProviderCredentials(cred) {
             key: 'flic',
             primary: 'Facility License',
             secondary: cred.facilityLicense,
-            badge: 'Active',
-            badgeClass: 'badge-success',
+            ...asDot('Active', statusDotClass('Active')),
             isDetail: true,
-            hasMetaLine: true,
+            hasMetaLine: false,
             metaItems: [],
             computedClass: 'cred-item',
         });
@@ -417,10 +398,9 @@ function mapProviderCredentials(cred) {
             key: 'cms',
             primary: 'CMS Certification',
             secondary: cred.cmsCertification,
-            badge: 'Active',
-            badgeClass: 'badge-success',
+            ...asDot('Active', statusDotClass('Active')),
             isDetail: true,
-            hasMetaLine: true,
+            hasMetaLine: false,
             metaItems: [],
             computedClass: 'cred-item',
         });
@@ -430,10 +410,9 @@ function mapProviderCredentials(cred) {
             key: 'accred',
             primary: 'Accreditation',
             secondary: cred.accreditation,
-            badge: 'Accredited',
-            badgeClass: 'badge-success',
+            ...asDot('Accredited', statusDotClass('Accredited')),
             isDetail: true,
-            hasMetaLine: true,
+            hasMetaLine: false,
             metaItems: [],
             computedClass: 'cred-item',
         });
@@ -443,24 +422,23 @@ function mapProviderCredentials(cred) {
             key: 'clia',
             primary: 'CLIA Certificate',
             secondary: cred.cliaCertificate,
-            badge: 'Active',
-            badgeClass: 'badge-success',
+            ...asDot('Active', statusDotClass('Active')),
             isDetail: true,
-            hasMetaLine: true,
+            hasMetaLine: false,
             metaItems: [],
             computedClass: 'cred-item',
         });
     }
     if (cred.boardCertifications?.length > 0) {
+        const extraMeta = cred.boardCertifications.length > 2 ? [{ key: 'board-more', text: `+${cred.boardCertifications.length - 2} more` }] : [];
         rows.push({
             key: 'board',
             primary: 'Board Certifications',
             secondary: cred.boardCertifications.map((bc) => bc.name).join(', '),
-            badge: 'Active',
-            badgeClass: 'badge-success',
-            metaItems: cred.boardCertifications.length > 2 ? [{ key: 'board-more', text: `+${cred.boardCertifications.length - 2} more` }] : [],
+            ...asDot('Active', statusDotClass('Active')),
+            metaItems: extraMeta,
             isDetail: true,
-            hasMetaLine: true,
+            hasMetaLine: extraMeta.length > 0,
             computedClass: 'cred-item',
         });
     }
@@ -469,8 +447,7 @@ function mapProviderCredentials(cred) {
             key: 'dea',
             primary: 'DEA Registration',
             secondary: cred.dea.number,
-            badge: cred.dea.status,
-            badgeClass: statusBadgeClass(cred.dea.status),
+            ...credIndicator(cred.dea.status),
             metaItems: cred.dea.expiryDate ? [{ key: 'dea-exp', text: `Expires ${cred.dea.expiryDate}` }] : [],
             isDetail: true,
             hasMetaLine: true,
@@ -482,8 +459,7 @@ function mapProviderCredentials(cred) {
             key: 'mal',
             primary: 'Malpractice Insurance',
             secondary: cred.malpracticeInsurance.carrier,
-            badge: cred.malpracticeInsurance.status,
-            badgeClass: statusBadgeClass(cred.malpracticeInsurance.status),
+            ...credIndicator(cred.malpracticeInsurance.status),
             metaItems: cred.malpracticeInsurance.expiryDate ? [{ key: 'mal-exp', text: `Expires ${cred.malpracticeInsurance.expiryDate}` }] : [],
             isDetail: true,
             hasMetaLine: true,
@@ -495,6 +471,7 @@ function mapProviderCredentials(cred) {
             key: 'lastcred',
             primary: 'Last Credentialing',
             secondary: cred.lastCredentialingDate,
+            ...noIndicator(),
             metaItems: cred.nextRecredentialingDue ? [{ key: 'nextcred', text: `Next due: ${cred.nextRecredentialingDue}` }] : [],
             isDetail: true,
             hasMetaLine: !!cred.nextRecredentialingDue,
@@ -509,8 +486,7 @@ function mapProviderNetworks(networks) {
         key: `net-${i}`,
         primary: n.networkName,
         secondary: `Eff: ${n.effectiveDate}`,
-        badge: n.contractStatus,
-        badgeClass: statusBadgeClass(n.contractStatus),
+        ...asDot(n.contractStatus, statusDotClass(n.contractStatus)),
         metaItems: [
             { key: `net-${i}-panel`, text: `Panel: ${n.panelStatus}` },
             ...(n.feeScheduleTier ? [{ key: `net-${i}-fee`, text: n.feeScheduleTier }] : []),
@@ -518,9 +494,6 @@ function mapProviderNetworks(networks) {
         isDetail: true,
         hasMetaLine: true,
         computedClass: 'detail-item',
-        extraBadges: [
-            { label: `Panel: ${n.panelStatus}`, badgeClass: n.panelStatus === 'Closed' ? 'badge-error' : 'badge-success' },
-        ],
     }));
 }
 
@@ -529,8 +502,7 @@ function mapProviderOpenCases(cases) {
         key: `poc-${i}`,
         primary: c.type,
         secondary: c.caseNumber,
-        badge: c.status,
-        badgeClass: statusBadgeClass(c.status),
+        ...asDot(c.status, statusDotClass(c.status)),
         isDetail: false,
         computedClass: 'bullet-item',
     }));
@@ -541,8 +513,7 @@ function mapProviderAdverseActions(actions) {
         key: aa.type,
         primary: aa.type,
         secondary: aa.description,
-        badge: aa.status,
-        badgeClass: 'badge-error',
+        ...asBadge(aa.status, 'badge-error'),
         isDetail: false,
         computedClass: 'bullet-item',
     }));
@@ -578,49 +549,79 @@ const SECTION_DEFS = [
         personas: ['member'],
         dataSelector: (d) => mapAlerts(d.alerts),
         countSelector: (d) => d.alerts?.length,
+        sources: [
+            { id: 'hc-alerts', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+            { id: 'd360-alerts', name: 'Data 360', type: 'Zero-Copy', iconName: 'standard:data_streams', recordUrl: '#' },
+        ],
     },
     {
         id: 'conditions',
         component: 'bullet-list',
         title: 'Active Conditions',
-        icon: 'utility:heart',
         personas: ['member'],
         dataSelector: (d) => mapMemberConditions(d.conditions),
         countSelector: (d) => d.conditions?.length,
+        sources: [
+            { id: 'hc-cond', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+            { id: 'd360-cond', name: 'Data 360', type: 'Zero-Copy', iconName: 'standard:data_streams', recordUrl: '#' },
+        ],
     },
     {
         id: 'claimsOverview',
         component: 'bullet-list',
         title: 'Claims Overview',
-        icon: 'utility:moneybag',
         personas: ['member'],
         dataSelector: (d) => mapMemberClaims(d.claimsOverview),
         countSelector: (d) => d.claimsOverview?.length,
+        sources: [
+            { id: 'hc-clm', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+            { id: 'clapi', name: 'Claims API', type: 'External', iconName: 'standard:record', recordUrl: '#' },
+        ],
     },
     {
-        id: 'priorAuthAppeals',
-        component: 'composite',
-        title: 'Prior Auth & Appeals',
-        icon: 'utility:edit_form',
+        id: 'priorAuths',
+        component: 'bullet-list',
+        title: 'Prior Authorizations',
         personas: ['member'],
-        dataSelector: (d) => mapMemberPriorAuths(d.priorAuthAppeals),
+        dataSelector: (d) => mapMemberPriorAuths(d.priorAuthAppeals?.priorAuths),
+        countSelector: (d) => d.priorAuthAppeals?.priorAuths?.length,
+        sources: [
+            { id: 'hc-pa', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
+    },
+    {
+        id: 'appeals',
+        component: 'bullet-list',
+        title: 'Appeals',
+        personas: ['member'],
+        dataSelector: (d) => mapMemberAppeals(d.priorAuthAppeals?.appeals),
+        countSelector: (d) => d.priorAuthAppeals?.appeals?.length,
+        sources: [
+            { id: 'hc-apl', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
     },
     {
         id: 'memberOpenCases',
         component: 'bullet-list',
         title: 'Open Cases',
-        icon: 'utility:cases',
         personas: ['member'],
         dataSelector: (d) => mapMemberOpenCases(d.openCases),
         countSelector: (d) => d.openCases?.length,
+        sources: [
+            { id: 'hc-oc', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
     },
     {
         id: 'memberCareGaps',
         component: 'alert-list',
         title: 'Care Gaps & Barriers',
-        icon: 'utility:task',
         personas: ['member'],
         dataSelector: (d) => mapMemberCareGaps(d.careGaps),
+        countSelector: (d) => (d.careGaps?.gaps?.length || 0) + (d.careGaps?.barriers?.length || 0),
+        sources: [
+            { id: 'hc-cg', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+            { id: 'd360-cg', name: 'Data 360', type: 'Zero-Copy', iconName: 'standard:data_streams', recordUrl: '#' },
+        ],
     },
 
     /* ── PATIENT ── */
@@ -634,36 +635,81 @@ const SECTION_DEFS = [
         id: 'clinicalSnapshot',
         component: 'bullet-list',
         title: 'Clinical Snapshot',
-        icon: 'utility:heart',
         personas: ['patient'],
         dataSelector: (d) => mapPatientConditions(d.clinicalSnapshot),
         countSelector: (d) => d.clinicalSnapshot?.length,
+        sources: [
+            { id: 'hc-cs', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+            { id: 'ehr-cs', name: 'EHR System', type: 'External', iconName: 'standard:record', recordUrl: '#' },
+        ],
     },
     {
         id: 'medications',
         component: 'bullet-list',
         title: 'Active Medications',
-        icon: 'utility:pills',
         personas: ['patient'],
         dataSelector: (d) => mapPatientMedications(d.medications),
         countSelector: (d) => d.medications?.length,
+        sources: [
+            { id: 'pharma', name: 'Pharmacy API', type: 'External', iconName: 'standard:medicine', recordUrl: '#' },
+            { id: 'hc-med', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
     },
     {
-        id: 'activity',
-        component: 'composite',
-        title: 'Recent & Upcoming Activity',
-        icon: 'utility:event',
+        id: 'encounters',
+        component: 'bullet-list',
+        title: 'Encounters',
         personas: ['patient'],
-        dataSelector: (d) => mapPatientActivity(d.recentActivity),
+        dataSelector: (d) => mapPatientEncounters(d.recentActivity?.encounters),
+        countSelector: (d) => d.recentActivity?.encounters?.length,
+        sources: [
+            { id: 'hc-enc', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
+    },
+    {
+        id: 'scheduledProcedures',
+        component: 'bullet-list',
+        title: 'Scheduled Procedures',
+        personas: ['patient'],
+        dataSelector: (d) => mapPatientScheduledProcedures(d.recentActivity?.scheduledProcedures),
+        countSelector: (d) => d.recentActivity?.scheduledProcedures?.length,
+        sources: [
+            { id: 'hc-sp', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
+    },
+    {
+        id: 'pendingLabs',
+        component: 'bullet-list',
+        title: 'Pending Labs',
+        personas: ['patient'],
+        dataSelector: (d) => mapPatientPendingLabs(d.recentActivity?.pendingLabs),
+        countSelector: (d) => d.recentActivity?.pendingLabs?.length,
+        sources: [
+            { id: 'hc-lab', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+            { id: 'ehr-lab', name: 'Lab System', type: 'External', iconName: 'standard:record', recordUrl: '#' },
+        ],
+    },
+    {
+        id: 'immunizations',
+        component: 'bullet-list',
+        title: 'Immunizations',
+        personas: ['patient'],
+        dataSelector: (d) => mapPatientImmunizations(d.recentActivity?.immunizations),
+        countSelector: (d) => d.recentActivity?.immunizations?.length,
+        sources: [
+            { id: 'hc-imm', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
     },
     {
         id: 'referrals',
         component: 'bullet-list',
         title: 'Referrals',
-        icon: 'utility:link',
         personas: ['patient'],
         dataSelector: (d) => mapPatientReferrals(d.referrals),
         countSelector: (d) => d.referrals?.length,
+        sources: [
+            { id: 'hc-ref', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
     },
     {
         id: 'patientCareGaps',
@@ -674,14 +720,43 @@ const SECTION_DEFS = [
         personas: ['patient'],
         dataSelector: (d) => mapPatientCareGaps(d.careGaps),
         countSelector: (d) => d.careGaps?.length,
+        sources: [
+            { id: 'hc-pcg', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+            { id: 'd360-pcg', name: 'Data 360', type: 'Zero-Copy', iconName: 'standard:data_streams', recordUrl: '#' },
+        ],
     },
     {
-        id: 'careManagement',
-        component: 'composite',
-        title: 'Care Management',
-        icon: 'utility:task',
+        id: 'carePrograms',
+        component: 'chip-group',
+        title: 'Care Programs',
         personas: ['patient'],
-        dataSelector: (d) => mapPatientCareManagement(d.careManagement),
+        dataSelector: (d) => mapCarePrograms(d.careManagement?.carePrograms),
+        countSelector: (d) => d.careManagement?.carePrograms?.length,
+        sources: [
+            { id: 'hc-cp', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
+    },
+    {
+        id: 'careBarriers',
+        component: 'alert-list',
+        title: 'Barriers',
+        personas: ['patient'],
+        dataSelector: (d) => mapCareBarriers(d.careManagement?.barriers),
+        countSelector: (d) => d.careManagement?.barriers?.length,
+        sources: [
+            { id: 'hc-cb', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
+    },
+    {
+        id: 'careTeam',
+        component: 'bullet-list',
+        title: 'Care Team',
+        personas: ['patient'],
+        dataSelector: (d) => mapCareTeam(d.careManagement?.careTeam),
+        countSelector: (d) => d.careManagement?.careTeam?.length,
+        sources: [
+            { id: 'hc-ct', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
     },
 
     /* ── PROVIDER ── */
@@ -695,42 +770,51 @@ const SECTION_DEFS = [
         id: 'credentialing',
         component: 'bullet-list',
         title: 'Credentialing & Compliance',
-        icon: 'utility:shield',
         personas: ['provider'],
         dataSelector: (d) => mapProviderCredentials(d.credentialing),
+        sources: [
+            { id: 'caqh', name: 'CAQH ProView', type: 'External', iconName: 'standard:record', recordUrl: '#' },
+            { id: 'hc-cred', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
     },
     {
         id: 'network',
         component: 'bullet-list',
         title: 'Network Participation',
-        icon: 'utility:world',
         personas: ['provider'],
         dataSelector: (d) => mapProviderNetworks(d.networkParticipation),
         countSelector: (d) => d.networkParticipation?.length,
+        sources: [
+            { id: 'hc-net', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
     },
     {
         id: 'providerOpenCases',
         component: 'bullet-list',
         title: 'Open Cases',
-        icon: 'utility:cases',
         personas: ['provider'],
         dataSelector: (d) => mapProviderOpenCases(d.openCases),
         countSelector: (d) => d.openCases?.length,
+        sources: [
+            { id: 'hc-poc', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
     },
     {
         id: 'adverseActions',
         component: 'bullet-list-or-empty',
         title: 'Adverse Actions',
-        icon: 'utility:ban',
         personas: ['provider'],
         dataSelector: (d) => mapProviderAdverseActions(d.adverseActions),
         emptyMessage: '\u2705 No adverse actions on file.',
+        sources: [
+            { id: 'hc-aa', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+            { id: 'npdb', name: 'NPDB', type: 'External', iconName: 'standard:record', recordUrl: '#' },
+        ],
     },
     {
         id: 'roster',
         component: 'chip-group',
         title: 'Roster Overview',
-        icon: 'utility:people',
         personas: ['provider'],
         dataSelector: (d) => mapProviderRoster(d.roster),
         countSelector: (d) => {
@@ -742,6 +826,9 @@ const SECTION_DEFS = [
             const total = d.providerSnapshot?.rosterSize || shown;
             return shown > 0 ? `Showing ${shown} of ${total}` : '';
         },
+        sources: [
+            { id: 'hc-roster', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+        ],
     },
 ];
 
@@ -759,7 +846,7 @@ export function buildSections(persona, ahisData) {
     return SECTION_DEFS.filter((def) => def.personas.includes(persona))
         .map((def) => {
             const data = def.dataSelector(ahisData);
-            const isEmpty = !data || (Array.isArray(data) && data.length === 0);
+            const isEmpty = !data || (Array.isArray(data) && data.length === 0) || (typeof data === 'object' && !Array.isArray(data) && !data.lines?.length);
 
             if (isEmpty && def.component !== 'bullet-list-or-empty') return null;
 
@@ -773,16 +860,16 @@ export function buildSections(persona, ahisData) {
                 icon: def.icon || null,
                 iconClass: def.iconClass || '',
                 count: countStr,
-                data: data || [],
+                data: data || (def.component === 'identity-grid' ? {} : []),
                 hasData: !isEmpty,
                 emptyMessage: def.emptyMessage || null,
                 summary: def.summarySelector ? def.summarySelector(ahisData) : null,
+                sources: def.sources || [],
 
                 isIdentityGrid: def.component === 'identity-grid',
                 isAlertList: def.component === 'alert-list',
                 isBulletList: def.component === 'bullet-list',
                 isChipGroup: def.component === 'chip-group',
-                isComposite: def.component === 'composite',
                 isBulletListOrEmpty: def.component === 'bullet-list-or-empty',
             };
         })

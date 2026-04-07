@@ -3,9 +3,10 @@ import { LightningElement, api, track } from 'lwc';
 export default class AhisSection extends LightningElement {
     @api sectionKey = '';
     @api title = '';
-    @api iconName = 'utility:chevronright';
+    @api iconName = '';
     @api count;
     @api iconClass = '';
+    @api sources = [];
 
     _expanded = true;
 
@@ -18,6 +19,7 @@ export default class AhisSection extends LightningElement {
     }
 
     @track isExpanded = true;
+    @track popoverOpen = false;
 
     connectedCallback() {
         this.isExpanded = this._expanded;
@@ -31,8 +33,28 @@ export default class AhisSection extends LightningElement {
         return this.isExpanded ? 'utility:chevrondown' : 'utility:chevronright';
     }
 
+    get hasIcon() {
+        return !!this.iconName;
+    }
+
     get iconComputedClass() {
         return `section-icon ${this.iconClass || ''}`.trim();
+    }
+
+    get hasSources() {
+        return Array.isArray(this.sources) && this.sources.length > 0;
+    }
+
+    get sourceCountLabel() {
+        return String((this.sources || []).length);
+    }
+
+    get popoverTitle() {
+        return `Source (${(this.sources || []).length})`;
+    }
+
+    get citationClass() {
+        return this.popoverOpen ? 'citation-btn citation-btn-selected' : 'citation-btn';
     }
 
     handleToggle() {
@@ -49,5 +71,15 @@ export default class AhisSection extends LightningElement {
             event.preventDefault();
             this.handleToggle();
         }
+    }
+
+    handleCitationClick(event) {
+        event.stopPropagation();
+        this.popoverOpen = !this.popoverOpen;
+    }
+
+    handleClosePopover(event) {
+        event.stopPropagation();
+        this.popoverOpen = false;
     }
 }

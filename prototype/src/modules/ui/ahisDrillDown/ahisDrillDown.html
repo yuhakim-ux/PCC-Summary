@@ -1,0 +1,58 @@
+<template>
+    <lightning-modal-header label={drillDownTitle}>
+    </lightning-modal-header>
+    <lightning-modal-body>
+        <!-- Loading -->
+        <template lwc:if={isLoading}>
+            <div class="slds-align_absolute-center slds-p-around_large">
+                <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- No Records -->
+        <template lwc:if={showEmpty}>
+            <div class="slds-p-around_large slds-text-align_center">
+                <h3 class="slds-text-heading_small slds-m-bottom_x-small">No Records Found</h3>
+                <p class="slds-text-body_regular slds-text-color_weak">
+                    There are no records to display for this category.
+                </p>
+            </div>
+        </template>
+
+        <!-- Records List -->
+        <template lwc:if={hasRecords}>
+            <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">
+                Showing {recordCount} records
+            </p>
+            <ul class="slds-has-dividers_bottom-space">
+                <template for:each={formattedRecords} for:item="record">
+                    <li key={record.id} class="slds-item">
+                        <article class="slds-tile slds-tile_board drill-tile">
+                            <h3 class="slds-tile__title slds-truncate">
+                                <a href="javascript:void(0);" class="record-link">{record.displayName}</a>
+                            </h3>
+                            <div class="slds-tile__detail">
+                                <dl class="slds-list_horizontal slds-wrap">
+                                    <template for:each={record.fields} for:item="field">
+                                        <dt key={field.key} class="slds-item_label slds-text-color_weak slds-truncate">{field.label}:</dt>
+                                        <dd key={field.key} class="slds-item_detail slds-truncate">
+                                            <template lwc:if={field.isStatus}>
+                                                <lightning-badge label={field.value} class={field.statusClass}></lightning-badge>
+                                            </template>
+                                            <template lwc:if={field.isText}>
+                                                {field.value}
+                                            </template>
+                                        </dd>
+                                    </template>
+                                </dl>
+                            </div>
+                        </article>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Close" onclick={handleClose}></lightning-button>
+    </lightning-modal-footer>
+</template>

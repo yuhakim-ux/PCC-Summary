@@ -3,17 +3,17 @@
 }
 
 .sub-section {
-    margin-top: 0.5rem;
-    margin-bottom: 0.25rem;
+    margin-top: var(--slds-g-spacing-3, 12px);
+    margin-bottom: var(--slds-g-spacing-1, 4px);
 }
 
 .sub-label {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    font-size: var(--slds-g-font-scale-1, 14px);
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0;
     color: var(--slds-g-color-on-surface-2, #706e6b);
-    padding-left: 0.25rem;
-    margin-bottom: 0.25rem;
+    padding-left: var(--slds-g-spacing-1, 4px);
+    margin-bottom: var(--slds-g-spacing-1, 4px);
     display: block;
 }

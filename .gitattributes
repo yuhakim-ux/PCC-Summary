@@ -1,0 +1,10 @@
+# Normalize line endings for cross-platform collaboration
+* text=auto eol=lf
+
+# Sources
+*.{js,mjs,cjs,ts,html,css,json,md,yml,yaml} text eol=lf
+*.{svg,xml} text eol=lf
+
+# Binary assets
+*.{png,jpg,jpeg,gif,ico,webp} binary
+*.{woff,woff2,ttf,eot} binary
