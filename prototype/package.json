@@ -1,7 +1,7 @@
 {
-  "name": "salesforce-ui",
+  "name": "pcc-summary-prototype",
   "version": "1.0.0",
-  "description": "",
+  "description": "PCC-Summary Vite + LWC console prototype (SLDS, Lightning base components)",
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist .vite node_modules",

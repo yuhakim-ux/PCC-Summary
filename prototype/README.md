@@ -1,6 +1,8 @@
-# Salesforce Design System 2 Starter Kit
+# PCC-Summary prototype (Vite + LWC)
 
-A **starter template** for prototyping and developing Salesforce experiences locally. Built with **LWC** (Lightning Web Components), **Vite**, **SLDS** (Salesforce Lightning Design System), and **lightning-base-components**, so you get fast builds, hot reload, and a setup that aligns with the Salesforce platform (synthetic shadow, base components, design tokens).
+This folder is the **PCC-Summary** interactive prototype: a Health Cloud–style **console shell**, **client-side routing**, and the **persona-aware summary** experience (Member / Patient / Provider). It builds on a **Salesforce Design System 2**–oriented stack: **LWC**, **Vite**, **SLDS**, and **lightning-base-components** (synthetic shadow, base components, design tokens).
+
+**Engineering context:** See the repository root [`README.md`](../README.md) and [`docs/PCC-Summary-Generation-Spec.md`](../docs/PCC-Summary-Generation-Spec.md) for the summary payload contract and section behavior.
 
 ## Who this is for
 
@@ -152,6 +154,27 @@ The project follows SLDS and LWC best practices: prefer Lightning Base Component
 ## Deployment and platform
 
 This template is for **local development and prototyping**. Deploying to the Salesforce platform (e.g. as an LWC-based experience or in a specific product) follows standard Salesforce deployment and may require product-specific configuration; it is out of scope for this README.
+
+### GitHub Pages via Actions
+
+This repo includes two GitHub Actions workflows for GitHub Pages:
+
+- `.github/workflows/pages-deploy.yml` - builds and deploys:
+  - production (`/`) from `main`
+  - branch previews (`/previews/<branch-slug>/`) for `feature/*`, `fix/*`, `prototype/*`
+  - PR previews (`/previews/pr-<number>/`) for PRs targeting `main`
+- `.github/workflows/pages-preview-cleanup.yml` - removes a branch preview path when a matching branch is deleted.
+
+Required repository settings:
+
+1. In **Settings -> Pages**, set **Source** to **GitHub Actions**.
+2. In **Settings -> Actions -> General -> Workflow permissions**, allow read/write permissions so workflows can publish Pages artifacts.
+
+Expected URL patterns:
+
+- Production: `https://<owner>.github.io/<repo>/`
+- Branch preview: `https://<owner>.github.io/<repo>/previews/<branch-slug>/`
+- PR preview: `https://<owner>.github.io/<repo>/previews/pr-<number>/`
 
 ## References
 
