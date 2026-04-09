@@ -1,7 +1,7 @@
 {
   "name": "pcc-summary-prototype",
   "version": "1.0.0",
-  "description": "PCC-Summary Vite + LWC console prototype (SLDS, Lightning base components)",
+  "description": "Vite + LWC prototype for PCC-Summary (Health Console shell + persona-aware summary UI)",
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist .vite node_modules",

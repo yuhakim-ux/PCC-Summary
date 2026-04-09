@@ -1,8 +1,8 @@
-# PCC-Summary prototype (Vite + LWC)
+# Salesforce Design System 2 Starter Kit
 
-This folder is the **PCC-Summary** interactive prototype: a Health Cloud–style **console shell**, **client-side routing**, and the **persona-aware summary** experience (Member / Patient / Provider). It builds on a **Salesforce Design System 2**–oriented stack: **LWC**, **Vite**, **SLDS**, and **lightning-base-components** (synthetic shadow, base components, design tokens).
+**PCC-Summary repo:** For team onboarding, product context, and the **PCC summary generation spec**, start at the repository root [**README.md**](../README.md).
 
-**Engineering context:** See the repository root [`README.md`](../README.md) and [`docs/PCC-Summary-Generation-Spec.md`](../docs/PCC-Summary-Generation-Spec.md) for the summary payload contract and section behavior.
+A **starter template** for prototyping and developing Salesforce experiences locally. Built with **LWC** (Lightning Web Components), **Vite**, **SLDS** (Salesforce Lightning Design System), and **lightning-base-components**, so you get fast builds, hot reload, and a setup that aligns with the Salesforce platform (synthetic shadow, base components, design tokens).
 
 ## Who this is for
 
