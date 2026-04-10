@@ -14,13 +14,6 @@
 
 export const routes = [
   {
-    path: '/',
-    component: 'page-ahis',
-    title: 'Carole White | Person Account',
-    navPage: 'ahis',
-    navLabel: 'Carole White',
-  },
-  {
     path: '/home',
     component: 'page-home',
     title: 'Home',
@@ -28,16 +21,21 @@ export const routes = [
     navLabel: 'Home',
   },
   {
+    path: '/',
+    component: 'page-ahis',
+    title: 'Carole White | Person Account',
+    navPage: 'ahis',
+    navLabel: 'Carole White',
+  },
+  {
     path: '/icons',
     component: 'page-icon-test',
     title: 'Icons',
-    navPage: 'icons',
-    navLabel: 'Icons',
   },
   {
     path: '/settings',
     component: 'page-settings',
-    title: 'Settings',
+    title: 'PCC Summary Setup',
     navPage: 'settings',
     navLabel: 'Settings',
   },
@@ -45,21 +43,14 @@ export const routes = [
     path: '/users/:id',
     component: 'page-user',
     title: (params) => `User ${params.id}`,
-    navPage: 'user',
-    navLabel: 'User',
-    navPath: '/users/42',
   },
   {
     path: '/contacts',
     component: 'page-contacts',
     title: 'Contacts',
-    navPage: 'contacts',
-    navLabel: 'Contacts',
   },
   {
     path: '/contacts/:id',
     component: 'page-contact-detail',
-    title: (params) => `Contact ${params.id}`,
-    navHighlight: 'contacts',
   },
 ];

@@ -1,5 +1,637 @@
 <template>
-    <div class="slds-p-around_large">
-        <h1 class="slds-text-heading_large">Settings</h1>
+    <div class="setup-page">
+
+        <!-- Left Nav -->
+        <div class="setup-page-nav">
+            <nav class="setup-nav">
+                <ul class="slds-nav-vertical" role="tablist" aria-orientation="vertical">
+                    <li class="slds-nav-vertical__item" role="presentation">
+                        <span class="slds-nav-vertical__section-title">Summary Configuration</span>
+                    </li>
+                    <template for:each={navItems} for:item="item">
+                        <li key={item.id} class="slds-nav-vertical__item" role="presentation">
+                            <a class={item.cssClass} role="tab" data-id={item.id} onclick={handleNavClick} aria-selected={item.isActive}>
+                                <span>{item.label}</span>
+                                <template lwc:if={item.isConfigured}>
+                                    <lightning-icon icon-name="utility:check" size="xx-small" class="nav-item-check"></lightning-icon>
+                                </template>
+                            </a>
+                        </li>
+                    </template>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Right Content -->
+        <div class="setup-page-content">
+
+            <!-- Page Header -->
+            <div class="slds-page-header setup-page-header">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <lightning-icon icon-name="standard:settings" size="large"></lightning-icon>
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1><span class="slds-page-header__title">PCC Summary Setup</span></h1>
+                                    </div>
+                                </div>
+                                <p class="slds-page-header__meta-text">Configure data sources and persona-based summaries for Agentforce Health Intelligence</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-page-header__col-actions">
+                        <div class="slds-page-header__controls">
+                            <lightning-button label="Save" variant="brand" onclick={handleSaveAll}></lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Banner -->
+            <div aria-live="polite">
+                <template lwc:if={showSaveBanner}>
+                    <div class="slds-notify_container slds-is-fixed">
+                        <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                            <span class="slds-notify__close">
+                                <lightning-button-icon icon-name="utility:close" variant="bare-inverse" onclick={handleCloseBanner}></lightning-button-icon>
+                            </span>
+                            <div class="slds-notify__content slds-grid slds-grid_vertical-align-center">
+                                <lightning-icon icon-name="utility:success" size="small" class="slds-m-right_small" variant="inverse"></lightning-icon>
+                                <h2>Configuration saved successfully.</h2>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="setup-body">
+
+                <!-- Main Panel -->
+                <div class="setup-main">
+
+                <!-- ══ MEMBER SUMMARY ══ -->
+                <template lwc:if={isMemberActive}>
+                    <lightning-card class="setup-card">
+                        <div slot="title" class="setup-card-title">
+                            <span>Member Summary</span>
+                        </div>
+                        <div class="slds-p-around_medium">
+                            <div class="setup-enable-row">
+                                <lightning-input type="toggle" label="Enable Member Summary for Payer Call Center Representatives" checked={memberEnabled} onchange={handleMemberToggle} message-toggle-active="Enabled" message-toggle-inactive="Disabled"></lightning-input>
+                            </div>
+                            <template lwc:if={memberEnabled}>
+
+                                <!-- Step 1 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={memberStep1BadgeClass}>{memberStep1Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Assign User Permissions</h3>
+                                            <p class="setup-step-desc">Grant the <code>View_Payer_Summary</code> permission set to users who should see Member summaries.</p>
+                                        </div>
+                                        <template lwc:if={memberPermissionsAssigned}>
+                                            <lightning-icon icon-name="utility:success" size="small" class="step-complete-icon"></lightning-icon>
+                                        </template>
+                                    </div>
+                                    <div class="setup-step-body">
+                                        <lightning-button label={memberPermBtnLabel} variant="neutral" icon-name="utility:user" onclick={handleAssignMemberPermissions}></lightning-button>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={memberStep2BadgeClass}>{memberStep2Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Setup Objects from Salesforce</h3>
+                                            <p class="setup-step-desc">Select Health Cloud objects to include in the member summary context.</p>
+                                        </div>
+                                    </div>
+                                    <div class="setup-step-body">
+                                        <div class="object-selector">
+                                            <div class="object-selector-available">
+                                                <p class="object-selector-label">Available Objects</p>
+                                                <div class="object-list-scroll">
+                                                    <template for:each={memberAvailableSfObjects} for:item="obj">
+                                                        <div key={obj.id} class="object-list-item" role="option" tabindex="0" data-id={obj.id} onclick={handleAddSfObject} onkeydown={handleObjectKeydown}>
+                                                            <span>{obj.label}</span>
+                                                        </div>
+                                                    </template>
+                                                    <template lwc:if={memberSfAvailableEmpty}>
+                                                        <p class="object-list-empty">All objects selected</p>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <div class="object-selector-controls">
+                                                <lightning-button-icon icon-name="utility:right" alternative-text="Add all" title="Add all" size="small" variant="bare" onclick={handleAddAllMemberSf}></lightning-button-icon>
+                                                <lightning-button-icon icon-name="utility:left" alternative-text="Remove all" title="Remove all" size="small" variant="bare" onclick={handleRemoveAllMemberSf}></lightning-button-icon>
+                                            </div>
+                                            <div class="object-selector-selected">
+                                                <p class="object-selector-label">Selected Objects <span class="selected-count">({memberSelectedSfCount})</span></p>
+                                                <div class="object-list-scroll">
+                                                    <template for:each={memberSelectedSfObjects} for:item="obj">
+                                                        <div key={obj.id} class="object-list-item" role="option" tabindex="0" data-id={obj.id} onclick={handleRemoveSfObject} onkeydown={handleObjectKeydown}>
+                                                            <span>{obj.label}</span>
+                                                        </div>
+                                                    </template>
+                                                    <template lwc:if={memberSfSelectedEmpty}>
+                                                        <p class="object-list-empty">No objects selected</p>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={memberStep3BadgeClass}>{memberStep3Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Setup Objects from EHR (Mulesoft)</h3>
+                                            <p class="setup-step-desc">Connect an external EHR via FHIR API to pull clinical data in real time.</p>
+                                        </div>
+                                        <template lwc:if={memberEhrConnected}>
+                                            <lightning-icon icon-name="utility:success" size="small" class="step-complete-icon"></lightning-icon>
+                                        </template>
+                                    </div>
+                                    <div class="setup-step-body setup-step-body_ehr">
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">a</span>
+                                            <div class="ehr-substep-content">
+                                                <p class="ehr-substep-label">Deploy FHIR Application</p>
+                                                <lightning-button label="Go to Mulesoft Direct" variant="neutral" icon-name="utility:new_window" onclick={handleMulesoftDirect}></lightning-button>
+                                            </div>
+                                        </div>
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">b</span>
+                                            <div class="ehr-substep-content">
+                                                <p class="ehr-substep-label">Select Named Credentials for Mulesoft Integration</p>
+                                                <lightning-combobox label="Named Credential" variant="label-hidden" placeholder="Select Named Credential..." value={memberNamedCredential} options={namedCredentialOptions} onchange={handleMemberCredentialChange}></lightning-combobox>
+                                            </div>
+                                        </div>
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">c</span>
+                                            <div class="ehr-substep-content">
+                                                <p class="ehr-substep-label">Select EHR Objects</p>
+                                                <div class="chip-selector">
+                                                    <template for:each={ehrObjects} for:item="obj">
+                                                        <span key={obj.id} class={obj.chipClass} role="checkbox" tabindex="0" aria-checked={obj.selected} data-id={obj.id} data-persona="member" onclick={handleEhrChipToggle} onkeydown={handleChipKeydown}>
+                                                            {obj.label}
+                                                            <template lwc:if={obj.selected}>
+                                                                <lightning-icon icon-name="utility:check" size="xx-small" class="chip-check"></lightning-icon>
+                                                            </template>
+                                                        </span>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={memberStep4BadgeClass}>{memberStep4Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Setup Objects from Data 360 Zero Copy</h3>
+                                            <p class="setup-step-desc">Surface claims, prior auth, appeals and grievances from external systems without storing data in Salesforce.</p>
+                                        </div>
+                                        <template lwc:if={memberData360Connected}>
+                                            <lightning-icon icon-name="utility:success" size="small" class="step-complete-icon"></lightning-icon>
+                                        </template>
+                                    </div>
+                                    <div class="setup-step-body setup-step-body_ehr">
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">a</span>
+                                            <div class="ehr-substep-content">
+                                                <lightning-input type="toggle" label="Enable Data 360 Zero Copy" checked={memberData360Enabled} onchange={handleMemberData360Toggle} message-toggle-active="Enabled" message-toggle-inactive="Disabled"></lightning-input>
+                                            </div>
+                                        </div>
+                                        <template lwc:if={memberData360Enabled}>
+                                            <div class="ehr-substep">
+                                                <span class="ehr-substep-num">b</span>
+                                                <div class="ehr-substep-content">
+                                                    <p class="ehr-substep-label">Create External Connector</p>
+                                                    <div class="connector-row">
+                                                        <lightning-button label={memberConnectorBtnLabel} variant="neutral" icon-name="utility:connected_apps" onclick={handleCreateMemberConnector}></lightning-button>
+                                                        <template lwc:if={memberConnectorCreated}>
+                                                            <span class="connector-created-badge">
+                                                                <lightning-icon icon-name="utility:check" size="xx-small"></lightning-icon>
+                                                                pcc-member-connector
+                                                            </span>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ehr-substep">
+                                                <span class="ehr-substep-num">c</span>
+                                                <div class="ehr-substep-content">
+                                                    <p class="ehr-substep-label">Select Data 360 Objects</p>
+                                                    <div class="chip-selector">
+                                                        <template for:each={data360MemberObjects} for:item="obj">
+                                                            <span key={obj.id} class={obj.chipClass} role="checkbox" tabindex="0" aria-checked={obj.selected} data-id={obj.id} data-persona="member" onclick={handleData360ChipToggle} onkeydown={handleChipKeydown}>
+                                                                {obj.label}
+                                                                <template lwc:if={obj.selected}>
+                                                                    <lightning-icon icon-name="utility:check" size="xx-small" class="chip-check"></lightning-icon>
+                                                                </template>
+                                                            </span>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                            </template>
+                        </div>
+                    </lightning-card>
+                </template>
+
+                <!-- ══ PATIENT SUMMARY ══ -->
+                <template lwc:if={isPatientActive}>
+                    <lightning-card class="setup-card">
+                        <div slot="title" class="setup-card-title">
+                            <span>Patient Summary</span>
+                        </div>
+                        <div class="slds-p-around_medium">
+                            <div class="setup-enable-row">
+                                <lightning-input type="toggle" label="Enable Patient Summary for Provider Call Center Representatives" checked={patientEnabled} onchange={handlePatientToggle} message-toggle-active="Enabled" message-toggle-inactive="Disabled"></lightning-input>
+                            </div>
+                            <template lwc:if={patientEnabled}>
+
+                                <!-- Step 1 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={patientStep1BadgeClass}>{patientStep1Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Assign User Permissions</h3>
+                                            <p class="setup-step-desc">Grant the <code>View_Care_Summary</code> permission set to patient call center users.</p>
+                                        </div>
+                                        <template lwc:if={patientPermissionsAssigned}>
+                                            <lightning-icon icon-name="utility:success" size="small" class="step-complete-icon"></lightning-icon>
+                                        </template>
+                                    </div>
+                                    <div class="setup-step-body">
+                                        <lightning-button label={patientPermBtnLabel} variant="neutral" icon-name="utility:user" onclick={handleAssignPatientPermissions}></lightning-button>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={patientStep2BadgeClass}>{patientStep2Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Setup Objects from Salesforce</h3>
+                                            <p class="setup-step-desc">Select Health Cloud clinical objects for the patient summary.</p>
+                                        </div>
+                                    </div>
+                                    <div class="setup-step-body">
+                                        <div class="object-selector">
+                                            <div class="object-selector-available">
+                                                <p class="object-selector-label">Available Objects</p>
+                                                <div class="object-list-scroll">
+                                                    <template for:each={patientAvailableSfObjects} for:item="obj">
+                                                        <div key={obj.id} class="object-list-item" role="option" tabindex="0" data-id={obj.id} onclick={handleAddPatientSfObject} onkeydown={handleObjectKeydown}>
+                                                            <span>{obj.label}</span>
+                                                        </div>
+                                                    </template>
+                                                    <template lwc:if={patientSfAvailableEmpty}>
+                                                        <p class="object-list-empty">All objects selected</p>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <div class="object-selector-controls">
+                                                <lightning-button-icon icon-name="utility:right" alternative-text="Add all" title="Add all" size="small" variant="bare" onclick={handleAddAllPatientSf}></lightning-button-icon>
+                                                <lightning-button-icon icon-name="utility:left" alternative-text="Remove all" title="Remove all" size="small" variant="bare" onclick={handleRemoveAllPatientSf}></lightning-button-icon>
+                                            </div>
+                                            <div class="object-selector-selected">
+                                                <p class="object-selector-label">Selected Objects <span class="selected-count">({patientSelectedSfCount})</span></p>
+                                                <div class="object-list-scroll">
+                                                    <template for:each={patientSelectedSfObjects} for:item="obj">
+                                                        <div key={obj.id} class="object-list-item" role="option" tabindex="0" data-id={obj.id} onclick={handleRemovePatientSfObject} onkeydown={handleObjectKeydown}>
+                                                            <span>{obj.label}</span>
+                                                        </div>
+                                                    </template>
+                                                    <template lwc:if={patientSfSelectedEmpty}>
+                                                        <p class="object-list-empty">No objects selected</p>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={patientStep3BadgeClass}>{patientStep3Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Setup Objects from EHR (Mulesoft)</h3>
+                                            <p class="setup-step-desc">Connect an external EHR via FHIR API for real-time clinical data.</p>
+                                        </div>
+                                        <template lwc:if={patientEhrConnected}>
+                                            <lightning-icon icon-name="utility:success" size="small" class="step-complete-icon"></lightning-icon>
+                                        </template>
+                                    </div>
+                                    <div class="setup-step-body setup-step-body_ehr">
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">a</span>
+                                            <div class="ehr-substep-content">
+                                                <p class="ehr-substep-label">Deploy FHIR Application</p>
+                                                <lightning-button label="Go to Mulesoft Direct" variant="neutral" icon-name="utility:new_window" onclick={handleMulesoftDirect}></lightning-button>
+                                            </div>
+                                        </div>
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">b</span>
+                                            <div class="ehr-substep-content">
+                                                <p class="ehr-substep-label">Select Named Credentials</p>
+                                                <lightning-combobox label="Named Credential" variant="label-hidden" placeholder="Select Named Credential..." value={patientNamedCredential} options={namedCredentialOptions} onchange={handlePatientCredentialChange}></lightning-combobox>
+                                            </div>
+                                        </div>
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">c</span>
+                                            <div class="ehr-substep-content">
+                                                <p class="ehr-substep-label">Select EHR Objects</p>
+                                                <div class="chip-selector">
+                                                    <template for:each={ehrObjects} for:item="obj">
+                                                        <span key={obj.id} class={obj.chipClass} role="checkbox" tabindex="0" aria-checked={obj.selected} data-id={obj.id} data-persona="patient" onclick={handleEhrChipToggle} onkeydown={handleChipKeydown}>
+                                                            {obj.label}
+                                                            <template lwc:if={obj.selected}>
+                                                                <lightning-icon icon-name="utility:check" size="xx-small" class="chip-check"></lightning-icon>
+                                                            </template>
+                                                        </span>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={patientStep4BadgeClass}>{patientStep4Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Setup Objects from Data 360 Zero Copy</h3>
+                                            <p class="setup-step-desc">Pull claims, care activity, and external data without storing it in Salesforce.</p>
+                                        </div>
+                                        <template lwc:if={patientData360Connected}>
+                                            <lightning-icon icon-name="utility:success" size="small" class="step-complete-icon"></lightning-icon>
+                                        </template>
+                                    </div>
+                                    <div class="setup-step-body setup-step-body_ehr">
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">a</span>
+                                            <div class="ehr-substep-content">
+                                                <lightning-input type="toggle" label="Enable Data 360 Zero Copy" checked={patientData360Enabled} onchange={handlePatientData360Toggle} message-toggle-active="Enabled" message-toggle-inactive="Disabled"></lightning-input>
+                                            </div>
+                                        </div>
+                                        <template lwc:if={patientData360Enabled}>
+                                            <div class="ehr-substep">
+                                                <span class="ehr-substep-num">b</span>
+                                                <div class="ehr-substep-content">
+                                                    <p class="ehr-substep-label">Create External Connector</p>
+                                                    <div class="connector-row">
+                                                        <lightning-button label={patientConnectorBtnLabel} variant="neutral" icon-name="utility:connected_apps" onclick={handleCreatePatientConnector}></lightning-button>
+                                                        <template lwc:if={patientConnectorCreated}>
+                                                            <span class="connector-created-badge">
+                                                                <lightning-icon icon-name="utility:check" size="xx-small"></lightning-icon>
+                                                                pcc-patient-connector
+                                                            </span>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ehr-substep">
+                                                <span class="ehr-substep-num">c</span>
+                                                <div class="ehr-substep-content">
+                                                    <p class="ehr-substep-label">Select Data 360 Objects</p>
+                                                    <div class="chip-selector">
+                                                        <template for:each={data360PatientObjects} for:item="obj">
+                                                            <span key={obj.id} class={obj.chipClass} role="checkbox" tabindex="0" aria-checked={obj.selected} data-id={obj.id} data-persona="patient" onclick={handleData360ChipToggle} onkeydown={handleChipKeydown}>
+                                                                {obj.label}
+                                                                <template lwc:if={obj.selected}>
+                                                                    <lightning-icon icon-name="utility:check" size="xx-small" class="chip-check"></lightning-icon>
+                                                                </template>
+                                                            </span>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                            </template>
+                        </div>
+                    </lightning-card>
+                </template>
+
+                <!-- ══ PROVIDER SUMMARY ══ -->
+                <template lwc:if={isProviderActive}>
+                    <lightning-card class="setup-card">
+                        <div slot="title" class="setup-card-title">
+                            <span>Provider Summary</span>
+                        </div>
+                        <div class="slds-p-around_medium">
+                            <div class="setup-enable-row">
+                                <lightning-input type="toggle" label="Enable Provider Summary for Provider Relations Teams" checked={providerEnabled} onchange={handleProviderToggle} message-toggle-active="Enabled" message-toggle-inactive="Disabled"></lightning-input>
+                            </div>
+                            <template lwc:if={providerEnabled}>
+
+                                <!-- Sub-type -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class="setup-step-badge">i</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Provider Sub-type</h3>
+                                            <p class="setup-step-desc">Select which provider record types this summary applies to.</p>
+                                        </div>
+                                    </div>
+                                    <div class="setup-step-body">
+                                        <lightning-checkbox-group label="Provider Types" variant="label-hidden" options={providerSubTypeOptions} value={providerSubTypes} onchange={handleProviderSubTypeChange}></lightning-checkbox-group>
+                                    </div>
+                                </div>
+
+                                <!-- Step 1 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={providerStep1BadgeClass}>{providerStep1Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Assign User Permissions</h3>
+                                            <p class="setup-step-desc">Grant <code>View_Provider_Summary</code> to provider relations staff. For PNM customers, also assign the PNM Add-On permission set.</p>
+                                        </div>
+                                        <template lwc:if={providerPermissionsAssigned}>
+                                            <lightning-icon icon-name="utility:success" size="small" class="step-complete-icon"></lightning-icon>
+                                        </template>
+                                    </div>
+                                    <div class="setup-step-body">
+                                        <lightning-button label={providerPermBtnLabel} variant="neutral" icon-name="utility:user" onclick={handleAssignProviderPermissions}></lightning-button>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={providerStep2BadgeClass}>{providerStep2Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Setup Objects from Salesforce</h3>
+                                            <p class="setup-step-desc">Select PRM Health Cloud objects. PNM objects (application, contracting) available from Release 266 with PNM Add-On.</p>
+                                        </div>
+                                    </div>
+                                    <div class="setup-step-body">
+                                        <div class="object-selector">
+                                            <div class="object-selector-available">
+                                                <p class="object-selector-label">Available Objects</p>
+                                                <div class="object-list-scroll">
+                                                    <template for:each={providerAvailableSfObjects} for:item="obj">
+                                                        <div key={obj.id} class="object-list-item" role="option" tabindex="0" data-id={obj.id} onclick={handleAddProviderSfObject} onkeydown={handleObjectKeydown}>
+                                                            <span>{obj.label}</span>
+                                                            <template lwc:if={obj.isPnm}>
+                                                                <span class="obj-badge-pnm">266+</span>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                    <template lwc:if={providerSfAvailableEmpty}>
+                                                        <p class="object-list-empty">All objects selected</p>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <div class="object-selector-controls">
+                                                <lightning-button-icon icon-name="utility:right" alternative-text="Add all" title="Add all" size="small" variant="bare" onclick={handleAddAllProviderSf}></lightning-button-icon>
+                                                <lightning-button-icon icon-name="utility:left" alternative-text="Remove all" title="Remove all" size="small" variant="bare" onclick={handleRemoveAllProviderSf}></lightning-button-icon>
+                                            </div>
+                                            <div class="object-selector-selected">
+                                                <p class="object-selector-label">Selected Objects <span class="selected-count">({providerSelectedSfCount})</span></p>
+                                                <div class="object-list-scroll">
+                                                    <template for:each={providerSelectedSfObjects} for:item="obj">
+                                                        <div key={obj.id} class="object-list-item" role="option" tabindex="0" data-id={obj.id} onclick={handleRemoveProviderSfObject} onkeydown={handleObjectKeydown}>
+                                                            <span>{obj.label}</span>
+                                                        </div>
+                                                    </template>
+                                                    <template lwc:if={providerSfSelectedEmpty}>
+                                                        <p class="object-list-empty">No objects selected</p>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={providerStep3BadgeClass}>{providerStep3Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Setup Objects from EHR (Mulesoft)</h3>
+                                            <p class="setup-step-desc">Optional: Connect EHR for credentialing or clinical data enrichment.</p>
+                                        </div>
+                                        <template lwc:if={providerEhrConnected}>
+                                            <lightning-icon icon-name="utility:success" size="small" class="step-complete-icon"></lightning-icon>
+                                        </template>
+                                    </div>
+                                    <div class="setup-step-body setup-step-body_ehr">
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">a</span>
+                                            <div class="ehr-substep-content">
+                                                <p class="ehr-substep-label">Deploy FHIR Application</p>
+                                                <lightning-button label="Go to Mulesoft Direct" variant="neutral" icon-name="utility:new_window" onclick={handleMulesoftDirect}></lightning-button>
+                                            </div>
+                                        </div>
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">b</span>
+                                            <div class="ehr-substep-content">
+                                                <p class="ehr-substep-label">Select Named Credentials</p>
+                                                <lightning-combobox label="Named Credential" variant="label-hidden" placeholder="Select Named Credential..." value={providerNamedCredential} options={namedCredentialOptions} onchange={handleProviderCredentialChange}></lightning-combobox>
+                                            </div>
+                                        </div>
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">c</span>
+                                            <div class="ehr-substep-content">
+                                                <p class="ehr-substep-label">Select EHR Objects</p>
+                                                <div class="chip-selector">
+                                                    <template for:each={ehrObjects} for:item="obj">
+                                                        <span key={obj.id} class={obj.chipClass} role="checkbox" tabindex="0" aria-checked={obj.selected} data-id={obj.id} data-persona="provider" onclick={handleEhrChipToggle} onkeydown={handleChipKeydown}>
+                                                            {obj.label}
+                                                            <template lwc:if={obj.selected}>
+                                                                <lightning-icon icon-name="utility:check" size="xx-small" class="chip-check"></lightning-icon>
+                                                            </template>
+                                                        </span>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4 -->
+                                <div class="setup-section">
+                                    <div class="setup-step-header">
+                                        <div class={providerStep4BadgeClass}>{providerStep4Badge}</div>
+                                        <div class="setup-step-meta">
+                                            <h3 class="setup-step-title">Setup Objects from Data 360 Zero Copy</h3>
+                                            <p class="setup-step-desc">Pull network, contract, and credentialing data from external systems.</p>
+                                        </div>
+                                        <template lwc:if={providerData360Connected}>
+                                            <lightning-icon icon-name="utility:success" size="small" class="step-complete-icon"></lightning-icon>
+                                        </template>
+                                    </div>
+                                    <div class="setup-step-body setup-step-body_ehr">
+                                        <div class="ehr-substep">
+                                            <span class="ehr-substep-num">a</span>
+                                            <div class="ehr-substep-content">
+                                                <lightning-input type="toggle" label="Enable Data 360 Zero Copy" checked={providerData360Enabled} onchange={handleProviderData360Toggle} message-toggle-active="Enabled" message-toggle-inactive="Disabled"></lightning-input>
+                                            </div>
+                                        </div>
+                                        <template lwc:if={providerData360Enabled}>
+                                            <div class="ehr-substep">
+                                                <span class="ehr-substep-num">b</span>
+                                                <div class="ehr-substep-content">
+                                                    <p class="ehr-substep-label">Create External Connector</p>
+                                                    <div class="connector-row">
+                                                        <lightning-button label={providerConnectorBtnLabel} variant="neutral" icon-name="utility:connected_apps" onclick={handleCreateProviderConnector}></lightning-button>
+                                                        <template lwc:if={providerConnectorCreated}>
+                                                            <span class="connector-created-badge">
+                                                                <lightning-icon icon-name="utility:check" size="xx-small"></lightning-icon>
+                                                                pcc-provider-connector
+                                                            </span>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ehr-substep">
+                                                <span class="ehr-substep-num">c</span>
+                                                <div class="ehr-substep-content">
+                                                    <p class="ehr-substep-label">Select Data 360 Objects</p>
+                                                    <div class="chip-selector">
+                                                        <template for:each={data360ProviderObjects} for:item="obj">
+                                                            <span key={obj.id} class={obj.chipClass} role="checkbox" tabindex="0" aria-checked={obj.selected} data-id={obj.id} data-persona="provider" onclick={handleData360ChipToggle} onkeydown={handleChipKeydown}>
+                                                                {obj.label}
+                                                                <template lwc:if={obj.selected}>
+                                                                    <lightning-icon icon-name="utility:check" size="xx-small" class="chip-check"></lightning-icon>
+                                                                </template>
+                                                            </span>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                            </template>
+                        </div>
+                    </lightning-card>
+                </template>
+
+                </div>
+            </div>
+        </div>
     </div>
 </template>

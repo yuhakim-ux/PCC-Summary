@@ -1,0 +1,449 @@
+/* ─── Setup Page Layout ────────────────────────────────────────────────────── */
+
+.setup-page {
+    display: flex;
+    min-height: 100vh;
+}
+
+.setup-page-nav {
+    flex-shrink: 0;
+    width: 240px;
+    background: var(--slds-g-color-surface-1, #ffffff);
+    border-right: 1px solid var(--slds-g-color-border-1, #e5e5e5);
+    overflow-y: auto;
+}
+
+.setup-page-content {
+    flex: 1;
+    min-width: 0;
+    background: var(--slds-g-color-surface-2, #f3f3f3);
+    padding-bottom: 3rem;
+}
+
+.setup-page-header {
+    background: var(--slds-g-color-surface-container-1, #ffffff);
+    border-bottom: 1px solid var(--slds-g-color-border-1, #e5e5e5);
+    padding: 1rem 1.5rem;
+}
+
+.setup-page-header .slds-page-header__title {
+    overflow: hidden;
+    color: var(--slds-g-color-on-surface-3, #001e5b);
+    font-feature-settings: 'liga' off, 'clig' off;
+    text-overflow: ellipsis;
+    font-family: var(--slds-g-font-family-base);
+    font-size: var(--slds-g-font-scale-4, 1.5rem);
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px;
+}
+
+.setup-page-header .slds-media__figure lightning-icon {
+    --slds-c-icon-radius-border: 6px;
+    --slds-c-icon-sizing-width: 48px;
+    --slds-c-icon-sizing-height: 48px;
+    width: 48px;
+    height: 48px;
+}
+
+.setup-body {
+    max-width: 960px;
+    margin: 0;
+    padding: 1.5rem;
+}
+
+/* ─── Left Navigation ───────────────────────────────────────────────────────── */
+
+.setup-nav {
+    padding: 8px 0;
+    position: sticky;
+    top: 0;
+}
+
+.slds-nav-vertical__section-title {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    min-height: 32px;
+    padding: 8px 16px 8px 24px;
+    font-size: var(--slds-g-font-size-base, 0.8125rem);
+    font-weight: 700;
+    color: var(--slds-g-color-on-surface-3, #001e5b);
+    line-height: 18px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.slds-nav-vertical__action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 8px 24px 8px 32px;
+    font-size: var(--slds-g-font-size-base, 0.8125rem);
+    font-weight: 400;
+    color: var(--slds-g-color-on-surface-1, #5c5c5c);
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+    cursor: pointer;
+    line-height: 18px;
+}
+
+.slds-nav-vertical__action:hover {
+    background: var(--slds-g-color-surface-2, #f3f3f3);
+}
+
+.slds-nav-vertical__action.slds-is-active {
+    border-left-color: var(--slds-g-color-border-accent-1, #066afe);
+    background: var(--slds-g-color-brand-base-90, #d6e6ff);
+    font-weight: 590;
+    color: var(--slds-g-color-accent-3, #022ac0);
+}
+
+.nav-item-check {
+    margin-left: auto;
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-success-1, #2e844a);
+}
+
+/* ─── Main Panel ──────────────────────────────────────────────────────────────── */
+
+.setup-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.setup-card {
+    margin-bottom: 0;
+    overflow: visible;
+}
+
+.setup-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow: hidden;
+    color: var(--slds-g-color-on-surface-3, #001e5b);
+    font-feature-settings: 'liga' off, 'clig' off;
+    text-overflow: ellipsis;
+    font-family: var(--slds-g-font-family-base);
+    font-size: var(--slds-g-font-scale-3, 1.25rem);
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px;
+}
+
+/* ─── Enable Row ──────────────────────────────────────────────────────────────── */
+
+.setup-enable-row {
+    background: var(--slds-g-color-surface-container-2, #f3f3f3);
+    border-radius: var(--slds-g-radius-border-2, 0.5rem);
+    padding: 1rem 1.25rem;
+    border: 1px solid #c9c9c9;
+    max-width: 680px;
+}
+
+/* ─── Setup Sections ──────────────────────────────────────────────────────────── */
+
+.setup-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--slds-g-color-border-1, #e5e5e5);
+}
+
+.setup-section:first-child {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.setup-step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.setup-step-badge {
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--slds-g-color-border-1, #c9c9c9);
+    background: var(--slds-g-color-surface-container-1, #ffffff);
+    color: var(--slds-g-color-on-surface-1, #181818);
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.125rem;
+}
+
+.setup-step-badge_complete {
+    background: var(--slds-g-color-accent-1, #0176d3);
+    border-color: var(--slds-g-color-accent-1, #0176d3);
+    color: var(--slds-g-color-on-accent-2, #ffffff);
+}
+
+.setup-step-meta {
+    flex: 1;
+}
+
+.setup-step-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--slds-g-color-on-surface-1, #181818);
+    margin: 0 0 0.25rem;
+}
+
+.setup-step-desc {
+    font-size: 0.8125rem;
+    color: var(--slds-g-color-on-surface-1, #181818);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.setup-step-desc code {
+    background: var(--slds-g-color-surface-container-3, #e5e5e5);
+    padding: 0.15em 0.4em;
+    border-radius: 0.2em;
+    font-size: 0.8em;
+    color: var(--slds-g-color-on-surface-1, #181818);
+    font-family: 'SFMono-Regular', 'Consolas', monospace;
+}
+
+.step-complete-icon {
+    flex-shrink: 0;
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-success-1, #2e844a);
+    margin-top: 0.125rem;
+}
+
+.setup-step-body {
+    padding-left: 2.625rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--slds-g-spacing-4, 1rem);
+}
+
+/* ─── Dual List Box (SF Objects) ─────────────────────────────────────────────── */
+
+.object-selector {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    max-width: 680px;
+}
+
+.object-selector-available,
+.object-selector-selected {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--slds-g-spacing-1, 4px);
+    min-width: 0;
+}
+
+.object-selector-label {
+    font-size: var(--slds-g-font-size-base, 0.8125rem);
+    font-weight: 590;
+    color: var(--slds-g-color-on-surface-2, #2e2e2e);
+    line-height: 18px;
+    margin: 0;
+}
+
+.selected-count {
+    font-weight: 400;
+    color: var(--slds-g-color-accent-1, #0176d3);
+}
+
+.object-list-scroll {
+    height: 175px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--slds-g-color-surface-container-1, #ffffff);
+    border: 1px solid var(--slds-g-color-border-2, #5c5c5c);
+    border-radius: var(--slds-g-radius-border-2, 0.5rem);
+    padding-top: var(--slds-g-spacing-1, 4px);
+}
+
+.object-list-item {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+    height: 36px;
+    padding: 0 var(--slds-g-spacing-3, 0.75rem);
+    font-size: var(--slds-g-font-size-base, 0.8125rem);
+    cursor: pointer;
+    color: var(--slds-g-color-on-surface-3, #001e5b);
+    transition: background 0.1s;
+    user-select: none;
+    overflow: hidden;
+}
+
+.object-list-item:hover {
+    background: var(--slds-g-color-surface-2, #f3f3f3);
+}
+
+.object-list-empty {
+    padding: 1rem var(--slds-g-spacing-3, 0.75rem);
+    font-size: var(--slds-g-font-size-base, 0.8125rem);
+    color: var(--slds-g-color-on-surface-2, #2e2e2e);
+    font-style: italic;
+    margin: 0;
+}
+
+.obj-badge-pnm {
+    margin-left: auto;
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--slds-g-radius-border-1, 0.25rem);
+    background: var(--slds-g-color-warning-container-1, #fff3cd);
+    color: var(--slds-g-color-on-warning-1, #8a6000);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.object-selector-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--slds-g-spacing-6, 2rem);
+    padding: var(--slds-g-spacing-6, 2rem) var(--slds-g-spacing-1, 4px) 0;
+}
+
+.object-selector-controls lightning-button-icon {
+    flex-shrink: 0;
+}
+
+/* ─── EHR Sub-steps ───────────────────────────────────────────────────────────── */
+
+.setup-step-body_ehr {
+    gap: var(--slds-g-spacing-4, 1rem);
+}
+
+.ehr-substep {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.ehr-substep-num {
+    flex-shrink: 0;
+    width: 1.375rem;
+    height: 1.375rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--slds-g-color-border-1, #e5e5e5);
+    background: var(--slds-g-color-surface-container-1, #ffffff);
+    color: var(--slds-g-color-on-surface-1, #181818);
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.25rem;
+    text-transform: lowercase;
+}
+
+.ehr-substep-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 680px;
+}
+
+.ehr-substep-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--slds-g-color-on-surface-1, #181818);
+    margin: 0 0 0.25rem;
+}
+
+/* ─── Chip Selector (EHR + Data 360 objects) ─────────────────────────────────── */
+
+.chip-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    background: var(--slds-g-color-surface-container-2, #f3f3f3);
+    border: 1px solid var(--slds-g-color-border-1, #e5e5e5);
+    border-radius: var(--slds-g-radius-border-2, 0.5rem);
+    max-width: 680px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--slds-g-radius-border-2, 0.25rem);
+    border: 1px solid var(--slds-g-color-border-1, #dddbda);
+    background: var(--slds-g-color-surface-container-1, #ffffff);
+    font-size: 0.75rem;
+    color: var(--slds-g-color-on-surface-1, #3e3e3c);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, color 0.12s;
+    user-select: none;
+}
+
+.chip:hover {
+    border-color: var(--slds-g-color-accent-1, #0176d3);
+    color: var(--slds-g-color-accent-1, #0176d3);
+}
+
+.chip_selected {
+    background: var(--slds-g-color-accent-1, #0176d3);
+    border-color: var(--slds-g-color-accent-1, #0176d3);
+    color: var(--slds-g-color-on-accent-2, #ffffff);
+    font-weight: 600;
+}
+
+.chip_selected:hover {
+    background: var(--slds-g-color-on-accent-1, #032d60);
+    border-color: var(--slds-g-color-on-accent-1, #032d60);
+    color: var(--slds-g-color-on-accent-2, #ffffff);
+}
+
+.chip-check {
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-on-accent-2, #ffffff);
+}
+
+/* ─── Connector row ───────────────────────────────────────────────────────────── */
+
+.connector-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.connector-created-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--slds-g-radius-border-2, 0.25rem);
+    background: var(--slds-g-color-success-container-1, #e3f5e3);
+    border: 1px solid var(--slds-g-color-success-1, #2e844a);
+    color: var(--slds-g-color-on-success-1, #1a5e2a);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.connector-created-badge lightning-icon {
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-success-1, #2e844a);
+}
+
+/* ─── Save Toast Banner ───────────────────────────────────────────────────────── */
+
+.slds-notify_container.slds-is-fixed {
+    position: fixed;
+    top: 4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9000;
+    min-width: 320px;
+}
