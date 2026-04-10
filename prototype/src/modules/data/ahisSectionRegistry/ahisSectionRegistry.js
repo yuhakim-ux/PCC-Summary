@@ -378,7 +378,7 @@ function mapProviderCredentials(cred) {
             metaItems: cred.stateLicense.expiryDate ? [{ key: 'lic-exp', text: `Expires ${cred.stateLicense.expiryDate}` }] : [],
             isDetail: true,
             hasMetaLine: true,
-            computedClass: 'cred-item',
+            computedClass: 'detail-item',
         });
     }
     if (cred.facilityLicense) {
@@ -390,7 +390,7 @@ function mapProviderCredentials(cred) {
             isDetail: true,
             hasMetaLine: false,
             metaItems: [],
-            computedClass: 'cred-item',
+            computedClass: 'detail-item',
         });
     }
     if (cred.cmsCertification) {
@@ -402,7 +402,7 @@ function mapProviderCredentials(cred) {
             isDetail: true,
             hasMetaLine: false,
             metaItems: [],
-            computedClass: 'cred-item',
+            computedClass: 'detail-item',
         });
     }
     if (cred.accreditation) {
@@ -414,7 +414,7 @@ function mapProviderCredentials(cred) {
             isDetail: true,
             hasMetaLine: false,
             metaItems: [],
-            computedClass: 'cred-item',
+            computedClass: 'detail-item',
         });
     }
     if (cred.cliaCertificate) {
@@ -426,20 +426,22 @@ function mapProviderCredentials(cred) {
             isDetail: true,
             hasMetaLine: false,
             metaItems: [],
-            computedClass: 'cred-item',
+            computedClass: 'detail-item',
         });
     }
     if (cred.boardCertifications?.length > 0) {
-        const extraMeta = cred.boardCertifications.length > 2 ? [{ key: 'board-more', text: `+${cred.boardCertifications.length - 2} more` }] : [];
+        const visible = cred.boardCertifications.slice(0, 2);
+        const extraCount = cred.boardCertifications.length - 2;
+        const extraMeta = extraCount > 0 ? [{ key: 'board-more', text: `+${extraCount} more` }] : [];
         rows.push({
             key: 'board',
             primary: 'Board Certifications',
-            secondary: cred.boardCertifications.map((bc) => bc.name).join(', '),
+            secondary: visible.map((bc) => bc.name).join(', '),
             ...asDot('Active', statusDotClass('Active')),
             metaItems: extraMeta,
             isDetail: true,
             hasMetaLine: extraMeta.length > 0,
-            computedClass: 'cred-item',
+            computedClass: 'detail-item',
         });
     }
     if (cred.dea?.number) {
@@ -451,7 +453,7 @@ function mapProviderCredentials(cred) {
             metaItems: cred.dea.expiryDate ? [{ key: 'dea-exp', text: `Expires ${cred.dea.expiryDate}` }] : [],
             isDetail: true,
             hasMetaLine: true,
-            computedClass: 'cred-item',
+            computedClass: 'detail-item',
         });
     }
     if (cred.malpracticeInsurance?.carrier) {
@@ -463,7 +465,7 @@ function mapProviderCredentials(cred) {
             metaItems: cred.malpracticeInsurance.expiryDate ? [{ key: 'mal-exp', text: `Expires ${cred.malpracticeInsurance.expiryDate}` }] : [],
             isDetail: true,
             hasMetaLine: true,
-            computedClass: 'cred-item',
+            computedClass: 'detail-item',
         });
     }
     if (cred.lastCredentialingDate) {
@@ -475,7 +477,7 @@ function mapProviderCredentials(cred) {
             metaItems: cred.nextRecredentialingDue ? [{ key: 'nextcred', text: `Next due: ${cred.nextRecredentialingDue}` }] : [],
             isDetail: true,
             hasMetaLine: !!cred.nextRecredentialingDue,
-            computedClass: 'cred-item',
+            computedClass: 'detail-item',
         });
     }
     return rows;
@@ -543,7 +545,7 @@ const SECTION_DEFS = [
     {
         id: 'alerts',
         component: 'alert-list',
-        title: 'Alerts & Flags',
+        title: 'Clinical Profile',
         icon: 'utility:warning',
         iconClass: 'alert-icon',
         personas: ['member'],
@@ -614,7 +616,7 @@ const SECTION_DEFS = [
     {
         id: 'memberCareGaps',
         component: 'alert-list',
-        title: 'Care Gaps & Barriers',
+        title: 'Clinical Profile',
         personas: ['member'],
         dataSelector: (d) => mapMemberCareGaps(d.careGaps),
         countSelector: (d) => (d.careGaps?.gaps?.length || 0) + (d.careGaps?.barriers?.length || 0),
@@ -630,6 +632,20 @@ const SECTION_DEFS = [
         component: 'identity-grid',
         personas: ['patient'],
         dataSelector: (d) => buildPatientIdentity(d.identityDemographics),
+    },
+    {
+        id: 'patientCareGaps',
+        component: 'alert-list',
+        title: 'Clinical Profile',
+        icon: 'utility:warning',
+        iconClass: 'alert-icon',
+        personas: ['patient'],
+        dataSelector: (d) => mapPatientCareGaps(d.careGaps),
+        countSelector: (d) => d.careGaps?.length,
+        sources: [
+            { id: 'hc-pcg', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+            { id: 'd360-pcg', name: 'Data 360', type: 'Zero-Copy', iconName: 'standard:data_streams', recordUrl: '#' },
+        ],
     },
     {
         id: 'clinicalSnapshot',
@@ -712,20 +728,6 @@ const SECTION_DEFS = [
         ],
     },
     {
-        id: 'patientCareGaps',
-        component: 'alert-list',
-        title: 'Care Gaps & Alerts',
-        icon: 'utility:warning',
-        iconClass: 'alert-icon',
-        personas: ['patient'],
-        dataSelector: (d) => mapPatientCareGaps(d.careGaps),
-        countSelector: (d) => d.careGaps?.length,
-        sources: [
-            { id: 'hc-pcg', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
-            { id: 'd360-pcg', name: 'Data 360', type: 'Zero-Copy', iconName: 'standard:data_streams', recordUrl: '#' },
-        ],
-    },
-    {
         id: 'carePrograms',
         component: 'chip-group',
         title: 'Care Programs',
@@ -805,7 +807,7 @@ const SECTION_DEFS = [
         title: 'Adverse Actions',
         personas: ['provider'],
         dataSelector: (d) => mapProviderAdverseActions(d.adverseActions),
-        emptyMessage: '\u2705 No adverse actions on file.',
+        emptyMessage: 'No adverse actions on file.',
         sources: [
             { id: 'hc-aa', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
             { id: 'npdb', name: 'NPDB', type: 'External', iconName: 'standard:record', recordUrl: '#' },

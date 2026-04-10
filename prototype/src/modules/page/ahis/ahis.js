@@ -7,7 +7,7 @@ const COLLAPSED_ALLOW_IDS = new Set(['alerts', 'patientCareGaps', 'adverseAction
 
 const ACTIVITY_ITEMS = [
     { id: 'a1', type: 'call', iconName: 'standard:log_a_call', subject: 'Medication review call', date: 'Apr 4, 2026', description: 'Discussed Metformin side effects and refill timing.' },
-    { id: 'a2', type: 'event', iconName: 'standard:event', subject: 'Telehealth — Dr. Aris', date: 'Mar 28, 2026', description: 'Annual wellness visit. Noted elevated BP (142/90).' },
+    { id: 'a2', type: 'event', iconName: 'standard:event', subject: 'Telehealth — Dr. Adams', date: 'Mar 28, 2026', description: 'Annual wellness visit. Noted elevated BP (142/90).' },
     { id: 'a3', type: 'task', iconName: 'standard:task', subject: 'Referral: Ophthalmology', date: 'Mar 28, 2026', description: 'Diabetic eye exam referral created. Pending scheduling.' },
     { id: 'a4', type: 'email', iconName: 'standard:email', subject: 'Care plan update sent', date: 'Mar 20, 2026', description: 'Updated care plan mailed to member with diabetes goals.' },
     { id: 'a5', type: 'call', iconName: 'standard:log_a_call', subject: 'Inbound — claim inquiry', date: 'Mar 12, 2026', description: 'Member called about denied knee arthroscopy claim.' },

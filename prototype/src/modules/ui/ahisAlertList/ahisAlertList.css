@@ -32,7 +32,7 @@
 .dot-success { background-color: var(--slds-g-color-success-1, #45c65a); }
 .dot-info    { background-color: var(--slds-g-color-info-1, #1b96ff); }
 
-.alert-text { color: var(--slds-g-color-on-surface-1, #181818); }
+.alert-text { color: #2E2E2E; }
 
 .show-more-btn {
     background: none;

@@ -182,13 +182,6 @@
    CONTENT TIMESTAMP + REGENERATE (SLDS 2)
    ═══════════════════════════════════ */
 
-.content-timestamp-row {
-    display: flex;
-    align-items: center;
-    gap: var(--slds-g-spacing-1, 4px);
-    padding: var(--slds-g-spacing-1, 4px) var(--slds-g-spacing-4, 16px);
-}
-
 .content-timestamp {
     font-size: var(--slds-g-font-scale-neg-1, 12px);
     color: var(--slds-g-color-on-surface-2, #706e6b);
@@ -197,6 +190,11 @@
 
 .regenerate-btn {
     --slds-c-button-icon-color-foreground: var(--slds-g-color-on-surface-2, #706e6b);
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    top: -1.5px;
+    margin-left: auto;
 }
 
 .ahis-content-wrapper {
@@ -353,24 +351,19 @@
     font-size: var(--slds-g-font-scale-1, 14px);
     font-weight: 600;
     line-height: 20px;
-    color: var(--slds-g-color-on-surface-1, #181818);
+    color: #03234D;
     flex: 1;
 }
 
 .sparkles-icon {
-    --slds-c-icon-color-foreground-default: var(--slds-g-color-on-surface-1, #032d60);
-    flex-shrink: 0;
-}
-
-.info-icon-btn {
-    --slds-c-button-icon-color-foreground: var(--slds-g-color-accent-1, #0176d3);
+    --slds-c-icon-color-foreground-default: #03234D;
     flex-shrink: 0;
 }
 
 .nested-card-body {
     font-size: var(--slds-g-font-scale-base, 13px);
     line-height: 18px;
-    color: var(--slds-g-color-on-surface-1, #181818);
+    color: #03234D;
 }
 
 /* ═══════════════════════════════════

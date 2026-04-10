@@ -18,6 +18,7 @@
     border-radius: var(--slds-g-radius-border-2, 8px);
     font-size: var(--slds-g-font-scale-base, 13px);
     border: 1px solid var(--slds-g-color-border-1, #e5e5e5);
+    color: #2E2E2E;
 }
 
 .chip-dot {

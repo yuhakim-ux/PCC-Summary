@@ -37,14 +37,14 @@
     font-weight: 600;
     line-height: 20px;
     letter-spacing: 0;
-    color: var(--slds-g-color-on-surface-1, #181818);
+    color: #2E2E2E;
     flex: 1;
 }
 
 .section-count {
     font-size: var(--slds-g-font-scale-1, 14px);
     font-weight: 600;
-    color: var(--slds-g-color-on-surface-1, #181818);
+    color: #2E2E2E;
     line-height: 20px;
 }
 

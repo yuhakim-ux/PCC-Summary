@@ -89,7 +89,7 @@ const PERSONA_DATA = {
             gender: 'Female',
             language: 'English',
             mrn: 'MRN-441029',
-            pcp: 'Dr. Aris',
+            pcp: 'Dr. Adams',
             careCoordinator: 'Jennifer Williams, RN',
             lastContact: { daysAgo: 3, channel: 'Telehealth', topic: 'Medication Review' },
             riskLevel: 'High Risk (Complex Care)',
@@ -100,14 +100,14 @@ const PERSONA_DATA = {
             { name: 'Mild Osteoarthritis', status: 'Active', severity: 'Mild', stage: '', onsetDate: '2022' },
         ],
         medications: [
-            { name: 'Metformin', dose: '500mg', frequency: '2x daily', prescriber: 'Dr. Aris', refillAlert: 'Refill due in 5 days', interactionWarning: null, sideEffects: 'Stomach upset reported' },
-            { name: 'Lisinopril', dose: '10mg', frequency: '1x daily', prescriber: 'Dr. Aris', refillAlert: null, interactionWarning: null, sideEffects: null },
-            { name: 'Atorvastatin', dose: '20mg', frequency: '1x daily', prescriber: 'Dr. Aris', refillAlert: null, interactionWarning: null, sideEffects: null },
+            { name: 'Metformin', dose: '500mg', frequency: '2x daily', prescriber: 'Dr. Adams', refillAlert: 'Refill due in 5 days', interactionWarning: null, sideEffects: 'Stomach upset reported' },
+            { name: 'Lisinopril', dose: '10mg', frequency: '1x daily', prescriber: 'Dr. Adams', refillAlert: null, interactionWarning: null, sideEffects: null },
+            { name: 'Atorvastatin', dose: '20mg', frequency: '1x daily', prescriber: 'Dr. Adams', refillAlert: null, interactionWarning: null, sideEffects: null },
         ],
         recentActivity: {
             encounters: [
-                { type: 'Annual Wellness Visit', reason: 'Routine checkup', date: '2026-03-28', provider: 'Dr. Aris' },
-                { type: 'Telehealth', reason: 'Medication review', date: '2026-03-15', provider: 'Dr. Aris' },
+                { type: 'Annual Wellness Visit', reason: 'Routine checkup', date: '2026-03-28', provider: 'Dr. Adams' },
+                { type: 'Telehealth', reason: 'Medication review', date: '2026-03-15', provider: 'Dr. Adams' },
                 { type: 'Lab Visit', reason: 'HbA1c + Lipid Panel', date: '2026-04-02', provider: 'Quest Diagnostics' },
             ],
             scheduledProcedures: [
@@ -123,8 +123,8 @@ const PERSONA_DATA = {
             ],
         },
         referrals: [
-            { specialty: 'Ophthalmology (Diabetic Eye Exam)', referringProvider: 'Dr. Aris', status: 'Pending', date: '2026-03-28' },
-            { specialty: 'Cardiology', referringProvider: 'Dr. Aris', status: 'Active', date: '2026-03-15' },
+            { specialty: 'Ophthalmology (Diabetic Eye Exam)', referringProvider: 'Dr. Adams', status: 'Pending', date: '2026-03-28' },
+            { specialty: 'Cardiology', referringProvider: 'Dr. Adams', status: 'Active', date: '2026-03-15' },
         ],
         careGaps: [
             { description: 'Diabetic Eye Exam overdue (last: 14 months ago)', urgency: 'error' },
@@ -137,7 +137,7 @@ const PERSONA_DATA = {
             carePlanStatus: 'Active — mixed progress',
             barriers: ['Transportation: difficulty getting to pharmacy', 'Limited health literacy'],
             careTeam: [
-                { name: 'Dr. Aris', role: 'PCP' },
+                { name: 'Dr. Adams', role: 'PCP' },
                 { name: 'Jennifer Williams, RN', role: 'Care Coordinator' },
                 { name: 'Mark Chen, PharmD', role: 'Clinical Pharmacist' },
             ],
@@ -151,7 +151,7 @@ const PERSONA_DATA = {
         suggestedActions: [
             { id: 'pa1', title: 'Schedule Diabetic Eye Exam', actionType: 'schedule', priority: 'High', description: 'Overdue by 2 months. Ophthalmology referral is pending — coordinate scheduling. If patient reports blurry vision, escalate to nurse callback.', status: 'pending' },
             { id: 'pa2', title: 'Switch Metformin to Mail-Order', actionType: 'outreach', priority: 'High', description: 'Resolve transportation barrier by switching Metformin refill to mail-order pharmacy. Refill due in 5 days.', status: 'pending' },
-            { id: 'pa3', title: 'Review HbA1c Trend with PCP', actionType: 'escalate', priority: 'High', description: 'HbA1c trending up over 6 months (7.2→8.1%). Coordinate with Dr. Aris to discuss medication adjustment before cardiology consult on Apr 20.', status: 'pending' },
+            { id: 'pa3', title: 'Review HbA1c Trend with PCP', actionType: 'escalate', priority: 'High', description: 'HbA1c trending up over 6 months (7.2→8.1%). Coordinate with Dr. Adams to discuss medication adjustment before cardiology consult on Apr 20.', status: 'pending' },
             { id: 'pa4', title: 'Initiate SDOH Screening', actionType: 'review', priority: 'Medium', description: 'Complete Social Determinants of Health screening to formally assess transportation, food access, and health literacy barriers.', status: 'pending' },
         ],
     },
@@ -164,7 +164,7 @@ const PERSONA_DATA = {
         persona: 'provider',
         providerSubType: 'individual',
         microSummary:
-            'Board-certified cardiologist. State license expires in 45 days 🟡. 2 open cases (1 grievance, 1 inquiry). No adverse actions on file.',
+            'Board-certified cardiologist. State license expires in 45 days. 2 open cases (1 grievance, 1 inquiry). No adverse actions on file.',
         providerSnapshot: {
             npi: '1234567890',
             npiType: 'Type 1',
@@ -226,7 +226,7 @@ const PERSONA_DATA = {
         persona: 'provider',
         providerSubType: 'facility',
         microSummary:
-            'Level II Trauma Center. Joint Commission accredited 🟢. CMS certification current. 24 physicians on roster. 1 open complaint case. 1 provider on roster with expiring license 🟡.',
+            'Level II Trauma Center. Joint Commission accredited. CMS certification current. 24 physicians on roster. 1 open complaint case. 1 provider on roster with expiring license.',
         providerSnapshot: {
             npi: '9876543210',
             npiType: 'Type 2',
@@ -288,10 +288,10 @@ const DRILL_DOWN_RECORDS = {
         { id: 'clm-003', name: 'Claim: Lab Work — Lipid Panel', status: 'Pending', priority: 'Medium', dueDate: 'In processing', ownerName: 'Claims Team' },
     ],
     Clinical: [
-        { id: 'tsk-001', name: 'HbA1c Follow-up Review', status: 'Open', priority: 'High', dueDate: '2026-04-15', ownerName: 'Dr. Aris' },
+        { id: 'tsk-001', name: 'HbA1c Follow-up Review', status: 'Open', priority: 'High', dueDate: '2026-04-15', ownerName: 'Dr. Adams' },
         { id: 'tsk-002', name: 'Diabetic Eye Exam Referral', status: 'Pending', priority: 'High', dueDate: '2026-04-10', ownerName: 'Jennifer Williams, RN' },
         { id: 'tsk-003', name: 'Medication Reconciliation', status: 'In Progress', priority: 'Medium', dueDate: '2026-04-12', ownerName: 'Mark Chen, PharmD' },
-        { id: 'tsk-004', name: 'Cardiology Pre-visit Lab Review', status: 'Open', priority: 'Medium', dueDate: '2026-04-18', ownerName: 'Dr. Aris' },
+        { id: 'tsk-004', name: 'Cardiology Pre-visit Lab Review', status: 'Open', priority: 'Medium', dueDate: '2026-04-18', ownerName: 'Dr. Adams' },
     ],
     Social: [
         { id: 'tsk-005', name: 'SDOH Transportation Assessment', status: 'Open', priority: 'Medium', dueDate: '2026-04-20', ownerName: 'Community Health Worker' },

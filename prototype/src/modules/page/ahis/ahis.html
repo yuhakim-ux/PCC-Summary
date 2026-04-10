@@ -67,7 +67,7 @@
                     </li>
                     <li class="slds-page-header__detail-block">
                         <div class="slds-truncate detail-label" title="PCP">PCP</div>
-                        <div class="slds-truncate detail-value" title="Dr. Aris">Dr. Aris</div>
+                        <div class="slds-truncate detail-value" title="Dr. Adams">Dr. Adams</div>
                     </li>
                     <li class="slds-page-header__detail-block">
                         <div class="slds-truncate detail-label" title="Phone">Phone</div>
@@ -171,20 +171,6 @@
 
                 <!-- Main Content -->
                 <template lwc:if={showContent}>
-                    <!-- Inline Timestamp + Regenerate -->
-                    <div class="content-timestamp-row">
-                        <span class="content-timestamp">{formattedTimestamp}</span>
-                        <lightning-button-icon
-                            icon-name="utility:refresh"
-                            alternative-text="Regenerate"
-                            title="Regenerate Summary"
-                            size="x-small"
-                            variant="bare"
-                            onclick={handleRefresh}
-                            class="regenerate-btn">
-                        </lightning-button-icon>
-                    </div>
-
                     <div class="ahis-content-wrapper">
                         <!-- CONTEXT ZONE -->
                         <div class="ahis-context-zone">
@@ -193,12 +179,15 @@
                                 <div class="nested-card-header">
                                     <lightning-icon icon-name="utility:sparkles" size="x-small" class="sparkles-icon"></lightning-icon>
                                     <span class="nested-card-title">AI Summary</span>
+                                    <span class="content-timestamp">{formattedTimestamp}</span>
                                     <lightning-button-icon
-                                        icon-name="utility:info"
-                                        alternative-text="Info"
-                                        size="small"
+                                        icon-name="utility:refresh"
+                                        alternative-text="Regenerate"
+                                        title="Regenerate Summary"
+                                        size="x-small"
                                         variant="bare"
-                                        class="info-icon-btn">
+                                        onclick={handleRefresh}
+                                        class="regenerate-btn">
                                     </lightning-button-icon>
                                 </div>
                                 <p class="nested-card-body">{microSummaryText}</p>
