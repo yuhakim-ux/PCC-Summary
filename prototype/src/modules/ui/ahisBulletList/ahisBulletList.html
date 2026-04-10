@@ -1,7 +1,7 @@
 <template>
     <template lwc:if={hasItems}>
         <ul class="bullet-list">
-            <template for:each={items} for:item="item">
+            <template for:each={visibleItems} for:item="item">
                 <li key={item.key} class={item.computedClass}>
                     <template lwc:if={item.isDetail}>
                         <div class="detail-primary">
@@ -47,5 +47,8 @@
                 </li>
             </template>
         </ul>
+        <template lwc:if={hasMore}>
+            <button class="show-more-btn" onclick={handleShowAll}>+ {hiddenCount} more</button>
+        </template>
     </template>
 </template>

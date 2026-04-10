@@ -521,12 +521,23 @@ function mapProviderAdverseActions(actions) {
     }));
 }
 
+function credStatusDotClass(status) {
+    if (status === 'yellow') return 'status-dot status-dot-warning';
+    if (status === 'red') return 'status-dot status-dot-error';
+    return 'status-dot status-dot-success';
+}
+
 function mapProviderRoster(roster) {
     return (roster || []).map((r, i) => ({
         key: `roster-${i}`,
-        label: `${r.name} · ${r.specialty}`,
-        dotColor: r.credentialStatus,
-        dotClass: `chip-dot chip-dot-${r.credentialStatus}`,
+        primary: r.name,
+        secondary: r.specialty,
+        isDot: true,
+        isBadge: false,
+        badge: null,
+        dotClass: credStatusDotClass(r.credentialStatus),
+        isDetail: false,
+        computedClass: 'bullet-item',
     }));
 }
 
@@ -770,6 +781,7 @@ const SECTION_DEFS = [
         title: 'Credentialing & Compliance',
         personas: ['provider'],
         dataSelector: (d) => mapProviderCredentials(d.credentialing),
+        countSelector: (d) => mapProviderCredentials(d.credentialing).length || undefined,
         sources: [
             { id: 'caqh', name: 'CAQH ProView', type: 'External', iconName: 'standard:record', recordUrl: '#' },
             { id: 'hc-cred', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
@@ -811,19 +823,11 @@ const SECTION_DEFS = [
     },
     {
         id: 'roster',
-        component: 'chip-group',
+        component: 'bullet-list',
         title: 'Roster Overview',
         personas: ['provider'],
         dataSelector: (d) => mapProviderRoster(d.roster),
-        countSelector: (d) => {
-            const count = d.roster?.length;
-            return count ? `${count} shown` : undefined;
-        },
-        summarySelector: (d) => {
-            const shown = d.roster?.length || 0;
-            const total = d.providerSnapshot?.rosterSize || shown;
-            return shown > 0 ? `Showing ${shown} of ${total}` : '';
-        },
+        countSelector: (d) => d.roster?.length || undefined,
         sources: [
             { id: 'hc-roster', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
         ],

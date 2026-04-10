@@ -237,7 +237,7 @@ const PERSONA_DATA = {
             phone: '(808) 555-0300',
             email: 'admin@makanavalleymc.org',
             acceptingNewPatients: true,
-            rosterSize: 24,
+            rosterSize: null,
             specialtiesOffered: ['Cardiology', 'Orthopedics', 'Internal Medicine', 'Emergency Medicine', 'Pediatrics', 'Radiology'],
         },
         credentialing: {
