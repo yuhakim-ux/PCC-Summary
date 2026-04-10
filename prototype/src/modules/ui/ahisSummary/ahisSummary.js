@@ -7,6 +7,7 @@ export default class AhisSummary extends LightningElement {
     @api ahisData = {};
     @api persona = 'member';
     @api collapsed = false;
+    sectionResetTokens = {};
 
     get allSections() {
         return buildSections(this.persona, this.ahisData).filter((s) => !s.isIdentityGrid);
@@ -14,8 +15,11 @@ export default class AhisSummary extends LightningElement {
 
     get renderedSections() {
         const all = this.allSections;
-        if (!this.collapsed) return all;
-        return all.filter((s) => COLLAPSED_ALLOW_IDS.has(s.id));
+        const visible = this.collapsed ? all.filter((s) => COLLAPSED_ALLOW_IDS.has(s.id)) : all;
+        return visible.map((section) => ({
+            ...section,
+            resetToken: this.sectionResetTokens[section.id] || 0,
+        }));
     }
 
     get hiddenSectionCount() {
@@ -25,5 +29,14 @@ export default class AhisSummary extends LightningElement {
 
     get hasHiddenSections() {
         return this.hiddenSectionCount > 0;
+    }
+
+    handleSectionToggle(event) {
+        const { sectionKey, expanded } = event.detail || {};
+        if (!sectionKey || expanded) return;
+        this.sectionResetTokens = {
+            ...this.sectionResetTokens,
+            [sectionKey]: (this.sectionResetTokens[sectionKey] || 0) + 1,
+        };
     }
 }

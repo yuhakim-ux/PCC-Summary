@@ -5,8 +5,20 @@ const DEFAULT_LIMIT = 4;
 export default class AhisBulletList extends LightningElement {
     @api items = [];
     @api initialLimit = DEFAULT_LIMIT;
+    _resetToken;
 
     @track showAll = false;
+
+    @api
+    get resetToken() {
+        return this._resetToken;
+    }
+    set resetToken(value) {
+        if (value !== this._resetToken) {
+            this._resetToken = value;
+            this.showAll = false;
+        }
+    }
 
     get hasItems() {
         return this.items?.length > 0;

@@ -208,6 +208,10 @@ function mapMemberCareGaps(careGaps) {
     return items;
 }
 
+function mapMemberClinicalProfile(data) {
+    return [...mapAlerts(data?.alerts), ...mapMemberCareGaps(data?.careGaps)];
+}
+
 /* ══════════════════════════════════════
    PATIENT DATA SELECTORS
    ══════════════════════════════════════ */
@@ -558,11 +562,13 @@ const SECTION_DEFS = [
         component: 'alert-list',
         title: 'Clinical Profile',
         personas: ['member'],
-        dataSelector: (d) => mapAlerts(d.alerts),
-        countSelector: (d) => d.alerts?.length,
+        dataSelector: (d) => mapMemberClinicalProfile(d),
+        countSelector: (d) => (d.alerts?.length || 0) + (d.careGaps?.gaps?.length || 0) + (d.careGaps?.barriers?.length || 0),
         sources: [
             { id: 'hc-alerts', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
             { id: 'd360-alerts', name: 'Data 360', type: 'Zero-Copy', iconName: 'standard:data_streams', recordUrl: '#' },
+            { id: 'hc-cg', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
+            { id: 'd360-cg', name: 'Data 360', type: 'Zero-Copy', iconName: 'standard:data_streams', recordUrl: '#' },
         ],
     },
     {
@@ -622,19 +628,6 @@ const SECTION_DEFS = [
             { id: 'hc-oc', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
         ],
     },
-    {
-        id: 'memberCareGaps',
-        component: 'alert-list',
-        title: 'Clinical Profile',
-        personas: ['member'],
-        dataSelector: (d) => mapMemberCareGaps(d.careGaps),
-        countSelector: (d) => (d.careGaps?.gaps?.length || 0) + (d.careGaps?.barriers?.length || 0),
-        sources: [
-            { id: 'hc-cg', name: 'Health Cloud', type: 'CRM', iconName: 'utility:salesforce1', recordUrl: '#' },
-            { id: 'd360-cg', name: 'Data 360', type: 'Zero-Copy', iconName: 'standard:data_streams', recordUrl: '#' },
-        ],
-    },
-
     /* ── PATIENT ── */
     {
         id: 'identityDemographics',
