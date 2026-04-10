@@ -5,16 +5,16 @@
             <div class="slds-page-header__col-title">
                 <div class="slds-media">
                     <div class="slds-media__figure">
-                        <span class="slds-icon_container slds-icon-standard-person-account record-icon">
-                            <lightning-icon icon-name="standard:person_account" size="medium"></lightning-icon>
+                        <span class="slds-icon_container record-icon">
+                            <lightning-icon icon-name={recordHeader.recordIcon} size="medium"></lightning-icon>
                         </span>
                     </div>
                     <div class="slds-media__body">
                         <div class="slds-page-header__name">
                             <div class="slds-page-header__name-title">
                                 <h1>
-                                    <span class="record-type-label">Person Account</span>
-                                    <span class="slds-page-header__title slds-truncate record-name card-header-title-match" title="Carole White">Carole White</span>
+                                    <span class="record-type-label">{recordHeader.recordTypeLabel}</span>
+                                    <span class="slds-page-header__title slds-truncate record-name card-header-title-match" title={recordHeader.recordName}>{recordHeader.recordName}</span>
                                 </h1>
                             </div>
                         </div>
@@ -53,32 +53,19 @@
         <div class="slds-page-header__row slds-page-header__row_gutters">
             <div class="slds-page-header__col-details">
                 <ul class="slds-page-header__detail-row">
-                    <li class="slds-page-header__detail-block">
-                        <div class="slds-truncate detail-label" title="Date of Birth">Date of Birth</div>
-                        <div class="slds-truncate detail-value" title="03/15/1958">03/15/1958</div>
-                    </li>
-                    <li class="slds-page-header__detail-block">
-                        <div class="slds-truncate detail-label" title="Member ID">Member ID</div>
-                        <div class="slds-truncate detail-value" title="982734">982734</div>
-                    </li>
-                    <li class="slds-page-header__detail-block">
-                        <div class="slds-truncate detail-label" title="Plan">Plan</div>
-                        <div class="slds-truncate detail-value" title="Medicare Advantage (HMO)">Medicare Advantage (HMO)</div>
-                    </li>
-                    <li class="slds-page-header__detail-block">
-                        <div class="slds-truncate detail-label" title="PCP">PCP</div>
-                        <div class="slds-truncate detail-value" title="Dr. Adams">Dr. Adams</div>
-                    </li>
-                    <li class="slds-page-header__detail-block">
-                        <div class="slds-truncate detail-label" title="Phone">Phone</div>
-                        <div class="slds-truncate detail-value">
-                            <lightning-formatted-phone value="4155550198"></lightning-formatted-phone>
-                        </div>
-                    </li>
-                    <li class="slds-page-header__detail-block">
-                        <div class="slds-truncate detail-label" title="MRN">MRN</div>
-                        <div class="slds-truncate detail-value" title="MRN-441029">MRN-441029</div>
-                    </li>
+                    <template for:each={recordHeader.fields} for:item="field">
+                        <li key={field.label} class="slds-page-header__detail-block">
+                            <div class="slds-truncate detail-label" title={field.label}>{field.label}</div>
+                            <template lwc:if={field.isPhone}>
+                                <div class="slds-truncate detail-value">
+                                    <lightning-formatted-phone value={field.value}></lightning-formatted-phone>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="slds-truncate detail-value" title={field.value}>{field.value}</div>
+                            </template>
+                        </li>
+                    </template>
                 </ul>
             </div>
         </div>

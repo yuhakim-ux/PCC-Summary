@@ -14,6 +14,14 @@
                         <template lwc:if={componentCtor}>
                             <lwc:component lwc:is={componentCtor} onnavigateback={handleNavigateBack}></lwc:component>
                         </template>
+                        <template lwc:elseif={isRouteNotFound}>
+                            <div class="not-found">
+                                <lightning-icon icon-name="utility:warning" size="large" class="not-found-icon"></lightning-icon>
+                                <h1 class="slds-text-heading_medium slds-m-top_medium">Page Not Found</h1>
+                                <p class="slds-text-body_regular slds-m-top_small slds-text-color_weak">The page you requested doesn't exist or has been moved.</p>
+                                <lightning-button label="Go Home" variant="brand" onclick={handleGoHome} class="slds-m-top_medium"></lightning-button>
+                            </div>
+                        </template>
                     </div>
                     <shell-theme-switcher
                         slds-version={_sldsVersion}

@@ -74,3 +74,16 @@
 lightning-badge {
     display: inline-block;
 }
+
+.not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--slds-g-spacing-8, 48px) var(--slds-g-spacing-4, 16px);
+    text-align: center;
+}
+
+.not-found-icon {
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-on-surface-2, #706e6b);
+}

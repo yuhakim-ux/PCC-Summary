@@ -3,11 +3,65 @@
         <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title={panelTitle}>{panelTitle}
         </h2>
         <div class="slds-panel__header-actions">
-            <lightning-button-icon icon-name="utility:pinned" size="small" label="Unpin Panel" variant="bare"
-                class="slds-p-right_xx-small"></lightning-button-icon>
+            <lightning-button-icon icon-name={pinIconName} size="small" label={pinLabel} variant="bare"
+                class="slds-p-right_xx-small" onclick={handleTogglePin}></lightning-button-icon>
             <lightning-button-icon icon-name="utility:close" size="small" label="Close Panel"
                 variant="bare" onclick={handleClosePanel}></lightning-button-icon>
         </div>
     </div>
-    <div class="slds-panel__body">{panelContent}</div>
+    <div class="slds-panel__body">
+
+        <!-- Agentforce -->
+        <template lwc:if={showAgentforcePanel}>
+            <div class="panel-chat">
+                <div class="panel-chat-messages">
+                    <div class="panel-chat-bubble panel-chat-bubble-agent">
+                        <p class="panel-chat-text">Hi, I'm Agentforce. How can I help you today?</p>
+                    </div>
+                </div>
+                <div class="panel-chat-input">
+                    <lightning-input type="text" placeholder="Ask Agentforce..." variant="label-hidden" label="Ask Agentforce"></lightning-input>
+                </div>
+            </div>
+        </template>
+
+        <!-- Notifications -->
+        <template lwc:if={showNotificationPanel}>
+            <template lwc:if={hasUnread}>
+                <p class="slds-text-body_small slds-text-color_weak slds-p-bottom_x-small">{unreadCount} unread</p>
+            </template>
+            <ul class="panel-notification-list">
+                <template for:each={notificationItems} for:item="item">
+                    <li key={item.id} class="panel-notification-item">
+                        <lightning-icon icon-name={item.icon} size="x-small" class="panel-notification-icon"></lightning-icon>
+                        <div class="panel-notification-content">
+                            <span class="panel-notification-title">{item.title}</span>
+                            <span class="panel-notification-body">{item.body}</span>
+                            <span class="panel-notification-time">{item.time}</span>
+                        </div>
+                        <template lwc:if={item.isUnread}>
+                            <span class="panel-unread-dot"></span>
+                        </template>
+                    </li>
+                </template>
+            </ul>
+        </template>
+
+        <!-- Guidance Center -->
+        <template lwc:if={showTrailheadPanel}>
+            <ul class="panel-guidance-list">
+                <template for:each={guidanceItems} for:item="item">
+                    <li key={item.id} class="panel-guidance-item">
+                        <span class="panel-guidance-title">{item.title}</span>
+                        <span class="panel-guidance-body">{item.body}</span>
+                    </li>
+                </template>
+            </ul>
+        </template>
+
+        <!-- Setup -->
+        <template lwc:if={showSettingsPanel}>
+            <p class="slds-text-body_regular slds-text-color_weak">Quick access to setup and configuration options will appear here.</p>
+        </template>
+    </div>
 </template>

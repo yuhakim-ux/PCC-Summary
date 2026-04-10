@@ -1,6 +1,6 @@
 <template>
     <div class="summary-section">
-        <div class="section-header" onclick={handleToggle} role="button" tabindex="0" onkeydown={handleKeydown}>
+        <div class="section-header" onclick={handleToggle} role="button" tabindex="0" aria-expanded={isExpanded} onkeydown={handleKeydown}>
             <lightning-icon icon-name={chevronIcon} size="xx-small" class="chevron"></lightning-icon>
             <template lwc:if={hasIcon}>
                 <lightning-icon icon-name={iconName} size="x-small" class={iconComputedClass}></lightning-icon>

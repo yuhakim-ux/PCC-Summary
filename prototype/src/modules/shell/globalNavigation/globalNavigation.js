@@ -48,6 +48,9 @@ export default class GlobalNavigation extends LightningElement {
 
     handleWaffleOpen() {
         const wasOpen = this.isWaffleMenuOpen;
+        if (!wasOpen) {
+            document.dispatchEvent(new CustomEvent('dismissoverlays'));
+        }
         this.isWaffleMenuOpen = !this.isWaffleMenuOpen;
         if (!wasOpen && this.isWaffleMenuOpen) {
             this._focusMenuOnNextRender = true;
@@ -106,10 +109,13 @@ export default class GlobalNavigation extends LightningElement {
 
     connectedCallback() {
         this._boundHandleDocumentClick = this._handleDocumentClick.bind(this);
+        this._boundDismissOverlays = () => { this.isWaffleMenuOpen = false; };
+        document.addEventListener('dismissoverlays', this._boundDismissOverlays);
     }
 
     disconnectedCallback() {
         document.removeEventListener('click', this._boundHandleDocumentClick);
+        document.removeEventListener('dismissoverlays', this._boundDismissOverlays);
     }
 
     renderedCallback() {

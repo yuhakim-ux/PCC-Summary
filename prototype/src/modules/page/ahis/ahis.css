@@ -541,16 +541,10 @@
     gap: var(--slds-g-spacing-2, 8px);
     padding: var(--slds-g-spacing-2, 8px) var(--slds-g-spacing-1, 4px);
     border-radius: var(--slds-g-radius-border-1, 4px);
-    cursor: pointer;
-    transition: background 0.12s ease;
 }
 
 .related-list-item:not(:last-child) {
     border-bottom: 1px solid var(--slds-g-color-border-1, #f0f0f0);
-}
-
-.related-list-item:hover {
-    background: var(--slds-g-color-surface-2, #f3f3f3);
 }
 
 .related-item-icon {

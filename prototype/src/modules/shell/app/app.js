@@ -51,6 +51,10 @@ export default class App extends LightningElement {
         return name ? ROUTE_COMPONENTS[name] ?? null : null;
     }
 
+    get isRouteNotFound() {
+        return this.route === null && window.location.pathname !== '/';
+    }
+
     get currentNavPage() {
         const name = this.route?.component;
         return name ? (ROUTE_TO_NAV_PAGE[name] ?? 'home') : 'home';
@@ -109,8 +113,13 @@ export default class App extends LightningElement {
     }
 
     handlePanelSelect(event) {
-        this.selectedPanel = event.detail?.name ?? this.selectedPanel;
-        this.isPanelOpen = true;
+        const incoming = event.detail?.name ?? this.selectedPanel;
+        if (this.isPanelOpen && this.selectedPanel === incoming) {
+            this.isPanelOpen = false;
+        } else {
+            this.selectedPanel = incoming;
+            this.isPanelOpen = true;
+        }
     }
 
     handlePanelClose() {
@@ -123,5 +132,9 @@ export default class App extends LightningElement {
 
     handleNavigateBack() {
         history.back();
+    }
+
+    handleGoHome() {
+        navigate('/');
     }
 }

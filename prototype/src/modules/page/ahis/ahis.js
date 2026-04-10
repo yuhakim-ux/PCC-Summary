@@ -1,25 +1,9 @@
 import { LightningElement, track } from 'lwc';
-import { getAHISData, getAvailableRoles } from 'data/ahis';
+import { getAHISData, getAvailableRoles, getRecordHeader, getSidebarData } from 'data/ahis';
 import { buildSections } from 'data/ahisSectionRegistry';
 import AhisDrillDown from 'ui/ahisDrillDown';
 
 const COLLAPSED_ALLOW_IDS = new Set(['alerts', 'patientCareGaps', 'adverseActions']);
-
-const ACTIVITY_ITEMS = [
-    { id: 'a1', type: 'call', iconName: 'standard:log_a_call', subject: 'Medication review call', date: 'Apr 4, 2026', description: 'Discussed Metformin side effects and refill timing.' },
-    { id: 'a2', type: 'event', iconName: 'standard:event', subject: 'Telehealth — Dr. Adams', date: 'Mar 28, 2026', description: 'Annual wellness visit. Noted elevated BP (142/90).' },
-    { id: 'a3', type: 'task', iconName: 'standard:task', subject: 'Referral: Ophthalmology', date: 'Mar 28, 2026', description: 'Diabetic eye exam referral created. Pending scheduling.' },
-    { id: 'a4', type: 'email', iconName: 'standard:email', subject: 'Care plan update sent', date: 'Mar 20, 2026', description: 'Updated care plan mailed to member with diabetes goals.' },
-    { id: 'a5', type: 'call', iconName: 'standard:log_a_call', subject: 'Inbound — claim inquiry', date: 'Mar 12, 2026', description: 'Member called about denied knee arthroscopy claim.' },
-];
-
-const RELATED_LISTS = [
-    { id: 'r1', label: 'Cases', count: '2', iconName: 'standard:case' },
-    { id: 'r2', label: 'Claims', count: '4', iconName: 'standard:custom_notification' },
-    { id: 'r3', label: 'Care Plans', count: '1', iconName: 'standard:capacity_plan' },
-    { id: 'r4', label: 'Referrals', count: '2', iconName: 'standard:document_reference' },
-    { id: 'r5', label: 'Appointments', count: '1', iconName: 'standard:event' },
-];
 
 
 export default class Ahis extends LightningElement {
@@ -35,17 +19,37 @@ export default class Ahis extends LightningElement {
     showGenerateButton = true;
     showActionBar = false;
     hasGenerated = false;
-    activityItems = ACTIVITY_ITEMS;
-    relatedLists = RELATED_LISTS;
 
     connectedCallback() {
+        this._boundDismissOverlays = () => { this.isPersonaPickerOpen = false; };
+        document.addEventListener('dismissoverlays', this._boundDismissOverlays);
         if (!this.showGenerateButton) {
             this.loadData();
         }
     }
 
+    disconnectedCallback() {
+        document.removeEventListener('dismissoverlays', this._boundDismissOverlays);
+    }
+
     get roleOptions() {
         return getAvailableRoles();
+    }
+
+    get recordHeader() {
+        return getRecordHeader(this.currentRole);
+    }
+
+    get sidebarData() {
+        return getSidebarData(this.currentRole);
+    }
+
+    get activityItems() {
+        return this.sidebarData.activityItems;
+    }
+
+    get relatedLists() {
+        return this.sidebarData.relatedLists;
     }
 
     get cardTitle() {
@@ -144,6 +148,9 @@ export default class Ahis extends LightningElement {
     }
 
     handlePersonaFabClick() {
+        if (!this.isPersonaPickerOpen) {
+            document.dispatchEvent(new CustomEvent('dismissoverlays'));
+        }
         this.isPersonaPickerOpen = !this.isPersonaPickerOpen;
     }
 
@@ -152,11 +159,16 @@ export default class Ahis extends LightningElement {
     }
 
     loadData() {
+        if (this.isLoading) return;
         this.isLoading = true;
         this.hasError = false;
 
+        const token = Symbol();
+        this._loadToken = token;
+
         // eslint-disable-next-line @lwc/lwc/no-async-operation
         setTimeout(() => {
+            if (this._loadToken !== token) return;
             try {
                 this.ahisData = getAHISData(this.currentRole);
                 this.hasGenerated = true;

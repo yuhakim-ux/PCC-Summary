@@ -17,7 +17,19 @@ export default class ThemeSwitcher extends LightningElement {
         return this.darkMode ? 'Light Mode' : 'Dark Mode';
     }
 
+    connectedCallback() {
+        this._boundDismissOverlays = () => { this.isCardOpen = false; };
+        document.addEventListener('dismissoverlays', this._boundDismissOverlays);
+    }
+
+    disconnectedCallback() {
+        document.removeEventListener('dismissoverlays', this._boundDismissOverlays);
+    }
+
     handleIconClick() {
+        if (!this.isCardOpen) {
+            document.dispatchEvent(new CustomEvent('dismissoverlays'));
+        }
         this.isCardOpen = !this.isCardOpen;
     }
 
