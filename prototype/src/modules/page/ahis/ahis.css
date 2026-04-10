@@ -450,6 +450,12 @@
     --slds-c-card-color-border: transparent;
 }
 
+@media (max-width: 1023px) {
+    .sidebar-col {
+        margin-top: 24px;
+    }
+}
+
 .sidebar-spacer {
     height: 24px;
 }
