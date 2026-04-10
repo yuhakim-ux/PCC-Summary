@@ -80,7 +80,7 @@ Sections are **not** a free-form markdown blob. The client builds a **fixed orde
 | `alert-list` | Alerts, care gaps as labeled rows with severity. |
 | `bullet-list` | Structured rows with optional status dot/badge and detail layout. |
 | `bullet-list-or-empty` | Same as bullet list, but allows a **fixed empty message** when array is empty (Provider **Adverse Actions**). |
-| `chip-group` | Compact tags (care programs, roster names). |
+| `chip-group` | Compact tags (care programs only). |
 
 **Ordering:** Order is defined by the registry sequence for that persona. Generators should **populate objects in the same conceptual order** (e.g. Member: identity → alerts → conditions → claims → …) so diffs and tests are stable.
 
@@ -97,13 +97,12 @@ Sections are **not** a free-form markdown blob. The client builds a **fixed orde
 | Registry ID | Source fields on payload | Notes |
 |-------------|---------------------------|--------|
 | `identityPlan` | `identityPlan` | Member ID, DOB, plan, PCP, last interaction. |
-| `alerts` | `alerts[]` | Each: `level` (`error` \| `warning` \| `info`), `text`. |
+| `alerts` (Clinical Profile) | `alerts[]` + `careGaps.gaps[]` + `careGaps.barriers[]` | Unified section. Alerts by `level`; gaps → warning; barriers → info. |
 | `conditions` | `conditions[]` | Each: `name`, `severity` (drives dot color). |
 | `claimsOverview` | `claimsOverview[]` | Claim lines; **Denied** uses badge; others use status dot. |
 | `priorAuths` | `priorAuthAppeals.priorAuths[]` | Service + auth id + status. |
 | `appeals` | `priorAuthAppeals.appeals[]` | Description + appeal id + `slaDaysRemaining` (badge). |
 | `memberOpenCases` | `openCases[]` | Case subject, number, status. |
-| `memberCareGaps` | `careGaps.gaps[]`, `careGaps.barriers[]` | Gaps → warning-level alerts; barriers → info-level. |
 
 ### 4.2 Patient (`persona: "patient"`)
 
@@ -131,12 +130,12 @@ Sections are **not** a free-form markdown blob. The client builds a **fixed orde
 | `network` | `networkParticipation[]` | Contract + panel + optional fee tier meta. |
 | `providerOpenCases` | `openCases[]` | |
 | `adverseActions` | `adverseActions[]` | Always show section; use `emptyMessage` when empty. |
-| `roster` | `roster[]` (facility) | Chips + optional “Showing X of Y” via `providerSnapshot.rosterSize`. |
+| `roster` | `roster[]` (facility) | Bullet list with status dots; uses universal 4-item truncation. Formerly “Showing X of Y” via `providerSnapshot.rosterSize`. |
 
 **Provider individual vs facility:**
 
 - **Individual:** Expect `stateLicense`, `dea`, `boardCertifications`, etc.
-- **Facility:** May use `facilityLicense`, `cmsCertification`, `accreditation`, `cliaCertificate` instead of personal license; roster chips are typical.
+- **Facility:** May use `facilityLicense`, `cmsCertification`, `accreditation`, `cliaCertificate` instead of personal license; roster rendered as bullet list (not chips).
 
 ---
 
@@ -287,7 +286,9 @@ The prototype registry does **not** hard-cap array lengths; **generation policy*
 | `suggestedActions` | 5 | Match top risks; dedupe titles. |
 | `careGaps` (patient) | 6 | `error` before `warning`. |
 | Provider `networkParticipation` | 8 | Active contracts first. |
-| `roster` (chips) | 20 visible | Use `summary` pattern “Showing 20 of {rosterSize}” when truncating. |
+| `roster` (bullet list) | No generation cap | Use `summary` pattern “Showing 20 of {rosterSize}” when truncating. |
+
+**Client-side truncation:** All `bullet-list` and `alert-list` sections display max **4 items** by default with a "+ N more" expand button. This resets when the section accordion is collapsed.
 
 **Collapsible UI:** The shell may collapse non-critical sections when `isCollapsed`; generation should still prefer **dense, ordered** lists over long prose inside section fields.
 

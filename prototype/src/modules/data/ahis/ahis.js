@@ -226,7 +226,7 @@ const PERSONA_DATA = {
         persona: 'provider',
         providerSubType: 'facility',
         microSummary:
-            'Level II Trauma Center. Joint Commission accredited. CMS certification current. 24 physicians on roster. 1 open complaint case. 1 provider on roster with expiring license.',
+            'Level II Trauma Center. Joint Commission accredited. CMS certification current. 5 physicians on roster. 1 open complaint case. 1 provider on roster with expiring license.',
         providerSnapshot: {
             npi: '9876543210',
             npiType: 'Type 2',
@@ -309,6 +309,125 @@ const DRILL_DOWN_RECORDS = {
     ],
 };
 
+const RECORD_HEADER = {
+    MEMBER: {
+        recordIcon: 'standard:person_account',
+        recordTypeLabel: 'Person Account',
+        recordName: 'Carole White',
+        fields: [
+            { label: 'Date of Birth', value: '03/15/1958' },
+            { label: 'Member ID', value: '982734' },
+            { label: 'Plan', value: 'Medicare Advantage (HMO)' },
+            { label: 'PCP', value: 'Dr. Adams' },
+            { label: 'Phone', value: '4155550198', isPhone: true },
+            { label: 'MRN', value: 'MRN-441029' },
+        ],
+    },
+    PATIENT: {
+        recordIcon: 'standard:person_account',
+        recordTypeLabel: 'Person Account',
+        recordName: 'Carole White',
+        fields: [
+            { label: 'Age', value: '68' },
+            { label: 'MRN', value: 'MRN-441029' },
+            { label: 'PCP', value: 'Dr. Adams' },
+            { label: 'Risk Level', value: 'High Risk (Complex Care)' },
+            { label: 'Phone', value: '4155550198', isPhone: true },
+            { label: 'Care Coordinator', value: 'Jennifer Williams, RN' },
+        ],
+    },
+    PROVIDER_INDIVIDUAL: {
+        recordIcon: 'standard:user',
+        recordTypeLabel: 'Provider — Individual',
+        recordName: 'Dr. Sarah Patel, MD, FACC',
+        fields: [
+            { label: 'NPI', value: '1234567890' },
+            { label: 'Specialty', value: 'Cardiology' },
+            { label: 'Phone', value: '4155550142', isPhone: true },
+            { label: 'Accepting Patients', value: 'Yes' },
+            { label: 'State', value: 'California' },
+            { label: 'Tax ID', value: 'TIN-XX-4829' },
+        ],
+    },
+    PROVIDER_FACILITY: {
+        recordIcon: 'standard:account',
+        recordTypeLabel: 'Provider — Facility',
+        recordName: 'Makana Valley Medical Center',
+        fields: [
+            { label: 'NPI', value: '9876543210' },
+            { label: 'Type', value: 'General Acute Care Hospital' },
+            { label: 'Phone', value: '8085550300', isPhone: true },
+            { label: 'Accepting Patients', value: 'Yes' },
+            { label: 'State', value: 'Hawaii' },
+            { label: 'Tax ID', value: 'TIN-XX-7710' },
+        ],
+    },
+};
+
+const SIDEBAR_DATA = {
+    MEMBER: {
+        activityItems: [
+            { id: 'a1', type: 'call', iconName: 'standard:log_a_call', subject: 'Medication review call', date: 'Apr 4, 2026', description: 'Discussed Metformin side effects and refill timing.' },
+            { id: 'a2', type: 'event', iconName: 'standard:event', subject: 'Telehealth — Dr. Adams', date: 'Mar 28, 2026', description: 'Annual wellness visit. Noted elevated BP (142/90).' },
+            { id: 'a3', type: 'task', iconName: 'standard:task', subject: 'Referral: Ophthalmology', date: 'Mar 28, 2026', description: 'Diabetic eye exam referral created. Pending scheduling.' },
+            { id: 'a4', type: 'email', iconName: 'standard:email', subject: 'Care plan update sent', date: 'Mar 20, 2026', description: 'Updated care plan mailed to member with diabetes goals.' },
+            { id: 'a5', type: 'call', iconName: 'standard:log_a_call', subject: 'Inbound — claim inquiry', date: 'Mar 12, 2026', description: 'Member called about denied knee arthroscopy claim.' },
+        ],
+        relatedLists: [
+            { id: 'r1', label: 'Cases', count: '2', iconName: 'standard:case' },
+            { id: 'r2', label: 'Claims', count: '4', iconName: 'standard:custom_notification' },
+            { id: 'r3', label: 'Care Plans', count: '1', iconName: 'standard:capacity_plan' },
+            { id: 'r4', label: 'Referrals', count: '2', iconName: 'standard:document_reference' },
+            { id: 'r5', label: 'Appointments', count: '1', iconName: 'standard:event' },
+        ],
+    },
+    PATIENT: {
+        activityItems: [
+            { id: 'a1', type: 'event', iconName: 'standard:event', subject: 'Telehealth — Dr. Adams', date: 'Mar 28, 2026', description: 'Annual wellness visit. Noted elevated BP (142/90).' },
+            { id: 'a2', type: 'task', iconName: 'standard:task', subject: 'Lab Visit — HbA1c + Lipid Panel', date: 'Apr 2, 2026', description: 'Ordered at Quest Diagnostics. Results pending.' },
+            { id: 'a3', type: 'call', iconName: 'standard:log_a_call', subject: 'Medication review call', date: 'Mar 15, 2026', description: 'Discussed Metformin side effects and refill timing.' },
+            { id: 'a4', type: 'task', iconName: 'standard:task', subject: 'Referral: Ophthalmology', date: 'Mar 28, 2026', description: 'Diabetic eye exam referral created. Pending scheduling.' },
+            { id: 'a5', type: 'event', iconName: 'standard:event', subject: 'Cardiology Consult — Scheduled', date: 'Apr 20, 2026', description: 'Scheduled with HeartCare SF for elevated BP workup.' },
+        ],
+        relatedLists: [
+            { id: 'r1', label: 'Care Plans', count: '1', iconName: 'standard:capacity_plan' },
+            { id: 'r2', label: 'Referrals', count: '2', iconName: 'standard:document_reference' },
+            { id: 'r3', label: 'Appointments', count: '2', iconName: 'standard:event' },
+            { id: 'r4', label: 'Lab Results', count: '3', iconName: 'standard:work_type' },
+            { id: 'r5', label: 'Medications', count: '3', iconName: 'standard:medicine' },
+        ],
+    },
+    PROVIDER_INDIVIDUAL: {
+        activityItems: [
+            { id: 'a1', type: 'call', iconName: 'standard:log_a_call', subject: 'Credentialing inquiry', date: 'Apr 5, 2026', description: 'Provider called about state license renewal process.' },
+            { id: 'a2', type: 'task', iconName: 'standard:task', subject: 'Grievance case assigned', date: 'Mar 30, 2026', description: 'Case #PRV-CS-2201 assigned to Provider Relations Team.' },
+            { id: 'a3', type: 'email', iconName: 'standard:email', subject: 'Contract renewal notice', date: 'Mar 20, 2026', description: 'Aetna HMO contract renewal notice sent for 2027 term.' },
+            { id: 'a4', type: 'task', iconName: 'standard:task', subject: 'Panel status review', date: 'Mar 10, 2026', description: 'Medicare Advantage panel closure reviewed.' },
+        ],
+        relatedLists: [
+            { id: 'r1', label: 'Cases', count: '2', iconName: 'standard:case' },
+            { id: 'r2', label: 'Contracts', count: '3', iconName: 'standard:contract' },
+            { id: 'r3', label: 'Credentials', count: '5', iconName: 'standard:entitlement' },
+            { id: 'r4', label: 'Networks', count: '3', iconName: 'standard:network_contract' },
+        ],
+    },
+    PROVIDER_FACILITY: {
+        activityItems: [
+            { id: 'a1', type: 'task', iconName: 'standard:task', subject: 'Complaint investigation started', date: 'Apr 3, 2026', description: 'Case #FAC-CS-0445 under investigation by Compliance Team.' },
+            { id: 'a2', type: 'call', iconName: 'standard:log_a_call', subject: 'Dr. Patel license follow-up', date: 'Apr 1, 2026', description: 'Contacted re: state license renewal — pending.' },
+            { id: 'a3', type: 'email', iconName: 'standard:email', subject: 'Accreditation survey results', date: 'Mar 25, 2026', description: 'Joint Commission survey results shared with admin.' },
+            { id: 'a4', type: 'task', iconName: 'standard:task', subject: 'Roster audit completed', date: 'Mar 15, 2026', description: '24 physicians verified. 1 flagged for license expiry.' },
+        ],
+        relatedLists: [
+            { id: 'r1', label: 'Cases', count: '1', iconName: 'standard:case' },
+            { id: 'r2', label: 'Roster', count: '24', iconName: 'standard:people' },
+            { id: 'r3', label: 'Contracts', count: '3', iconName: 'standard:contract' },
+            { id: 'r4', label: 'Credentials', count: '6', iconName: 'standard:entitlement' },
+            { id: 'r5', label: 'Accreditations', count: '2', iconName: 'standard:reward' },
+        ],
+    },
+};
+
 const AVAILABLE_PERSONAS = [
     { value: 'MEMBER', label: 'Member Summary' },
     { value: 'PATIENT', label: 'Patient Summary' },
@@ -327,6 +446,14 @@ export function getAHISData(role) {
         generatedAt: new Date().toISOString(),
         ...data,
     };
+}
+
+export function getRecordHeader(role) {
+    return RECORD_HEADER[role] || RECORD_HEADER.MEMBER;
+}
+
+export function getSidebarData(role) {
+    return SIDEBAR_DATA[role] || SIDEBAR_DATA.MEMBER;
 }
 
 export function getDrillDownRecords(riskCategory) {

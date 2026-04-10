@@ -144,7 +144,7 @@ Sections always visible regardless of collapse state:
 | Provider — Individual | `PROVIDER_INDIVIDUAL` | `provider` |
 | Provider — Facility | `PROVIDER_FACILITY` | `provider` |
 
-**Note:** Provider Individual and Provider Facility share the `provider` runtime persona. The distinction is in the data — facility payloads use `facilityLicense`, `cmsCertification`, `accreditation`, and `roster` chips instead of personal license/DEA/board certs.
+**Note:** Provider Individual and Provider Facility share the `provider` runtime persona. The distinction is in the data — facility payloads use `facilityLicense`, `cmsCertification`, `accreditation`, and `roster` bullet list instead of personal license/DEA/board certs.
 
 ### State 6: Insight drill-down
 
@@ -193,7 +193,7 @@ Sections are **registry-driven**, not free-form. The registry (`ahisSectionRegis
 | `alert-list` | Labeled rows with severity icon. Always shown; never collapses |
 | `bullet-list` | Structured rows with status dot or badge + optional detail sub-text |
 | `bullet-list-or-empty` | Same as bullet-list but renders a fixed empty message when empty (used for Adverse Actions) |
-| `chip-group` | Compact tag chips (care programs, facility roster names) |
+| `chip-group` | Compact tag chips (care programs only; roster converted to `bullet-list`) |
 
 **Empty section behavior:** If a section's data array is empty, the entire section is omitted — **except** `bullet-list-or-empty`, which always renders with an empty message. Engineering should not hide the Adverse Actions section even when empty.
 
@@ -226,7 +226,25 @@ No HTML changes needed — it is already wrapped in `<template lwc:if={showActio
 
 ---
 
-## 8. Prototype vs. Production Delta
+## 8. Recent UX/UI Changes (April 2026)
+
+The following changes were applied after initial prototype handoff:
+
+| Change | Detail |
+|---|---|
+| Unified Clinical Profile | Member alerts + care gaps + barriers merged into a single "Clinical Profile" section. Patient and Member each have one Clinical Profile instead of separate alert/care gap sections. |
+| Universal 4-item truncation | All `bullet-list` and `alert-list` sections show max 4 items with a "+ N more" expand button. Resets on section collapse. |
+| Roster converted to bullet list | Provider Facility roster changed from `chip-group` to `bullet-list` with status dots, matching the universal section pattern. |
+| Timestamp moved into AI Summary callout | The regeneration timestamp and refresh button now live inside the purple AI Summary nested card header, not above it. |
+| Removed `ahisTokens.css` | The `ui/ahisTokens` module was dead code (no component consumed it). Color contract is now documented in [UX-DESIGN-SPEC.md §12](./UX-DESIGN-SPEC.md). |
+| Warning colors aligned to SLDS 2 | Badge bg `#F9E3B6`, badge text / dot / icon `#8C4B02` across all components. |
+| Emoji removal | All emoji characters removed from micro-summaries, empty-state messages, and section content. |
+| Text color standardization | Summary content uses `#2E2E2E`; identity grid and AI Summary callout use `#03234D`. |
+| Section header icons removed from Clinical Profile | Warning icon no longer appears on Clinical Profile headers across all personas. |
+
+---
+
+## 9. Prototype vs. Production Delta
 
 | Behavior | Prototype | Production LWC |
 |---|---|---|
@@ -242,7 +260,7 @@ No HTML changes needed — it is already wrapped in `<template lwc:if={showActio
 
 ---
 
-## 9. File Reference
+## 10. File Reference
 
 | File | Purpose |
 |---|---|
@@ -262,7 +280,7 @@ No HTML changes needed — it is already wrapped in `<template lwc:if={showActio
 
 ---
 
-## 10. Key Contacts
+## 11. Key Contacts
 
 | Role | Name |
 |---|---|

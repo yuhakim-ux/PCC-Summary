@@ -29,5 +29,5 @@
 }
 
 .chip-dot-green  { background-color: var(--slds-g-color-success-1, #2e844a); }
-.chip-dot-yellow { background-color: var(--slds-g-color-warning-1, #fe9339); }
+.chip-dot-yellow { background-color: #8C4B02; }
 .chip-dot-red    { background-color: var(--slds-g-color-error-1, #ba0517); }

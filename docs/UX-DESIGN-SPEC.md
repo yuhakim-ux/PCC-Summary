@@ -39,7 +39,7 @@ Both Provider Individual and Provider Facility map to the `provider` runtime per
 | Sub-type | Expected data fields |
 |---|---|
 | Individual | `stateLicense`, `dea`, `boardCertifications`, `malpractice`, personal network contracts |
-| Facility | `facilityLicense`, `cmsCertification`, `accreditation`, `cliaCertificate`, `roster[]` chips |
+| Facility | `facilityLicense`, `cmsCertification`, `accreditation`, `cliaCertificate`, `roster[]` bullet list |
 
 ---
 
@@ -53,8 +53,8 @@ The AHIS surface occupies a **custom LWC tab or component** on the Member/Patien
 2. **AHIS card** — Custom LWC. Contains all elements below.
 3. **Identity grid** — Always visible. First thing an agent reads. Non-collapsible.
 4. **Micro-summary blurb** — AI-generated plain-language paragraph. Always visible. Non-collapsible.
-5. **AI label + timestamp** — Small inline label ("AI · Today at 2:34 PM"). Always visible once generated.
-6. **Alerts section** — Always visible. Cannot be collapsed. Highest urgency items.
+5. **AI Summary callout** — Purple nested card with sparkles icon, "AI Summary" title, timestamp, and regenerate button inline in the header. Always visible once generated.
+6. **Clinical Profile section** — Always visible. Cannot be collapsed. Contains alerts, care gaps, and barriers (unified per persona).
 7. **Collapsed sections** — Hidden behind "Show more (N)" until expanded. See §5.
 8. **Insights tab** — Always accessible. Parallel tab to summary sections.
 9. **Actions tab** — Always accessible. Parallel tab to insights.
@@ -108,11 +108,11 @@ Not every section is relevant on every call. The collapse pattern keeps the most
 
 ### Always visible (never collapses)
 
-| Section ID | Persona | Reason |
-|---|---|---|
-| `alerts` | All | Safety-critical items; agents must see these immediately |
-| `patientCareGaps` | Patient | Overdue care gaps often drive the call |
-| `adverseActions` | Provider | Compliance risk; always requires an explicit "none" confirmation |
+| Section ID | Title | Persona | Reason |
+|---|---|---|---|
+| `alerts` | Clinical Profile | Member | Unified alerts + care gaps + barriers; safety-critical items agents must see immediately |
+| `patientCareGaps` | Clinical Profile | Patient | Overdue care gaps often drive the call |
+| `adverseActions` | Adverse Actions | Provider | Compliance risk; always requires an explicit "none" confirmation |
 
 ### Collapsed by default (revealed by "Show more")
 
@@ -120,7 +120,7 @@ All other sections. The toggle label reads **"Show more (N)"** where N = the num
 
 ### Always-empty section rule
 
-The **Adverse Actions** section (provider persona only) must always render — even when the array is empty. Use the `bullet-list-or-empty` primitive. The empty message reads: *"No adverse actions on record."* This is a deliberate compliance design decision: absence of adverse actions must be explicitly confirmed, not inferred from a missing section.
+The **Adverse Actions** section (provider persona only) must always render — even when the array is empty. Use the `bullet-list-or-empty` primitive. The empty message reads: *"No adverse actions on file."* This is a deliberate compliance design decision: absence of adverse actions must be explicitly confirmed, not inferred from a missing section.
 
 ---
 
@@ -280,7 +280,11 @@ These limits are a **generation policy**, not a hard client cap. The prototype d
 | Suggested Actions | 5 | Match top risks; dedupe titles |
 | Care Gaps (patient) | 6 | `error` before `warning` |
 | Network Participation (provider) | 8 | Active contracts first |
-| Roster chips (facility) | 20 visible | Show "Showing 20 of N" when truncating |
+| Roster (facility) | Per universal truncation | Same 4-item limit as all other sections |
+
+### Client-side truncation (universal)
+
+All `bullet-list` and `alert-list` sections display a maximum of **4 items** by default. If the data exceeds 4, a **"+ N more"** button appears. Clicking it reveals all items. When the parent section accordion is collapsed and reopened, the list resets to the truncated (4-item) state.
 
 ---
 
@@ -297,23 +301,51 @@ These limits are a **generation policy**, not a hard client cap. The prototype d
 
 ---
 
-## 12. Accessibility Notes
+## 12. Color Contract
 
-- All badge and dot indicators must include accessible text (not color alone). The prototype uses visible text labels alongside color.
-- The persona picker FAB must be keyboard navigable and include `aria-expanded` state.
-- Accordion sections (Show more / Show less) must use `aria-expanded` on the toggle control.
-- Insight drill-down modal must trap focus and return focus to the triggering element on close.
-- Do not rely on emoji characters in annotation pills or Einstein insight banners — use SLDS icons instead.
+The prototype does **not** use a centralized token file. Components reference SLDS 2 design tokens directly or use the hardcoded hex values below. Production LWCs should map these to org-level design tokens where available.
+
+| Role | Value | Where used |
+|---|---|---|
+| Summary content text | `#2E2E2E` | Section headers, counts, item text, dot labels, alert text, chips, empty-state messages |
+| Identity + AI callout text | `#03234D` | Identity grid lines, AI Summary nested card title/body, sparkles icon |
+| Warning badge background | `#F9E3B6` | `.badge-warning` |
+| Warning badge text / dot / icon | `#8C4B02` | `.badge-warning`, `.dot-warning`, `.status-dot-warning`, `.chip-dot-yellow`, `.alert-icon` |
+| Error badge background | `var(--slds-g-color-error-container-1, #feded8)` | `.badge-error` |
+| Error badge text / dot | `var(--slds-g-color-error-1, #ba0517)` / dot `#ea001e` | `.badge-error`, `.dot-error`, `.status-dot-error` |
+| Success badge background | `var(--slds-g-color-success-container-1, #cdefc4)` | `.badge-success` |
+| Success badge text / dot | `var(--slds-g-color-success-1, #2e844a)` / dot `#45c65a` | `.badge-success`, `.dot-success`, `.status-dot-success` |
+| Info badge background | `var(--slds-g-color-info-container-1, #eef4ff)` | `.badge-info` |
+| Info badge text / dot | `var(--slds-g-color-info-1, #0070d2)` / dot `#1b96ff` | `.badge-info`, `.dot-info`, `.status-dot-info` |
+| Neutral badge background | `var(--slds-g-color-surface-container-3, #e5e5e5)` | `.badge-neutral` |
+| Neutral badge text / dot | `var(--slds-g-color-on-surface-2, #706e6b)` / dot `#939090` | `.badge-neutral`, `.status-dot-neutral` |
+
+**Note:** The prototype previously included a `ui/ahisTokens` module with `--ahis-*` custom properties. This file was removed because no component consumed it — all values were either 1:1 aliases of SLDS 2 tokens or unused. The table above is the authoritative color reference for production.
 
 ---
 
-## 13. Design Decisions Log
+## 13. Accessibility Notes
+
+- All badge and dot indicators must include accessible text (not color alone). The prototype uses visible text labels alongside color.
+- The persona picker FAB must be keyboard navigable and include `aria-expanded` state.
+- Section accordion headers must include `aria-expanded` on the toggle control. (Note: the prototype uses `role="button"` + chevron icon but does not yet bind `aria-expanded`; production must add this.)
+- Insight drill-down modal must trap focus and return focus to the triggering element on close.
+- Do not rely on emoji characters in micro-summaries, section content, or annotation pills — use plain text or SLDS icons instead.
+
+---
+
+## 14. Design Decisions Log
 
 | Decision | Rationale |
 |---|---|
-| No emoji in annotation pills or Einstein banners | Inconsistent rendering across platforms; SLDS icons provide accessible, consistent alternatives |
+| No emoji in micro-summaries or section content | Inconsistent rendering across platforms; plain text and SLDS icons provide accessible, consistent alternatives |
 | Adverse Actions always shows even when empty | Compliance requirement — agents must explicitly confirm absence, not infer it |
-| Alerts section never collapses | Safety-critical; a collapsed allergy alert that an agent misses is a patient safety risk |
+| Clinical Profile section never collapses | Safety-critical; a collapsed allergy alert that an agent misses is a patient safety risk |
+| Unified Clinical Profile per persona | Member: alerts + care gaps + barriers merged into one section. Eliminates duplicate "Clinical Profile" headers and reduces scan overhead |
+| Timestamp and regenerate inside AI Summary callout | Keeps AI attribution and controls co-located; frees vertical space above the fold |
+| Roster as bullet list, not chips | Consistent with all other sections; reduces visual noise; follows universal 4-item truncation pattern |
+| Universal 4-item truncation with "+ N more" | Keeps all sections scannable above fold; resets to collapsed when parent accordion is closed |
+| Removed `ahisTokens.css` custom properties | No component consumed the `--ahis-*` tokens; all values were 1:1 aliases of SLDS 2 tokens or hardcoded hex. Color contract documented in §12 |
 | Persona by Permission Set, not profile | Profile names differ per org; permission sets are portable and admin-configurable |
 | Status → badge vs. dot distinction | Badges are reserved for actionable/urgent states to preserve their signal value; overusing badges = agents ignore them |
 | Micro-summary capped at 600 chars | Agents have 5–10 seconds before a patient starts talking; a wall of text defeats the purpose |

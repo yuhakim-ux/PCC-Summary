@@ -68,7 +68,7 @@
     top: -1px;
 }
 .status-dot-error   { background-color: var(--slds-g-color-error-1, #ea001e); }
-.status-dot-warning { background-color: var(--slds-g-color-warning-1, #ff8c00); }
+.status-dot-warning { background-color: #8C4B02; }
 .status-dot-success { background-color: var(--slds-g-color-success-1, #45c65a); }
 .status-dot-info    { background-color: var(--slds-g-color-info-1, #1b96ff); }
 .status-dot-neutral { background-color: var(--slds-g-color-on-surface-2, #939090); }
@@ -98,8 +98,8 @@
 }
 
 .badge-warning {
-    --slds-c-badge-color-background: var(--slds-g-color-warning-container-1, #fef3e0);
-    --slds-c-badge-text-color: var(--slds-g-color-warning-2, #8c4b02);
+    --slds-c-badge-color-background: #F9E3B6;
+    --slds-c-badge-text-color: #8C4B02;
 }
 
 .badge-success {
