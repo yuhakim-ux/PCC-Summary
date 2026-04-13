@@ -18,6 +18,8 @@ export default class AhisAlertList extends LightningElement {
             text: item.text,
             className: `alert-item alert-${item.level || 'info'}`,
             dotClass: `dot dot-${item.level || 'info'}`,
+            sources: item.sources || [],
+            hasSources: !!(item.sources && item.sources.length),
         }));
     }
 

@@ -11,23 +11,45 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 2px;
     min-width: 18px;
     height: 16px;
-    padding: 0 4px;
-    font-size: 10px;
-    font-weight: 700;
+    padding: 0 var(--slds-g-spacing-1, 4px);
+    font-size: var(--slds-g-font-scale-neg-2, 10px);
+    font-weight: 600;
     line-height: 16px;
-    color: var(--slds-g-color-accent-1, #0176d3);
-    background: var(--slds-g-color-accent-container-1, #e1ecff);
-    border: none;
+    color: var(--slds-g-color-accent-2, #0250D9);
+    background: var(--slds-g-color-surface-container-1, white);
+    border: 1px solid var(--slds-g-color-border-2, #5C5C5C);
     border-radius: var(--slds-g-radius-border-2, 8px);
     cursor: pointer;
-    vertical-align: super;
-    transition: background 0.12s ease;
+    vertical-align: middle;
+    transition: background 0.12s ease, border-color 0.12s ease;
 }
 
 .citation-btn:hover {
-    background: var(--slds-g-color-accent-container-1, #d4e3ff);
+    box-shadow: 0px 1.5px 0px 0px var(--color-component-hooks-neutral-button-bevel, #2e2e2e);
+}
+
+.citation-icon {
+    --slds-c-icon-sizing: 6px;
+    --slds-c-icon-color-foreground-default: var(--slds-g-color-accent-2, #0250D9);
+    width: 6px;
+    height: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    transform: scale(0.72);
+    transform-origin: center;
+}
+
+.citation-count {
+    font-size: var(--slds-g-font-scale-neg-2, 10px);
+    font-weight: 600;
+    line-height: 16px;
+    color: var(--slds-g-color-accent-2, #0250D9);
+    white-space: nowrap;
 }
 
 .citation-popover {
@@ -36,11 +58,15 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
-    min-width: 220px;
-    background: var(--slds-g-color-surface-container-1, #ffffff);
-    border: 1px solid var(--slds-g-color-border-1, #e5e5e5);
+    min-width: 240px;
+    max-width: 320px;
+    background: var(--slds-g-color-surface-container-1, white);
+    border: 1px solid var(--slds-g-color-border-2, #5C5C5C);
     border-radius: var(--slds-g-radius-border-3, 12px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    box-shadow:
+        0px -1px 2px rgba(0, 0, 0, 0.06),
+        0px 5px 5px rgba(0, 0, 0, 0.08),
+        0px 0px 7px rgba(0, 0, 0, 0.08);
     padding: var(--slds-g-spacing-3, 12px);
 }
 
@@ -52,39 +78,62 @@
 }
 
 .popover-title {
-    font-size: var(--slds-g-font-scale-neg-1, 0.6875rem);
-    font-weight: 590;
+    font-size: var(--slds-g-font-scale-neg-1, 12px);
+    font-weight: 600;
     color: var(--slds-g-color-on-surface-2, #706e6b);
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
 
-.popover-body {
-    display: flex;
-    align-items: center;
-    gap: var(--slds-g-spacing-1, 4px);
-}
-
-.popover-source-icon {
+.popover-close {
+    --slds-c-button-icon-color-foreground: var(--slds-g-color-on-surface-2, #706e6b);
     flex-shrink: 0;
 }
 
-.popover-source-name {
+.popover-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--slds-g-spacing-2, 8px);
+}
+
+.popover-item {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 8px);
+    padding: var(--slds-g-spacing-2, 8px);
+    border-radius: var(--slds-g-radius-border-2, 8px);
+    background: var(--slds-g-color-surface-2, #f3f3f3);
+}
+
+.popover-src-icon {
+    flex-shrink: 0;
+}
+
+.popover-src-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.popover-src-name {
     font-size: var(--slds-g-font-scale-base, 13px);
     font-weight: 600;
     color: var(--slds-g-color-accent-1, #0176d3);
     text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.popover-source-name:hover {
+.popover-src-name:hover {
     text-decoration: underline;
 }
 
-.popover-source-dot {
+.popover-src-type {
+    font-size: var(--slds-g-font-scale-neg-1, 12px);
     color: var(--slds-g-color-on-surface-2, #706e6b);
-}
-
-.popover-source-type {
-    font-size: var(--slds-g-font-scale-base, 13px);
-    color: var(--slds-g-color-on-surface-2, #706e6b);
+    line-height: 16px;
 }

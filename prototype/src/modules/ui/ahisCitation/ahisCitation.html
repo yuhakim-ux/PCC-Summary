@@ -1,29 +1,38 @@
 <template>
-    <span class="citation-wrapper">
-        <button class="citation-btn" onclick={handleClick} aria-expanded={isOpen} title={tooltipText}>
-            {label}
-        </button>
-        <template lwc:if={isOpen}>
-            <div class="citation-popover" role="tooltip">
-                <div class="popover-header">
-                    <span class="popover-title">Source</span>
-                    <lightning-button-icon
-                        icon-name="utility:close"
-                        alternative-text="Close"
-                        size="x-small"
-                        variant="bare"
-                        onclick={handleClose}>
-                    </lightning-button-icon>
+    <template lwc:if={hasSources}>
+        <span class="citation-wrapper">
+            <button class="citation-btn" onclick={handleClick} aria-expanded={isOpen} title={tooltipText}>
+                <lightning-icon icon-name="utility:link" size="xx-small" class="citation-icon"></lightning-icon>
+                <span class="citation-count">{pillLabel}</span>
+            </button>
+            <template lwc:if={isOpen}>
+                <div class="citation-popover" role="tooltip">
+                    <div class="popover-header">
+                        <span class="popover-title">{popoverTitle}</span>
+                        <lightning-button-icon
+                            icon-name="utility:close"
+                            alternative-text="Close"
+                            size="xx-small"
+                            variant="bare"
+                            class="popover-close"
+                            onclick={handleClose}>
+                        </lightning-button-icon>
+                    </div>
+                    <ul class="popover-list">
+                        <template for:each={sources} for:item="src">
+                            <li key={src.id} class="popover-item">
+                                <template lwc:if={src.iconName}>
+                                    <lightning-icon icon-name={src.iconName} size="xx-small" class="popover-src-icon"></lightning-icon>
+                                </template>
+                                <div class="popover-src-info">
+                                    <a href={src.recordUrl} class="popover-src-name">{src.name}</a>
+                                    <span class="popover-src-type">{src.type}</span>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
                 </div>
-                <div class="popover-body">
-                    <template lwc:if={sourceIconName}>
-                        <lightning-icon icon-name={sourceIconName} size="xx-small" class="popover-source-icon"></lightning-icon>
-                    </template>
-                    <a href="javascript:void(0)" class="popover-source-name" onclick={handleNavigate}>{sourceName}</a>
-                    <span class="popover-source-dot">·</span>
-                    <span class="popover-source-type">{sourceType}</span>
-                </div>
-            </div>
-        </template>
-    </span>
+            </template>
+        </span>
+    </template>
 </template>

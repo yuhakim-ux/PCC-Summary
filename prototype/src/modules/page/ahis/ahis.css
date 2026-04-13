@@ -192,9 +192,6 @@
     --slds-c-button-icon-color-foreground: var(--slds-g-color-on-surface-2, #706e6b);
     display: inline-flex;
     align-items: center;
-    position: relative;
-    top: -1.5px;
-    margin-left: auto;
 }
 
 .ahis-content-wrapper {
@@ -364,6 +361,21 @@
     font-size: var(--slds-g-font-scale-base, 13px);
     line-height: 18px;
     color: #03234D;
+}
+
+.summary-bullets {
+    margin: 0;
+    padding: 0 0 0 var(--slds-g-spacing-4, 16px);
+    list-style: disc;
+}
+
+.summary-bullet {
+    font-size: var(--slds-g-font-scale-base, 13px);
+    line-height: 20px;
+    color: #03234D;
+    padding: 2px 0;
+    list-style: disc;
+    display: list-item;
 }
 
 /* ═══════════════════════════════════

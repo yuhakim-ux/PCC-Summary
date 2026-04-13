@@ -6,44 +6,7 @@
                 <lightning-icon icon-name={iconName} size="x-small" class={iconComputedClass}></lightning-icon>
             </template>
             <h3 class="section-title">{title}</h3>
-            <template lwc:if={hasCount}>
-                <span class="section-count">{count}</span>
-            </template>
-            <template lwc:if={hasSources}>
-                <button class={citationClass} onclick={handleCitationClick} title="View sources">
-                    <lightning-icon icon-name="utility:link" size="xx-small" class="citation-icon"></lightning-icon>
-                    <span class="citation-count">{sourceCountLabel}</span>
-                </button>
-            </template>
         </div>
-        <template lwc:if={popoverOpen}>
-            <div class="citation-popover">
-                <div class="popover-header">
-                    <span class="popover-title">{popoverTitle}</span>
-                    <lightning-button-icon
-                        icon-name="utility:close"
-                        alternative-text="Close"
-                        size="xx-small"
-                        variant="bare"
-                        class="popover-close"
-                        onclick={handleClosePopover}>
-                    </lightning-button-icon>
-                </div>
-                <ul class="popover-list">
-                    <template for:each={sources} for:item="src">
-                        <li key={src.id} class="popover-item">
-                            <template lwc:if={src.iconName}>
-                                <lightning-icon icon-name={src.iconName} size="xx-small" class="popover-src-icon"></lightning-icon>
-                            </template>
-                            <div class="popover-src-info">
-                                <a href={src.recordUrl} class="popover-src-name">{src.name}</a>
-                                <span class="popover-src-type">{src.type}</span>
-                            </div>
-                        </li>
-                    </template>
-                </ul>
-            </div>
-        </template>
         <template lwc:if={isExpanded}>
             <div class="section-body">
                 <slot></slot>

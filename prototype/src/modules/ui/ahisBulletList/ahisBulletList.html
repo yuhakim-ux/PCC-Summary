@@ -16,6 +16,9 @@
                             <template lwc:if={item.secondary}>
                                 <span class="item-secondary">{item.secondary}</span>
                             </template>
+                            <template lwc:if={item.hasSources}>
+                                <ui-ahis-citation sources={item.sources}></ui-ahis-citation>
+                            </template>
                         </div>
                         <template lwc:if={item.hasMetaLine}>
                             <div class="detail-meta">
@@ -39,6 +42,9 @@
                         <span class="item-primary">{item.primary}</span>
                         <template lwc:if={item.secondary}>
                             <span class="item-secondary">{item.secondary}</span>
+                        </template>
+                        <template lwc:if={item.hasSources}>
+                            <ui-ahis-citation sources={item.sources}></ui-ahis-citation>
                         </template>
                         <template lwc:if={item.note}>
                             <span class="item-note">{item.note}</span>

@@ -1,16 +1,25 @@
 import { LightningElement, api, track } from 'lwc';
 
 export default class AhisCitation extends LightningElement {
-    @api label = '';
-    @api sourceName = '';
-    @api sourceType = '';
-    @api sourceIconName = '';
-    @api sourceId = '';
+    @api sources = [];
 
     @track isOpen = false;
 
+    get hasSources() {
+        return Array.isArray(this.sources) && this.sources.length > 0;
+    }
+
+    get pillLabel() {
+        return String((this.sources || []).length);
+    }
+
     get tooltipText() {
-        return `Source: ${this.sourceName}`;
+        const count = (this.sources || []).length;
+        return `${count} source${count !== 1 ? 's' : ''}`;
+    }
+
+    get popoverTitle() {
+        return `Sources (${(this.sources || []).length})`;
     }
 
     handleClick(event) {
@@ -18,19 +27,9 @@ export default class AhisCitation extends LightningElement {
         this.isOpen = !this.isOpen;
     }
 
-    handleClose() {
+    handleClose(event) {
+        event.stopPropagation();
         this.isOpen = false;
-    }
-
-    handleNavigate() {
-        this.isOpen = false;
-        this.dispatchEvent(
-            new CustomEvent('navigate', {
-                detail: { sourceId: this.sourceId, sourceName: this.sourceName },
-                bubbles: true,
-                composed: true,
-            })
-        );
     }
 
     connectedCallback() {
