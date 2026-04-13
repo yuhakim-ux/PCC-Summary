@@ -1,9 +1,8 @@
 # PCC-Summary
 
-Interactive **prototype** for the **PCC (Patient/Provider Care) Summary** feature — a Health Cloud Agentforce surface that gives call center agents a persona-aware, AI-generated patient or provider summary on the 360 record page.
+Interactive **prototype** for the **PCC (Patient/Provider) Summary** feature — a Health Cloud Agentforce surface that gives call center agents a persona-aware, AI-generated patient or provider summary on the 360 record page.
 
 **GitHub:** [github.com/yuhakim-ux/PCC-Summary](https://github.com/yuhakim-ux/PCC-Summary)  
-**Deployed prototype:** [yuhakim-ux.github.io/PCC-Summary](https://yuhakim-ux.github.io/PCC-Summary/)  
 **Active iteration:** `v2/pm-feedback` branch — see [v2 changes](#v2pm-feedback-changes) below
 
 ---
