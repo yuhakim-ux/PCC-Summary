@@ -5,6 +5,9 @@
                 <li key={alert.key} class={alert.className}>
                     <span class={alert.dotClass}></span>
                     <span class="alert-text">{alert.text}</span>
+                    <template lwc:if={alert.hasSources}>
+                        <ui-ahis-citation sources={alert.sources}></ui-ahis-citation>
+                    </template>
                 </li>
             </template>
         </ul>

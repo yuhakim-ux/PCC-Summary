@@ -835,15 +835,29 @@ const SECTION_DEFS = [
  * Build the list of renderable sections for the given persona and data.
  * Returns an array of section descriptors the template can iterate.
  */
+function attachSourcesToItems(data, sectionSources) {
+    if (!Array.isArray(data) || !sectionSources?.length) return data;
+    return data.map((item) => ({
+        ...item,
+        sources: item.sources || sectionSources,
+        hasSources: true,
+    }));
+}
+
 export function buildSections(persona, ahisData) {
     if (!ahisData) return [];
 
     return SECTION_DEFS.filter((def) => def.personas.includes(persona))
         .map((def) => {
-            const data = def.dataSelector(ahisData);
-            const isEmpty = !data || (Array.isArray(data) && data.length === 0) || (typeof data === 'object' && !Array.isArray(data) && !data.lines?.length);
+            const rawData = def.dataSelector(ahisData);
+            const isEmpty = !rawData || (Array.isArray(rawData) && rawData.length === 0) || (typeof rawData === 'object' && !Array.isArray(rawData) && !rawData.lines?.length);
 
             if (isEmpty && def.component !== 'bullet-list-or-empty') return null;
+
+            const sectionSources = def.sources || [];
+            const data = Array.isArray(rawData)
+                ? attachSourcesToItems(rawData, sectionSources)
+                : rawData || (def.component === 'identity-grid' ? {} : []);
 
             const count = def.countSelector ? def.countSelector(ahisData) : undefined;
             const countStr = count !== undefined && count !== null ? String(count) : undefined;
@@ -855,11 +869,11 @@ export function buildSections(persona, ahisData) {
                 icon: def.icon || null,
                 iconClass: def.iconClass || '',
                 count: countStr,
-                data: data || (def.component === 'identity-grid' ? {} : []),
+                data,
                 hasData: !isEmpty,
                 emptyMessage: def.emptyMessage || null,
                 summary: def.summarySelector ? def.summarySelector(ahisData) : null,
-                sources: def.sources || [],
+                sources: sectionSources,
 
                 isIdentityGrid: def.component === 'identity-grid',
                 isAlertList: def.component === 'alert-list',

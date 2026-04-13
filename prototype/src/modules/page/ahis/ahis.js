@@ -3,9 +3,6 @@ import { getAHISData, getAvailableRoles, getRecordHeader, getSidebarData } from 
 import { buildSections } from 'data/ahisSectionRegistry';
 import AhisDrillDown from 'ui/ahisDrillDown';
 
-const COLLAPSED_ALLOW_IDS = new Set(['alerts', 'patientCareGaps', 'adverseActions']);
-
-
 export default class Ahis extends LightningElement {
     @track ahisData = {};
     @track isLoading = false;
@@ -89,8 +86,15 @@ export default class Ahis extends LightningElement {
         return `Today at ${time}`;
     }
 
-    get microSummaryText() {
-        return this.ahisData?.microSummary || 'Generate a summary to see top context and alerts.';
+    get microSummaryItems() {
+        const raw = this.ahisData?.microSummary;
+        if (!raw) return [];
+        const lines = Array.isArray(raw) ? raw : [raw];
+        return lines.map((text, i) => ({ key: `ms-${i}`, text }));
+    }
+
+    get hasMicroSummary() {
+        return this.microSummaryItems.length > 0;
     }
 
     get followVariant() {
@@ -112,8 +116,8 @@ export default class Ahis extends LightningElement {
     get toggleLabel() {
         if (!this.isCollapsed) return 'Show less';
         const all = buildSections(this.resolvedPersona, this.ahisData);
-        const hidden = all.filter((s) => !s.isIdentityGrid && !COLLAPSED_ALLOW_IDS.has(s.id));
-        return `Show more (${hidden.length})`;
+        const sections = all.filter((s) => !s.isIdentityGrid);
+        return `Show Details (${sections.length})`;
     }
 
     get primaryActionLabel() {

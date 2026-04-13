@@ -10,8 +10,6 @@
                         title={section.title}
                         icon-name={section.icon}
                         icon-class={section.iconClass}
-                        count={section.count}
-                        sources={section.sources}
                         ontoggle={handleSectionToggle}>
                         <ui-ahis-alert-list items={section.data}></ui-ahis-alert-list>
                     </ui-ahis-section>
@@ -24,8 +22,6 @@
                         title={section.title}
                         icon-name={section.icon}
                         icon-class={section.iconClass}
-                        count={section.count}
-                        sources={section.sources}
                         ontoggle={handleSectionToggle}>
                         <ui-ahis-bullet-list items={section.data} reset-token={section.resetToken}></ui-ahis-bullet-list>
                     </ui-ahis-section>
@@ -38,7 +34,6 @@
                         title={section.title}
                         icon-name={section.icon}
                         icon-class={section.iconClass}
-                        sources={section.sources}
                         ontoggle={handleSectionToggle}>
                         <template lwc:if={section.hasData}>
                             <ui-ahis-bullet-list items={section.data} reset-token={section.resetToken}></ui-ahis-bullet-list>
@@ -55,8 +50,6 @@
                         section-key={section.id}
                         title={section.title}
                         icon-name={section.icon}
-                        count={section.count}
-                        sources={section.sources}
                         ontoggle={handleSectionToggle}>
                         <ui-ahis-chip-group items={section.data} summary={section.summary}></ui-ahis-chip-group>
                     </ui-ahis-section>

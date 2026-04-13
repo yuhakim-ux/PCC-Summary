@@ -4,9 +4,7 @@ export default class AhisSection extends LightningElement {
     @api sectionKey = '';
     @api title = '';
     @api iconName = '';
-    @api count;
     @api iconClass = '';
-    @api sources = [];
 
     _expanded = true;
 
@@ -19,14 +17,9 @@ export default class AhisSection extends LightningElement {
     }
 
     @track isExpanded = true;
-    @track popoverOpen = false;
 
     connectedCallback() {
         this.isExpanded = this._expanded;
-    }
-
-    get hasCount() {
-        return this.count !== undefined && this.count !== null && this.count !== '';
     }
 
     get chevronIcon() {
@@ -39,22 +32,6 @@ export default class AhisSection extends LightningElement {
 
     get iconComputedClass() {
         return `section-icon ${this.iconClass || ''}`.trim();
-    }
-
-    get hasSources() {
-        return Array.isArray(this.sources) && this.sources.length > 0;
-    }
-
-    get sourceCountLabel() {
-        return String((this.sources || []).length);
-    }
-
-    get popoverTitle() {
-        return `Source (${(this.sources || []).length})`;
-    }
-
-    get citationClass() {
-        return this.popoverOpen ? 'citation-btn citation-btn-selected' : 'citation-btn';
     }
 
     handleToggle() {
@@ -71,15 +48,5 @@ export default class AhisSection extends LightningElement {
             event.preventDefault();
             this.handleToggle();
         }
-    }
-
-    handleCitationClick(event) {
-        event.stopPropagation();
-        this.popoverOpen = !this.popoverOpen;
-    }
-
-    handleClosePopover(event) {
-        event.stopPropagation();
-        this.popoverOpen = false;
     }
 }

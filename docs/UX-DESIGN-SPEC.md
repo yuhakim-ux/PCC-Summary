@@ -2,7 +2,7 @@
 
 **Document type:** UX/UI design spec for engineering implementation  
 **Feature:** Agentforce Health Intelligence Surface (AHIS) — Custom LWC  
-**Release:** 264 — PCC Provider Agents  
+**Release:** 262.8 — PCC Summaries
 **Prepared by:** Yuha Kim, UX Designer — Salesforce Industries (Health Cloud)  
 **Figma references:**  
 - [Agentic Summary Custom LWC](https://www.figma.com/design/4p5hFM6CgwXzaoUskfTz1V/262.8---Agentic-Summary-Custom-LWC)  
@@ -50,19 +50,21 @@ The AHIS surface occupies a **custom LWC tab or component** on the Member/Patien
 ### Layout regions (top to bottom)
 
 1. **Record header** — Standard Salesforce record header (name, account number, follow button, edit). Not part of the custom LWC.
-2. **AHIS card** — Custom LWC. Contains all elements below.
-3. **Identity grid** — Always visible. First thing an agent reads. Non-collapsible.
-4. **Micro-summary blurb** — AI-generated plain-language paragraph. Always visible. Non-collapsible.
-5. **AI Summary callout** — Purple nested card with sparkles icon, "AI Summary" title, timestamp, and regenerate button inline in the header. Always visible once generated.
-6. **Clinical Profile section** — Always visible. Cannot be collapsed. Contains alerts, care gaps, and barriers (unified per persona).
-7. **Collapsed sections** — Hidden behind "Show more (N)" until expanded. See §5.
-8. **Insights tab** — Always accessible. Parallel tab to summary sections.
-9. **Actions tab** — Always accessible. Parallel tab to insights.
-10. **Action bar** — Currently hidden. See Prototype Handoff §7.
+2. **Summary card** — Custom LWC. Card header includes the summary title, timestamp, regenerate button, and overflow menu. Contains all elements below.
+3. **Key Insights card** — Purple nested card with sparkles icon, "Key Insights" title, and info icon. Contains a bullet list of the top 3–5 concise alert-style items. Always visible once generated. *(v2: renamed from "AI Summary"; content changed from paragraph to bullets; timestamp + refresh moved to card header.)*
+4. **Detail sections** — All hidden by default behind **"Show Details (N)"**. Expanding reveals the full accordion sections (Clinical Profile, Claims, Medications, etc.). *(v2: previously, Clinical Profile and certain safety-critical sections were always visible. Now all sections are behind the toggle.)*
+5. **Insights tab** — Always accessible. Parallel tab to summary sections.
+6. **Actions tab** — Always accessible. Parallel tab to insights.
+7. **Card footer** — Centered "Show Details (N)" / "Show less" toggle link with a subtle top border divider.
+8. **Action bar** — Currently hidden. See Prototype Handoff §7.
+
+> **v2 change:** The identity grid (previously region 3) has been removed from the AHIS card. Identity context is available in the standard record header above and is no longer duplicated inside the card.
 
 ---
 
 ## 4. Identity Grid
+
+> **v2 change:** The identity grid is **hidden** in the current iteration. The record header provides the same identity context. The field mappings below are retained as a reference for production in case the grid is restored.
 
 The identity grid is the first thing an agent sees. It must load fast and be scannable in under 3 seconds.
 
@@ -104,19 +106,13 @@ The identity grid is the first thing an agent sees. It must load fast and be sca
 
 ### Design rationale
 
-Not every section is relevant on every call. The collapse pattern keeps the most critical information above the fold while making the full picture available within one click.
+The Key Insights bullet list gives the agent the critical snapshot in under 5 seconds. All detail sections are one click away behind "Show Details" — keeping the card compact by default while making the full picture immediately accessible.
 
-### Always visible (never collapses)
+### All sections hidden by default (v2)
 
-| Section ID | Title | Persona | Reason |
-|---|---|---|---|
-| `alerts` | Clinical Profile | Member | Unified alerts + care gaps + barriers; safety-critical items agents must see immediately |
-| `patientCareGaps` | Clinical Profile | Patient | Overdue care gaps often drive the call |
-| `adverseActions` | Adverse Actions | Provider | Compliance risk; always requires an explicit "none" confirmation |
+All detail sections (Clinical Profile, Claims, Medications, Conditions, etc.) are hidden behind the **"Show Details (N)"** toggle, where N = the total number of sections for the current persona. Clicking reveals all sections at once.
 
-### Collapsed by default (revealed by "Show more")
-
-All other sections. The toggle label reads **"Show more (N)"** where N = the number of hidden sections for the current persona.
+> **v2 change:** Previously, certain safety-critical sections (`alerts`, `patientCareGaps`, `adverseActions`) were always visible using a `COLLAPSED_ALLOW_IDS` allowlist. This logic has been removed. The Key Insights bullet list now surfaces the most critical items, and all structured detail sections are behind the toggle.
 
 ### Always-empty section rule
 
@@ -127,6 +123,8 @@ The **Adverse Actions** section (provider persona only) must always render — e
 ## 6. Indicator System (Badges and Dots)
 
 The prototype implements a two-track indicator system. Engineering must not deviate from this mapping — it is the visual language agents use to triage at a glance.
+
+> **v2 change:** Section item counts (e.g., "Claims 4") have been **removed** from accordion headers to reduce visual noise. The badge and dot indicator system on individual items within sections is unchanged.
 
 ### When to use a badge (pill) vs. a dot
 
@@ -174,17 +172,28 @@ The prototype implements a two-track indicator system. Engineering must not devi
 
 ---
 
-## 7. Micro-Summary (AI Blurb)
+## 7. Key Insights (Micro-Summary)
 
-The micro-summary is a plain-language paragraph that appears immediately below the identity grid. It is the only free-text field in the payload — all other content is structured.
+The Key Insights section renders inside the purple nested card at the top of the AHIS card. It is the first content an agent reads after the card title. The `microSummary` field is the only AI-generated content field in the payload — all other content is structured.
+
+> **v2 change:** The `microSummary` field changed from a single string (paragraph) to an **array of strings** (bullet items). The UI renders these as a standard bulleted list inside the Key Insights card.
 
 ### Design requirements
 
-- **Length:** 350–600 characters or 3–5 sentences. Do not exceed.
-- **No bullet characters inside this string.** The sections below carry structure.
-- **Content order:** Lead with plan/clinical stability → top risks (SLA deadlines, denials, allergies, credential expiry) → care gaps.
+- **Format:** An array of 3–5 concise strings. Each string becomes one bullet point.
+- **Length per item:** Under ~100 characters. Short, scannable fragments — not full sentences.
+- **Content priority:** Lead with the highest-urgency items (allergies, denials, SLA deadlines, credential expiry), then care gaps and operational flags.
 - **Tone:** Operational, not clinical. Written for a call center agent, not a clinician.
-- **Example (member):** "Active Medicare Advantage member. 1 denied knee claim under appeal — SLA in 3 days. Insulin PA pending clinical review. Severe Penicillin allergy on file."
+- **No severity indicators.** The bullets are plain text with standard disc markers — no colored dots or badges.
+- **Example (member):**
+  ```json
+  [
+    "Severe Penicillin Allergy — Anaphylaxis history (2023)",
+    "On Insulin + Warfarin (high-risk medication combination)",
+    "Knee procedure claim denied — $2,400 patient responsibility",
+    "Insulin Prior Auth pending clinical review (Auth #PA-992)"
+  ]
+  ```
 
 ---
 
@@ -270,7 +279,7 @@ These limits are a **generation policy**, not a hard client cap. The prototype d
 
 | Content area | Maximum | Truncation strategy |
 |---|---|---|
-| Micro-summary | ~600 characters or 5 sentences | Drop lowest-priority clause first |
+| Micro-summary (Key Insights) | 3–5 bullet items, each under ~100 chars | Drop lowest-priority item first |
 | Alerts | 8 | Severity order: error → warning → info; drop oldest info |
 | Claims | 6 | Most recent + any Denied/Pending first |
 | Conditions / Clinical Snapshot | 10 | Active problems first; chronic stable last |
@@ -350,3 +359,10 @@ The prototype does **not** use a centralized token file. Components reference SL
 | Status → badge vs. dot distinction | Badges are reserved for actionable/urgent states to preserve their signal value; overusing badges = agents ignore them |
 | Micro-summary capped at 600 chars | Agents have 5–10 seconds before a patient starts talking; a wall of text defeats the purpose |
 | Parallel insights + actions tabs | Separating structured data (sections) from AI interpretation (insights) and AI recommendations (actions) prevents cognitive overload |
+| **(v2)** Identity grid hidden | Record header already provides identity context; removing the grid reduces vertical space above the fold and avoids duplication |
+| **(v2)** All sections behind "Show Details" | Key Insights bullet list provides the critical snapshot; full detail sections are one click away, keeping the default card compact |
+| **(v2)** Micro-summary changed from paragraph to bullet list | Concise, scannable bullet items outperform narrative text for triage speed; each item is under 100 characters |
+| **(v2)** "AI Summary" renamed to "Key Insights" | More descriptive of the content; avoids overloaded "AI" branding in an already agentic context |
+| **(v2)** Timestamp + refresh moved to card header | Frees space inside the Key Insights card for content; keeps AI attribution at the card level |
+| **(v2)** Section counts removed from accordion headers | Reduces visual noise; item count is visible when the section is expanded |
+| **(v2)** Citations moved from section headers to individual items | Source provenance is more useful at the item level; agents can verify specific claims, not just sections |

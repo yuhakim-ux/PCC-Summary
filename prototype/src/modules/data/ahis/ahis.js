@@ -11,8 +11,13 @@ const PERSONA_DATA = {
         icon: 'utility:identity',
         message: 'Plan, claims, and financial overview for member calls',
         persona: 'member',
-        microSummary:
-            'Active Medicare Advantage member. 1 denied knee claim under appeal — SLA in 3 days. Insulin PA pending clinical review. Severe Penicillin allergy on file.',
+        microSummary: [
+            'Active Medicare Advantage member since Jan 2026.',
+            'A denied knee arthroscopy claim is under active appeal with only 3 days remaining on the SLA — this is likely the reason for the call.',
+            'An insulin prior authorization is also pending clinical review, and given the patient\'s high-risk medication combination (Insulin + Warfarin), any gap in coverage could be dangerous.',
+            'Severe Penicillin allergy with anaphylaxis history is on file.',
+            'Transportation has been flagged as a care barrier.',
+        ],
         identityPlan: {
             memberId: '982734',
             name: 'Carole White',
@@ -81,8 +86,13 @@ const PERSONA_DATA = {
         icon: 'utility:heart',
         message: 'Clinical details, medications, and referrals for patient care',
         persona: 'patient',
-        microSummary:
-            '68F with Type 2 Diabetes — HbA1c trending up (7.2% → 8.1% over 6 months). Metformin refill due in 5 days; stomach upset reported. Overdue for diabetic eye exam (14 months). Transportation barrier flagged.',
+        microSummary: [
+            '68-year-old female with Type 2 Diabetes whose HbA1c has been trending up over the past 6 months (7.2% to 8.1%), indicating the current treatment plan may need adjustment.',
+            'Metformin refill is due in 5 days, and the patient has reported stomach upset as a side effect.',
+            'A diabetic eye exam is overdue by 14 months — an ophthalmology referral is pending but not yet scheduled.',
+            'A transportation barrier has been flagged, which may affect pharmacy access and appointment attendance.',
+            'A cardiology consult is scheduled for April 20.',
+        ],
         identityDemographics: {
             name: 'Carole White',
             age: 68,
@@ -163,8 +173,13 @@ const PERSONA_DATA = {
         message: 'Credentialing, compliance, and network status for this provider',
         persona: 'provider',
         providerSubType: 'individual',
-        microSummary:
-            'Board-certified cardiologist. State license expires in 45 days. 2 open cases (1 grievance, 1 inquiry). No adverse actions on file.',
+        microSummary: [
+            'Board-certified cardiologist with active credentials across three networks.',
+            'The most urgent issue is a California state medical license expiring in 45 days — if not renewed, the provider may face temporary network suspension.',
+            'There are 2 open cases: a member grievance currently under review and a general inquiry.',
+            'No adverse actions are on file.',
+            'The Medicare Advantage panel is currently closed to new patients.',
+        ],
         providerSnapshot: {
             npi: '1234567890',
             npiType: 'Type 1',
@@ -225,8 +240,12 @@ const PERSONA_DATA = {
         message: 'Facility credentialing, accreditation, and roster overview',
         persona: 'provider',
         providerSubType: 'facility',
-        microSummary:
-            'Level II Trauma Center. Joint Commission accredited. CMS certification current. 5 physicians on roster. 1 open complaint case. 1 provider on roster with expiring license.',
+        microSummary: [
+            'Level II Trauma Center accredited by the Joint Commission with current CMS certification.',
+            'There is an active complaint case under investigation by the Compliance Team with a 10-business-day response window.',
+            'One physician on the 5-person roster (Dr. Sarah Patel, Cardiology) has a state license expiring in 45 days, which could affect the facility\'s credentialing compliance.',
+            'The facility has no neurologist on roster despite 12% of consult requests being for neurology.',
+        ],
         providerSnapshot: {
             npi: '9876543210',
             npiType: 'Type 2',

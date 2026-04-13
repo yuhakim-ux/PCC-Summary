@@ -86,6 +86,18 @@
                 </div>
 
                 <div slot="actions" class="actions-row">
+                    <template lwc:if={showContent}>
+                        <span class="content-timestamp">{formattedTimestamp}</span>
+                        <lightning-button-icon
+                            icon-name="utility:refresh"
+                            alternative-text="Regenerate"
+                            title="Regenerate Summary"
+                            size="x-small"
+                            variant="bare"
+                            onclick={handleRefresh}
+                            class="regenerate-btn">
+                        </lightning-button-icon>
+                    </template>
                     <lightning-button-menu
                         alternative-text="More options"
                         variant="bare"
@@ -161,37 +173,31 @@
                     <div class="ahis-content-wrapper">
                         <!-- CONTEXT ZONE -->
                         <div class="ahis-context-zone">
-                            <ui-ahis-identity-grid rows={identityData}></ui-ahis-identity-grid>
                             <section class="nested-card">
                                 <div class="nested-card-header">
                                     <lightning-icon icon-name="utility:sparkles" size="x-small" class="sparkles-icon"></lightning-icon>
-                                    <span class="nested-card-title">AI Summary</span>
-                                    <span class="content-timestamp">{formattedTimestamp}</span>
-                                    <lightning-button-icon
-                                        icon-name="utility:refresh"
-                                        alternative-text="Regenerate"
-                                        title="Regenerate Summary"
-                                        size="x-small"
-                                        variant="bare"
-                                        onclick={handleRefresh}
-                                        class="regenerate-btn">
-                                    </lightning-button-icon>
+                                    <span class="nested-card-title">Key Insights</span>
                                 </div>
-                                <p class="nested-card-body">{microSummaryText}</p>
+                                <template lwc:if={hasMicroSummary}>
+                                    <ul class="summary-bullets">
+                                        <template for:each={microSummaryItems} for:item="item">
+                                            <li key={item.key} class="summary-bullet">{item.text}</li>
+                                        </template>
+                                    </ul>
+                                </template>
                             </section>
                         </div>
 
-                        <!-- DIVIDER -->
-                        <div class="ahis-zone-divider"></div>
-
-                        <!-- DETAILS ZONE -->
-                        <div class="ahis-details-zone">
-                            <ui-ahis-summary
-                                ahis-data={ahisData}
-                                persona={resolvedPersona}
-                                collapsed={isCollapsed}>
-                            </ui-ahis-summary>
-                        </div>
+                        <!-- DETAILS ZONE (hidden when collapsed) -->
+                        <template lwc:if={isExpanded}>
+                            <div class="ahis-zone-divider"></div>
+                            <div class="ahis-details-zone">
+                                <ui-ahis-summary
+                                    ahis-data={ahisData}
+                                    persona={resolvedPersona}>
+                                </ui-ahis-summary>
+                            </div>
+                        </template>
 
                         <!-- Action Bar — hidden (set showActionBar=true to restore) -->
                         <template lwc:if={showActionBar}>
